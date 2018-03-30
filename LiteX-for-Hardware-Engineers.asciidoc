@@ -4,7 +4,7 @@ This is an introduction to LiteX written by and for hardware engineers. Experien
 
 foo bar 
 
-=What is LiteX?
+==What is LiteX?
 Foo bar
 
 
