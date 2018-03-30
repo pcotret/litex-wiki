@@ -109,13 +109,13 @@ Again, sys_clk is implicit because we used a "naked" self.sync. And, note that t
 
 If you wanted to do two clock domains, you might do something like this:
  <nowiki>
-class Baz(Module):
- def __init__(self):
-   foo = Signal()
-   bar_r = Signal()
-   bar_w = Signal()
-   self.sync.read += bar_r.eq(foo)   # when adding just one item to the list, you can use +=
-   self.sync.write += bar_w.eq(foo)</nowiki>
+ class Baz(Module):
+   def __init__(self):
+     foo = Signal()
+     bar_r = Signal()
+     bar_w = Signal()
+     self.sync.read += bar_r.eq(foo)   # when adding just one item to the list, you can use +=
+     self.sync.write += bar_w.eq(foo)</nowiki>
 
 This is the verilog equivalent of
  <nowiki>
