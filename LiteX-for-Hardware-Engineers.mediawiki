@@ -1,0 +1,46 @@
+This is an introduction to LiteX written by and for hardware engineers who have experience designing FPGAs using Verilog and Vivado. 
+
+Experienced Python engineers can skip this and [https://github.com/m-labs/migen read the source code] for documentation.
+
+__TOC__
+
+==What is LiteX?==
+LiteX is a Python "front-end" that generates Verilog netlists, and drives proprietary build "back-ends", such as Vivado or ISE, to create bitstreams ("gateware") for FPGAs.
+
+LiteX is relies on a Python toolbox called [https://github.com/m-labs/migen Migen]. In addition to a build environment, it provides a set of IP blocks, most of them written and maintained by [https://github.com/enjoy-digital?tab=repositories Enjoy-Digital]. Some of the IP blocks include a DDR2/3 MIG equivalent, various softcore CPUs (lm32, or1k, RISCV), Ethernet controller, HDMI input/output, Wishbone routing fabrics, streams, and PCI express.
+
+LiteX naively supports Linux/x86. It requires Python3.5 or later. You'll need to manually download, install, and provision your back-end tools (e.g. Vivado/ISE), and you'll also need to install a gcc cross-compiler to any softcore CPU you plan to use in your designs. Details later.
+
+Here's the design flow in a nutshell:
+
+# Describe your design in Python using the migen toolbox and LiteX IP by customizing a "platform" object
+# Run a function which passes your "platform" object to a Builder object, and invokes the build() method which:
+## Creates a "top.v" file: a single, flat verilog netlist of your entire design modulo a few exceptions to be noted later.
+## Creates a "top.xdc" file: constraints that locate pins, defines clocks, and eliminates false paths
+## If a CPU is configured, generates and builds a BIOS binary to be compiled into the design
+## If a toolchain is configured, creates a "top.tcl" file which drives the proprietary synth/place/route/bitgen "backend" toolchain
+## Attempts to run the proprietary back-end tool (Vivado will be assumed for this doc, but ISE is also supported)
+# Run "make" in the "firmware" directory, which builds your firmware binary (firmware.bin).
+# Upload top.bit to the FPGA -- typically over JTAG via openOCD
+# Upload firmware.bin to the FPGA -- typically via UART or Ethernet, using the "flterm" host-native application and the "serialboot" command
+# Interact with your firmware's REPL loop using flterm
+# If you designed a "litescope" into your design (an ILA like Chipscope), configure triggers and download traces using an analyzer script, which relies on a helper program called litex_server. Debugging occurs either through a supplementary UART or Ethernet that must be present in the hardware (either designed in or test leads connected to a header).
+# Find bugs & go back to step 1!
+
+
+==Glossary==
+{|  
+|----
+! scope="col" width="width:20em;" |LiteX term
+! scope="col" width="width:20em;" |Meaning
+|-
+|Gateware
+|Bitstream. The stuff that goes into an FPGA
+|-
+|Firmware
+|Loadable application code, usually dropped into DRAM
+|-
+|BIOS
+|Bootstrapping code baked into the bitsream of the FPGA
+|----
+|}
