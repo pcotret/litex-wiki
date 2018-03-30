@@ -1,0 +1,5 @@
+This is an introduction to LiteX written by and for hardware engineers. Experienced Python engineers would prefer to read the source code for documentation.
+
+# What is LiteX
+
+
