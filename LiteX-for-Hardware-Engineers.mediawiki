@@ -152,7 +152,9 @@ The one argument is automatically expanded by the ClockDomainsRenamer to the dic
 ==Submodules==
 Noticed how above, I was particular to include a line "self.submodules += myfoo" or similar at the end of every example? This has to do with the submodules attribute.
 
-Designs can be hierarchical in migen. That's a good thing, but you have to tell migen about the submodules, or else they don't do anything. Here's a simple example:
+Designs can be hierarchical in migen. That's a good thing, but you have to tell migen about the submodules, or else they don't do anything. You tell migen about a submodule -- and thus include it for flattening and netlisting -- by adding it to the submodule attribute. Forgetting to do so will silently fail, throwing no errors and leaving you wondering why the submodule you thought you included is outputting nothing but 0.
+
+Here's a simple example:
  
  <nowiki>
  myfoo = Foo()
