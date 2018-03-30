@@ -30,14 +30,19 @@ Here's the design flow in a nutshell:
 
 LiteX-buildenv attempts to automate steps 3 and onwards. However, I don't use the master script, it's a bit too brittle yet for reliable development, so I tend to run each of the major steps one command at a time.
 
+==Editors and Environments==
+It's extremely helpful to use a very featureful Python editor when coding with LiteX/migen. Just trying to code in a basic text editor will drive you nuts. I was introduced to [https://www.jetbrains.com/pycharm/ PyCharm], and I would strongly recommend it if you don't already have a preferred editor. In particular you want to be able to "push" into object declarations by control-clicking on the name and method name autocompletion is extremely helpful when groping around for signal names. 
+
+Furthermore, Python has several key limitations, a major one being package management. Namely, it ... doesn't really exist natively in the system. Just running setup.py on various eggs will toss all your packages into your system dist-packages directory, which can break other parts of your system. If you ask five Python developers how to deal with this, you'll get five different answers. Litex-buildenv I think tries to use Conda to get around this. Just be aware there's some weird stuff going on here that's totally obvious to the package maintainer but you'll be blindsided by the assumptions sometime down the road. 
+
 == What is Migen?==
 Migen is the Python toolbox that's used to create a description of your hardware design. It abuses the Python's object-oriented class and method system to create a design tree embodied as a single mega-object. 
 
 For design description, the base class is a "Module". It has five key attributes used to organize the elements that describe any hardware design:
 * Comb
 * Sync
-* Specials
 * Submodules
+* Specials
 * ClockDomains
 
 Each of these attributes is a list, and a design is described by appending an element to the appropriate list. Once all the lists have been populated, the submodules are collected and then finalized into a single, huge verilog netlist. 
@@ -52,30 +57,135 @@ So let's look at what each of these attributes are, one at a time.
 The comb attribute is a list of "combinational" logic operations. The verilog equivalent is everything that occurs outside an always @(posedge) block, e.g. all your assign statements. Since comb is a list, you append operations onto the list using Python list syntax. "self" is a shortcut to your module object, and ".comb" is how you reference the "comb" attribute:
 
  <nowiki>
-foo = Signal()  # these are all one-bit wide by default
-bar = Signal()
-baz = Signal()
-mumble = Signal()
-
-self.comb += [
-  foo.eq(bar)
-  baz.eq(foo & mumble)
-]
-</nowiki>
+ foo = Signal()  # these are all one-bit wide by default
+ bar = Signal()
+ baz = Signal()
+ mumble = Signal()
+ self.comb += [
+   foo.eq(bar),
+   baz.eq(foo & mumble),  # trailing commas at the end of a list are OK in python
+ ]</nowiki>
 
 This is the verilog equivalent of:
-<nowiki>
-wire foo;
-wire bar;
-wire baz;
-wire mumble;
-assign foo = bar;
-assign baz = foo & mumble;
-</nowiki>
+ <nowiki>
+ wire foo;
+ wire bar;
+ wire baz;
+ wire mumble;
+ assign foo = bar;
+ assign baz = foo & mumble;</nowiki>
 
 You'll notice that there's no "=" operator -- assignment (and thus declaration of which signal in the source and sink) is done by invoking .eq() on the sink and putting the source as the argument for a signal. However, most arithmetic operations are available between Signals, e.g. ~ is invert, & is and, | is or, + is add, * is multiply. I think there's also divide and I have no idea about signed types. 
 
 ===Sync===
+The Sync attribute is the list of synchronous operations. Items added to this list will generally infer a clocked register. 
+
+"But to what clock domain?" I hear you ask. Migen starts with a single, default clock domain called "sys". Its frequency is defined by passing a mandatory "clk_freq" argument to the SoCSDRAM base class, and it's up to you to actually hook up a clock generator that is at the right frequency. 
+
+You can also specify which clock domain you want registers to go to by adding a modifier to the sync attribute. The migen methodology prescribes *not* assigning a clock domain until a module is instantiated. So if a sub-module's design can be implemented in a single, synchronous domain, just use the generic "sync" attribute. If the sub-module requires two clock domains, it's actually recommended to make up a "descriptive" name for the module, such as "write" and "read" clock domains for a FIFO. Then, when the modules are created, the all the clocks can be renamed to be consistent with the instantiating-module level clock names using a function called ClockDomainsRenamer(). 
+
+Clear as mud? Some examples will help. 
+
+ <nowiki>
+ foo = Signal()
+ bar = Signal()
+ bar_r = Signal()
+ self.sync += [
+    bar_r.eq(bar),
+    foo.eq(bar & ~bar_r),
+ ]</nowiki>
+
+This is the verilog equivalent of
+ <nowiki>
+ wire bar;
+ reg foo = 1'd0;  // yes, the autogen code will use decimal constants
+ reg bar_r = 1'd0;
+ always(@posdege sys_clk) begin
+    bar_r <= bar;
+    foo <= bar & bar_r;
+ end</nowiki>
+
+Again, sys_clk is implicit because we used a "naked" self.sync. And, note that the "zero" initializer of every register is part of the migen spec (so if you forget to hook up an input to an output, you get zeros injected at the break and no warnings or errors thrown by the verilog compiler).
+
+If you wanted to do two clock domains, you might do something like this:
+ <nowiki>
+class Baz(Module):
+ def __init__(self):
+   foo = Signal()
+   bar_r = Signal()
+   bar_w = Signal()
+   self.sync.read += bar_r.eq(foo)   # when adding just one item to the list, you can use +=
+   self.sync.write += bar_w.eq(foo)</nowiki>
+
+This is the verilog equivalent of
+ <nowiki>
+   wire foo;
+   reg bar_r = 1'd0;
+   reg bar_w = 1'd0;
+   always(@posedge read_clk) begin
+     bar_r <= foo;
+   end
+   always(@posedge write_clk) begin
+     bar_w <= foo;
+   end</nowiki>
+
+Easy enough, but where does read_clk and write_clk come from? Notice how I encapsulated the Python in a module called Baz(). To assign them in an upper level function, do this:
+
+ <nowiki>
+ mybaz = Baz()
+ mybaz = ClockDomainsRenamer( {"write" : "sys", "read" : "pix"} )(mybaz)
+ self.submodules += mybaz  # I'll describe why this is important later, but it's IMPORTANT</nowiki>
+
+What's happened here is the the "write" domain of this instance of Baz() got assigned to the (default) sys_clk domain, and the "read" domain got assigned to a pix_clk domain (which presumably, you've created in the ClockDomains attribute, more on how to do that later). As you can see here, the ClockDomainsRenamer lets us go from the local names of the function to the instance names used by the actual design, based on a Python dictionary that has the format {"submodule1_clock" : "actual1_clock", "submodule2_clock" : "actual2_clock", ...}. 
+
+The final re-assignment of mybaz to mybaz isn't mandatory, but since you never want to use the original instance of it, it's helpful to discard any possibility of confusing yourself with the old an new versions by re-assigning the modified object to its original name. 
+
+There's one other trick for ClockDomainsRenamer. Quite often you're looking to actually rename the default "sys" clock to something else, because most modules are written just adding items to the base "sync" domain (and hence the default sys clock domain) This leads to this shortcut:
+
+ <nowiki>
+ myfoo = Foo()
+ myfoo = ClockDomainsRenamer("pix")(myfoo)
+ self.submodules += myfoo</nowiki>
+
+The one argument is automatically expanded by the ClockDomainsRenamer to the dictionary {"sys":"lone_argument_clk"}.
+
+==Submodules==
+Noticed how above, I was particular to include a line "self.submodules += myfoo" or similar at the end of every example? This has to do with the submodules attribute.
+
+Designs can be hierarchical in migen. That's a good thing, but you have to tell migen about the submodules, or else they don't do anything. Here's a simple example:
+ 
+ <nowiki>
+ myfoo = Foo()
+ myfoo = ClockDomainsRenamer("pix")(myfoo)
+ self.submodules += myfoo</nowiki>
+
+versus
+
+ <nowiki>
+ myfoo = Foo()
+ myfoo = ClockDomainsRenamer("pix")(myfoo)</nowiki>
+
+What's the difference? In the first one, we remembered to add our module to the submodules list. In the second one, we created the submodule, did something to it, but didn't add it to the submodules list. 
+
+The second one is perfectly valid Python syntax; it will compile and run, and the verilog generated will throw no errors, but if you look at the netlist, the entire contents of the "myfoo" instance is missing from the generated netlist. 
+
+In other words, it's extremely easy to forget to add something to the submodules list, and forgetting to do so means the submodule is never flattened during the build process and thus never sent to the code generator. And because migen initializes all registers to 0, the absence of the module will result in perfectly valid verilog being generated that throws no errors. 
+
+So I try to include that line in every example, even the short ones, to save you the headache and trouble. 
+
+One other confusing bit about adding something to submodules is that later references go through self. Easier to see code than explain:
+
+ <nowiki>
+ self.submodules.myfoo += Foo()
+ self.comb += self.myfoo.subsignal.eq(othersignal)</nowiki>
+
+In the example above, you added Foo() to submodules.myfoo, but later on you /reference/ it through self.myfoo. 
+
+==Specials==
+To be written
+
+==ClockDomains==
+To be written
 
 ==Glossary==
 {|  
