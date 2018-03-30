@@ -13,7 +13,8 @@ LiteX naively supports Linux/x86. It requires Python3.5 or later. You'll need to
 
 Here's the design flow in a nutshell:
 
-# Describe your design in Python using the migen toolbox and LiteX IP by customizing a "platform" object
+# Describe your design in Python using the migen toolbox and LiteX IP by customizing a "Module" object (typically by subclassing SoCSDRAM, which is a subclass of SoCCore which subclasses the base Module class)
+# Describe your build environment by customizing a "Platform" object (typically by subclassing the XilinxPlatform class which itself sublcasses the GenericPlatform base class)
 # Run a function which passes your "platform" object to a Builder object, and invokes the build() method which:
 ## Creates a "top.v" file: a single, flat verilog netlist of your entire design modulo a few exceptions to be noted later.
 ## Creates a "top.xdc" file: constraints that locate pins, defines clocks, and eliminates false paths
@@ -27,6 +28,54 @@ Here's the design flow in a nutshell:
 # If you designed a "litescope" into your design (an ILA like Chipscope), configure triggers and download traces using an analyzer script, which relies on a helper program called litex_server. Debugging occurs either through a supplementary UART or Ethernet that must be present in the hardware (either designed in or test leads connected to a header).
 # Find bugs & go back to step 1!
 
+LiteX-buildenv attempts to automate steps 3 and onwards. However, I don't use the master script, it's a bit too brittle yet for reliable development, so I tend to run each of the major steps one command at a time.
+
+== What is Migen?==
+Migen is the Python toolbox that's used to create a description of your hardware design. It abuses the Python's object-oriented class and method system to create a design tree embodied as a single mega-object. 
+
+For design description, the base class is a "Module". It has five key attributes used to organize the elements that describe any hardware design:
+* Comb
+* Sync
+* Specials
+* Submodules
+* ClockDomains
+
+Each of these attributes is a list, and a design is described by appending an element to the appropriate list. Once all the lists have been populated, the submodules are collected and then finalized into a single, huge verilog netlist. 
+
+The elements that go into a design description are numerous, but the most common one you'll encounter is Signal(), followed distantly by ClockDomain() and Instance(). 
+
+A Signal(), as its name implies, is a named net. By default, a Signal() has a bit width of 1. An n-bit signal is created by Signal(n). Groups of Signals() can be bundled together in Records() and Streams(), more on that later. A Signal() has no inherent direction, clock domain, or meaning. It picks this all up based on how you use it: which attribute of the Module class you've assigned it to, and so forth. 
+
+So let's look at what each of these attributes are, one at a time.
+
+===Comb===
+The comb attribute is a list of "combinational" logic operations. The verilog equivalent is everything that occurs outside an always @(posedge) block, e.g. all your assign statements. Since comb is a list, you append operations onto the list using Python list syntax. "self" is a shortcut to your module object, and ".comb" is how you reference the "comb" attribute:
+
+ <nowiki>
+foo = Signal()  # these are all one-bit wide by default
+bar = Signal()
+baz = Signal()
+mumble = Signal()
+
+self.comb += [
+  foo.eq(bar)
+  baz.eq(foo & mumble)
+]
+</nowiki>
+
+This is the verilog equivalent of:
+<nowiki>
+wire foo;
+wire bar;
+wire baz;
+wire mumble;
+assign foo = bar;
+assign baz = foo & mumble;
+</nowiki>
+
+You'll notice that there's no "=" operator -- assignment (and thus declaration of which signal in the source and sink) is done by invoking .eq() on the sink and putting the source as the argument for a signal. However, most arithmetic operations are available between Signals, e.g. ~ is invert, & is and, | is or, + is add, * is multiply. I think there's also divide and I have no idea about signed types. 
+
+===Sync===
 
 ==Glossary==
 {|  
