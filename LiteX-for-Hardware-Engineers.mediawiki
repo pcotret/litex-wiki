@@ -207,12 +207,17 @@ To be written -- simple walk-through of the basic stuff needed to implement an l
 
 ==Design Patterns==
 to be written -- some common python design patterns for common tasks
-===Streams===
-Talk about streams, and their use as I/O
-===Records===
-
 ===Module I/O===
 How streams & records can be used for module I/O
+
+===Streams===
+More about how streams a can be used (asyncfifo, upconverter, downconverter, etc.)
+
+===Records===
+...yah...i don't even know this one really, but it seems important...
+
+===Multi-Domain Clocking===
+Design patterns and strategies for dealing with multiple clock domains
 
 ==Debugging==
 ===Litescope===
