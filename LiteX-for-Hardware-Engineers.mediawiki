@@ -293,10 +293,9 @@ This line just stashes the reference to the Signal so the next iteration of the 
 
 If instead of creating a new Signal() object and assigning it to next_s, but instead referencing an existing signal with the same globally unique ID, you would in fact have a whole series of Signals just wire-OR'd together. 
 
-Here's another design pattern for doing timing delays:
+Here's another design pattern for doing timing delays.
 
- <nowiki>
- for i in range(rgb2ycbcr.latency + chroma_downsampler.latency):
+ <nowiki> for i in range(rgb2ycbcr.latency + chroma_downsampler.latency):
      next_de = Signal()
      next_vsync = Signal()
      self.sync.pix += [
@@ -304,15 +303,12 @@ Here's another design pattern for doing timing delays:
          next_vsync.eq(vsync)
      ]
      de = next_de
-     vsync = next_vsync
- </nowiki>
-  
+     vsync = next_vsync</nowiki>
+
 This is an in-line approach to creating the delays, reasonably compact and doesn't require templates to be defined for every signal group.
 
 A final design pattern is to implement a synchronous buffer using a memory element to implement a delay:
-
- <nowiki>
- class _SyncBuffer(Module):
+ <nowiki> class _SyncBuffer(Module):
     def __init__(self, width, depth):
         self.din = Signal(width)
         self.dout = Signal(width)
@@ -339,10 +335,9 @@ A final design pattern is to implement a synchronous buffer using a memory eleme
             self.dout.eq(rdport.dat_r)
         ]
         self.sync += If(self.re, _inc(consume, depth))
- </nowiki>
+</nowiki>
  
 This uses the "storage" paradigm plus pointer arithmetic. It has the advantage that the delay can be varied dynamically (not at compile time) and can also be more efficient for long delays, since instead of eating FD's for delays it's using a block RAM. It does require some additional logic to wrap around the SyncBuffer to let it "fill" first to the depth you need for the delay before draining it.
-
 
 ===Module I/O===
 How streams & records can be used for module I/O
