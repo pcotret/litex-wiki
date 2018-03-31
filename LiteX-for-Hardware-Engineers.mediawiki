@@ -279,21 +279,15 @@ Note that in the TimingDelayRGB() module, we're iterating through and using the 
 
 Breaking it down step by step:
 
- <nowiki>
-   next_s = Signal(len(s))
- </nowiki>
+ <nowiki>next_s = Signal(len(s))</nowiki>
 
 Is creating a new Signal() object, with a globally unique ID, and temporarily binding it to next_s. 
 
- <nowiki>
-   self.sync += next_s.eq(s)
- </nowiki>
+ <nowiki>self.sync += next_s.eq(s)</nowiki>
 
 This adds the next_s Signal to the sync list. What happens is migen automatically sees that the object referenced by next_s is unique, and resolves this by internally appending a unique number to next_s to make the instance unique. If you look at the generated verilog, you'll see next_s1, next_s2, next_s3, ... and so forth as it "uniquefies" the instances added to the sync attribute list.
 
- <nowiki>
-  s = next_s
- </nowiki>
+ <nowiki>s = next_s</nowiki>
 
 This line just stashes the reference to the Signal so the next iteration of the loop can wire up the daisy chain.
 
