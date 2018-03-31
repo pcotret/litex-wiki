@@ -187,7 +187,79 @@ One other confusing bit about adding something to submodules is that later refer
 In the example above, you added Foo() to submodules.myfoo, but later on you /reference/ it through self.myfoo. 
 
 ===Specials===
-To be written -- don't forget to include how to instantiate verilog modules here
+Specials are how migen handles certain design elements that don't fit into the comb/sync paradigm or have to pierce the abstraction layer and do something platform or implementation-specific.
+
+On the Xilinx platform, these are the specials I'm aware of:
+
+* Instantiating a verilog module or primitive
+* MultiReg
+* AsyncResetSynchronizer
+* DifferentialInput
+* DifferentialOutput
+
+You might be tempted to stick a special in the "submodules" attribute, but that won't work because their template class is Special, not Module. Like all the other attributes, you add to a special by just using the += pattern:
+
+ <nowiki>
+ self.specials += MultiReg(consume.q, consume_wdomain, "write")
+ self.specials += Instance("BUFG", i_I=self.pll_sys, o_O=self.cd_sys.clk)
+ </nowiki>
+
+====Instances====
+The "Instance" special is particularly handy. You use this to summon blocks like BUFGs, BUFIOs, BUFRs, PLLE2, MMCME2 and so forth. The format of an Instance special is as follows:
+
+ <nowiki>
+  Instance( "VERILOG_MODULE_NAME", ...list of parameters or ios.... )
+ </nowiki>
+ 
+So if a verilog module has a template like this:
+
+ <nowiki>
+  foo #(
+     .PARAM1("STRING_PARAM"),
+     .PARAM2(5.0)
+  )
+  foo_inst(
+     .A(A_THING),  // output: A
+     .B(B_THING),  // input: B
+     .C(C_THING),  // inout: C
+  );
+ </nowiki>
+
+The Instance format would look like this:
+
+ <nowiki>
+  migen_sigA = Signal()
+  migen_sigB = Signal()
+  migen_sigC = Signal()
+  self.specials += [
+    Instance("foo",
+             p_PARAM1="STRING_PARAM",
+	     p_PARAM2=5.0,
+	     i_A=migen_sigA,
+	     o_B=migen_sigB,
+	     io_C=migen_sigC
+	    ),
+  ]
+  </nowiki>
+
+If you're looking to instance a module that's your own verilog and not part of the Xilinx primitives, you can add the verilog file with a platform command:
+
+ <nowiki>
+ self.platform.add_source("full/path/to_module/module1.v")
+ </nowiki>
+
+This leaves the module heirarchy intact, and you also have to add all submodules referenced by your verilog to the path as well.
+
+====MultiReg====
+MultiReg is a one-bit synchronizer for crossing asynchronous domains. By default, it creates two registers that go into a "sys" clock domain, but you can change which domain it goes to by specifying an odomain parameter:
+
+ <nowiki>
+ self.specials += MultiReg( input_domainA, output_domainB, "pix" )
+ </nowiki>
+
+Will take signal input_domainA, instiate two registers in the "pix" domain, and the output_domainB will be synchronized accordingly. The reason this is in a special block is there are some attributes added to prevent retiming optimization from modifying the synchronizer structure: presumably if you did this just using self.sync operations you might not get the expected outcome after optimizations.
+
+Migen includes a whole bunch of clock-domain crossing tools, including a PulseSynchronizer and Grey counters. Take a look inside the migen/genlib/cdc.py file for some ideas.
 
 ===ClockDomains===
 To be written
