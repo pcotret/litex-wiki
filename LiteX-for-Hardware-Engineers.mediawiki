@@ -183,11 +183,50 @@ One other confusing bit about adding something to submodules is that later refer
 
 In the example above, you added Foo() to submodules.myfoo, but later on you /reference/ it through self.myfoo. 
 
-==Specials==
+===Specials===
+To be written -- don't forget to include how to instantiate verilog modules here
+
+===ClockDomains===
 To be written
 
-==ClockDomains==
-To be written
+==Physical Constraints==
+===Pin Constraints===
+To be written -- how to add pin location constraints to your project.
+===Timing Constraints===
+To be written -- how to add additional timing constraints to your project.
+
+==Timing Reports & Schematics==
+To be written -- how to use Vivado to view timing reports and schematics. 
+
+==Softcores==
+===CSRs: Config and Status Registers===
+To be written -- how to create CSRs, access bits, get them into your clock domain, and prevent false timing paths
+
+===BaseSoC and Clockgen===
+To be written -- simple walk-through of the basic stuff needed to implement an lm32 CPU with a clock generator
+
+==Design Patterns==
+to be written -- some common python design patterns for common tasks
+===Module I/O===
+How streams & records can be used for module I/O
+
+===Streams===
+More about how streams a can be used (asyncfifo, upconverter, downconverter, etc.)
+
+===Records===
+...yah...i don't even know this one really, but it seems important...
+
+===Multi-Domain Clocking===
+Design patterns and strategies for dealing with multiple clock domains
+
+==Debugging==
+===Litescope===
+To be written: how to instantiate litescope, how to find & connect signals to litescope, how to drive litescope
+===Netlist===
+To be written: looking in top.v is often the fastest way to pick out subtle bugs in your Python code
+
+==IP Cores==
+Docs about the IP cores. It will take a long time to be comprehensive but initially populate with instantiation templates, explanation of options, plus inputs/outputs
 
 ==Glossary==
 {|  
