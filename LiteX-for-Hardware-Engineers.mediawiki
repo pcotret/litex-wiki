@@ -206,8 +206,10 @@ You might be tempted to stick a special in the "submodules" attribute, but that 
 
 ====Instances====
 The "Instance" special is particularly handy. You use this to summon blocks like BUFGs, BUFIOs, BUFRs, PLLE2, MMCME2 and so forth. The format of an Instance special is as follows:
+ <nowiki> Instance( "VERILOG_MODULE_NAME", ...list of parameters or ios.... )
+ </nowiki>
 
- <nowiki>Instance( "VERILOG_MODULE_NAME", ...list of parameters or ios.... )</nowiki>
+ <nowiki></nowiki>
  
 So if a verilog module has a template like this:
 
