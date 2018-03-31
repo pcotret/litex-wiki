@@ -207,9 +207,7 @@ You might be tempted to stick a special in the "submodules" attribute, but that 
 ====Instances====
 The "Instance" special is particularly handy. You use this to summon blocks like BUFGs, BUFIOs, BUFRs, PLLE2, MMCME2 and so forth. The format of an Instance special is as follows:
 
- <nowiki>
-  Instance( "VERILOG_MODULE_NAME", ...list of parameters or ios.... )
- </nowiki>
+ <nowiki>Instance( "VERILOG_MODULE_NAME", ...list of parameters or ios.... )</nowiki>
  
 So if a verilog module has a template like this:
 
@@ -234,19 +232,17 @@ The Instance format would look like this:
   self.specials += [
     Instance("foo",
              p_PARAM1="STRING_PARAM",
-	     p_PARAM2=5.0,
-	     i_A=migen_sigA,
-	     o_B=migen_sigB,
-	     io_C=migen_sigC
-	    ),
+             p_PARAM2=5.0,
+             i_A=migen_sigA,
+             o_B=migen_sigB,
+             io_C=migen_sigC
+             ),
   ]
   </nowiki>
 
 If you're looking to instance a module that's your own verilog and not part of the Xilinx primitives, you can add the verilog file with a platform command:
 
- <nowiki>
- self.platform.add_source("full/path/to_module/module1.v")
- </nowiki>
+ <nowiki>self.platform.add_source("full/path/to_module/module1.v")</nowiki>
 
 This leaves the module heirarchy intact, and you also have to add all submodules referenced by your verilog to the path as well.
 
