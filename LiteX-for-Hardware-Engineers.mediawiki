@@ -310,7 +310,7 @@ Here's another design pattern for doing timing delays:
      ]
      de = next_de
      vsync = next_vsync
-  </nowiki>
+ </nowiki>
   
 This is an in-line approach to creating the delays, reasonably compact and doesn't require templates to be defined for every signal group.
 
