@@ -209,7 +209,148 @@ To be written -- how to create CSRs, access bits, get them into your clock domai
 To be written -- simple walk-through of the basic stuff needed to implement an lm32 CPU with a clock generator
 
 ==Design Patterns==
-to be written -- some common python design patterns for common tasks
+A collection of design patterns enabled by the migen toolbox.
+
+===Timing Delays===
+Timing delays -- inserting pipeline registers to equalize delays between control and data paths -- is a common task. There's a few ways to do it in Migen. Here's some examples.
+
+The simplest way to create a delay is to make it manually:
+
+ <nowiki>
+ sig = Signal()
+ sig1 = Signal()
+ sig2 = Signal()
+ sig3 = Signal()
+ self.sync += [
+    sig3.eq(sig2), # three clock cycles delay
+    sig2.eq(sig1),
+    sig1.eq(sig),
+ ]
+ </nowiki>
+
+This can get cumbersome for busses. Here's an example of creating a record that defines a bus, and then using a parameterizeable function that builds the delay pipe with a for loop.
+
+ <nowiki>
+ # define the bus layout as a record
+ rgb_layout = [ 
+    ("r", 8),
+    ("g", 8),
+    ("b", 8)
+ ]
+
+ class TimingDelayRGB(Module):
+    def __init__(self, latency):
+        self.sink = stream.Endpoint(rgb_layout)    # "inputs"
+        self.source = stream.Endpoint(rgb_layout)  # "outputs"
+
+        for name in list_signals(rgb_layout):
+            s = getattr(self.sink, name)
+            for i in range(latency):
+                next_s = Signal(len(s))
+                self.sync += next_s.eq(s)          # self.sync means this module by default is using "sys" clock
+                s = next_s
+            self.comb += getattr(self.source, name).eq(s)
+
+
+ class MyModule(Module):
+   def __init__(self):
+     timing_rgb_delay = TimingDelayRGB(4) 
+     timing_rgb_delay = ClockDomainsRenamer("pix_o")(timing_rgb_delay)  # remap the default "sys" clock to local "pix_o" domain
+     self.submodules += timing_rgb_delay                   # if you forget this line, the timing delay won't be generated in the verilog netlist
+     
+     self.hdmi_out0_rgb = hdmi_out0_rgb = stream.Endpoint(rgb_layout) 
+     self.hdmi_out0_rgb_d = hdmi_out0_rgb_d = stream.Endpoint(rgb_layout) 
+     self.comb += [
+            hdmi_out0_rgb.b.eq(core_source_data_d[0:8]),   # wire up the input record
+            hdmi_out0_rgb.g.eq(core_source_data_d[8:16]),
+            hdmi_out0_rgb.r.eq(core_source_data_d[16:24]),
+            hdmi_out0_rgb.valid.eq(core_source_valid_d),
+	    
+            timing_rgb_delay.sink.eq(hdmi_out0_rgb),       # wire the input record to the timingdelay element
+	    
+            hdmi_out0_rgb_d.eq(timing_rgb_delay.source)    # hdmi_out0_rgb_d is 4 cycles delayed from hdmi_out0_rgb
+     ]
+</nowiki>
+
+So this uses a "record" with r,g,b fields, takes a latency parameter, and automatically iterates through the latency depth and creates a set of daisy-chained registers.
+
+Note that in the TimingDelayRGB() module, we're iterating through and using the same variable name, "next_s" over and over again. It would seem that this wouldn't make a delay, but rather a whole bunch of wires all tied to the same signal. However, next_s is just a temporary variable name, and the Signal() '''object''' assigned to it is always unique because every call to Signal() creates a brand new Signal() object.
+
+Breaking it down step by step:
+
+ <nowiki>
+   next_s = Signal(len(s))
+ </nowiki>
+
+Is creating a new Signal() object, with a globally unique ID, and temporarily binding it to next_s. 
+
+ <nowiki>
+   self.sync += next_s.eq(s)
+ </nowiki>
+
+This adds the next_s Signal to the sync list. What happens is migen automatically sees that the object referenced by next_s is unique, and resolves this by internally appending a unique number to next_s to make the instance unique. If you look at the generated verilog, you'll see next_s1, next_s2, next_s3, ... and so forth as it "uniquefies" the instances added to the sync attribute list.
+
+ <nowiki>
+  s = next_s
+ </nowiki>
+
+This line just stashes the reference to the Signal so the next iteration of the loop can wire up the daisy chain.
+
+If instead of creating a new Signal() object and assigning it to next_s, but instead referencing an existing signal with the same globally unique ID, you would in fact have a whole series of Signals just wire-OR'd together. 
+
+Here's another design pattern for doing timing delays:
+
+ <nowiki>
+ for i in range(rgb2ycbcr.latency + chroma_downsampler.latency):
+     next_de = Signal()
+     next_vsync = Signal()
+     self.sync.pix += [
+         next_de.eq(de),
+         next_vsync.eq(vsync)
+     ]
+     de = next_de
+     vsync = next_vsync
+  </nowiki>
+  
+This is an in-line approach to creating the delays, reasonably compact and doesn't require templates to be defined for every signal group.
+
+A final design pattern is to implement a synchronous buffer using a memory element to implement a delay:
+
+ <nowiki>
+ class _SyncBuffer(Module):
+    def __init__(self, width, depth):
+        self.din = Signal(width)
+        self.dout = Signal(width)
+        self.re = Signal()
+
+        # # #
+
+        produce = Signal(max=depth)
+        consume = Signal(max=depth)
+        storage = Memory(width, depth)
+        self.specials += storage
+
+        wrport = storage.get_port(write_capable=True)
+        self.specials += wrport
+        self.comb += [
+            wrport.adr.eq(produce),
+            wrport.dat_w.eq(self.din),
+            wrport.we.eq(1)
+        ]
+        self.sync += _inc(produce, depth)
+
+        rdport = storage.get_port(async_read=True)
+        self.specials += rdport
+        self.comb += [
+            rdport.adr.eq(consume),
+            self.dout.eq(rdport.dat_r)
+        ]
+        self.sync += If(self.re, _inc(consume, depth))
+ </nowiki>
+ 
+This uses the "storage" paradigm plus pointer arithmetic. It has the advantage that the delay can be varied dynamically (not at compile time) and can also be more efficient for long delays, since instead of eating FD's for delays it's using a block RAM. It does require some additional logic to wrap around the SyncBuffer to let it "fill" first to the depth you need for the delay before draining it.
+
+
 ===Module I/O===
 How streams & records can be used for module I/O
 
