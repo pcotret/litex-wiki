@@ -432,6 +432,11 @@ To be written: looking in top.v is often the fastest way to pick out subtle bugs
 ==IP Cores==
 Docs about the IP cores. It will take a long time to be comprehensive but initially populate with instantiation templates, explanation of options, plus inputs/outputs
 
+==Configuration==
+LiteX/migen has the neat trick of being able to configure a SPI flash memory via JTAG, using the [https://github.com/quartiq/bscan_spi_bitstreams SPI programming via boundary scan repo]. Basically, it's a set of bitfiles that instantiate a BSCANE2 block, couple it with a small state machine, and uses that to drive the SPI pins. On 7-series devices, the CCLK is dedicated, so it also instantiates a STARTUPE2 block to drive the CCLK. It does a weird trick where it relies on the pad bond-outs to the SPI and JTAG pins to be invariant in terms of the on-die pads, so if you look at the code the pinout may not match your package but it doesn't matter since both SPI and JTAG are reserved pins that are invariant across all package options of a certain die type. One thing that is slightly suspect, however, is it calls for a 2.5V I/O. Haven't validated this thoroughly but it does seem to make the programming process a bit fussy; probing the SPINOR while programming, for example, might cause a bitstream error.
+
+Unfortunately, the design requires an older version of the bscan-spi protocol, so it doesn't work with the latest openocd. You will need to download and compile the [https://github.com/m-labs/openocd version of openocd maintained by m-labs] until the bscan_spi_bitstreams repo is updated.
+
 ==Glossary==
 {|  
 |----
