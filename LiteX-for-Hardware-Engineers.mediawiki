@@ -7,7 +7,7 @@ __TOC__
 ==What is LiteX?==
 LiteX is a Python "front-end" that generates Verilog netlists, and drives proprietary build "back-ends", such as Vivado or ISE, to create bitstreams ("gateware") for FPGAs.
 
-LiteX is relies on a Python toolbox called [https://github.com/m-labs/migen Migen]. In addition to a build environment, it provides a set of IP blocks, most of them written and maintained by [https://github.com/enjoy-digital?tab=repositories Enjoy-Digital]. Some of the IP blocks include a DDR2/3 MIG equivalent, various softcore CPUs (lm32, or1k, RISCV), Ethernet controller, HDMI input/output, Wishbone routing fabrics, streams, and PCI express.
+LiteX is relies on a Python toolbox called [https://github.com/m-labs/migen Migen]. In addition to a build environment, it provides a set of IP blocks. Some of the IP blocks include a DDR2/3 MIG equivalent, various softcore CPUs (lm32, or1k, RISCV), Ethernet controller, HDMI input/output, Wishbone routing fabrics, streams, and PCI express.
 
 LiteX naively supports Linux/x86. It requires Python3.5 or later. You'll need to manually download, install, and provision your back-end tools (e.g. Vivado/ISE), and you'll also need to install a gcc cross-compiler to any softcore CPU you plan to use in your designs. Details later.
 
