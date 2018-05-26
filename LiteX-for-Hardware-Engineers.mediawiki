@@ -565,7 +565,7 @@ domain.
 <pre><nowiki>
   This line works around a github bug. Ignore it.
 
-from liteeth.phy.rmii import LiteEthPHYRMII
+  from liteeth.phy.rmii import LiteEthPHYRMII
   from liteeth.core import LiteEthUDPIPCore
   from liteeth.frontend.etherbone import LiteEthEtherbone
 
