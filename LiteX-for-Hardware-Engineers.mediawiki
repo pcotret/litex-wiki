@@ -425,7 +425,212 @@ Design patterns and strategies for dealing with multiple clock domains
 
 ==Debugging==
 ===Litescope===
-To be written: how to instantiate litescope, how to find & connect signals to litescope, how to drive litescope
+
+Litescope is the equivalent of the Xilinx ILA for Litex. It samples a
+set of signals into holding registers that can be read out via
+wishbone.  Because it's wishbone-based, the data read out can occur
+via any wishbone bridge -- UART, ethernet, or PCI.
+
+Only simple trigger conditions are supported (signal equals 1 or 0, no
+edges or compound statements)
+
+So, the architecture of a litescope instantiation consists of two parts:
+the sampler, and the wishbone readout bridge.
+
+====Litescope Sampler====
+You'll need to modify three sections in your SoC description to add an analyzer.
+See below for the three sections called out:
+
+<nowiki>
+  class MySoC(BaseSoC):
+    csr_peripherals += "analyzer"  ## 1. need this to create the wishbone interface
+    csr_map_update(BaseSoC.csr_map, csr_peripherals)
+    
+    def __init__(...):
+
+      # 2. add this inside your "init" function of your base SoC
+      from litescope import LiteScopeAnalyzer
+      analyzer_signals = [
+         signal1,
+         signal2,
+      ]
+      self.submodules.analyzer = LiteScopeAnalyzer(analyzer_signals, 128, cd="pix_o", cd_ratio=2)
+
+    # 3. also need to add this function to your SoC definition to generate the analyzer definition file
+    def do_exit(self, vns):
+      self.analyzer.export_csv(vns, "test/analyzer.csv")
+</nowiki>
+
+Basically, you assign the signals to the analyzer_signals domain, and
+then instantiate the LiteScopeAnalyzer(). Here's the arguments to
+LiteScopeAnalyzer:
+
+* analyzer_signals -- the array of signals to be sampled
+* depth -- in this case 128. Depth is limited by the capacity of your FPGA (so it's width of analyzer_signals * depth < available memory)
+* sampler domain -- the name of tho clock domain that your signals are coming from. "sys" by default.
+* cd_ratio -- set this to 1 if sampler domain frequency < "sys" frequency. Set to 2 if greater.
+
+You also need to hook do_exit() of your SoC description to generate
+the analyzer.csv file. You should change the path to wherever your
+analyzer readout script is located (couple sections down for more on
+that one). You also need to add "analyzer" to the CSR peripherals list
+so it shows up in the firmware address space.
+
+====Litescope Bridge====
+
+You have many choices to extract data from the lightscope
+sampler. It's just another etherbone peripheral, so you could use the
+local softcore CPU to read out data. Or you can send commands over a
+bridge that translates e.g. UART, PCI express, or ethernet to wishbone
+addresses and vice versa.
+
+Here's an example of a UART bridge:
+
+<nowiki>
+  # 1. define the pins
+  _io += [
+    ("serial", 1,
+        Subsignal("tx", Pins("B17")),
+        Subsignal("rx", Pins("A18")),
+        IOStandard("LVCMOS33")
+    ),
+  ]
+  
+  # 2. instantiate the bridge
+  from litex.soc.cores.uart import UARTWishboneBridge
+	
+  self.submodules.bridge = UARTWishboneBridge(platform.request("serial",1), 100e6, baudrate=115200)
+  self.add_wb_master(self.bridge.wishbone)
+</nowiki>
+
+In this case, the first argument are the pads, the second is the sys
+clock frequency, and the third is the baud rate of the serial
+port. Apparently only 115200 is well-tested. You can try higher baud
+rates but you might have some bit errors.
+
+Here's an example of an Ethernet bridge:
+<nowiki>
+  # 1. define the pins
+  _io += [
+    # RMII PHY Pads
+    ("rmii_eth_clocks", 0,
+     Subsignal("ref_clk", Pins("D17"), IOStandard("LVCMOS33"))
+     ),
+    ("rmii_eth", 0,
+     Subsignal("rst_n", Pins("F16"), IOStandard("LVCMOS33")),
+     Subsignal("rx_data", Pins("A20 B18"), IOStandard("LVCMOS33")),
+     Subsignal("crs_dv", Pins("C20"), IOStandard("LVCMOS33")),
+     Subsignal("tx_en", Pins("A19"), IOStandard("LVCMOS33")),
+     Subsignal("tx_data", Pins("C18 C19"), IOStandard("LVCMOS33")),
+     Subsignal("mdc", Pins("F14"), IOStandard("LVCMOS33")),
+     Subsignal("mdio", Pins("F13"), IOStandard("LVCMOS33")),
+     Subsignal("rx_er", Pins("B20"), IOStandard("LVCMOS33")),
+     Subsignal("int_n", Pins("D21"), IOStandard("LVCMOS33")),
+     ),
+  ]
+  
+  # 2. instantiate the bridge
+  from liteeth.phy.rmii import LiteEthPHYRMII
+  from liteeth.core import LiteEthUDPIPCore
+  from liteeth.frontend.etherbone import LiteEthEtherbone
+
+  self.submodules.phy = phy = LiteEthPHYRMII(platform.request("rmii_eth_clocks"), platform.request("rmii_eth"))
+  mac_address = 0x1337320dbabe
+  ip_address="10.0.11.2"
+  self.submodules.core = LiteEthUDPIPCore(self.phy, mac_address, convert_ip(ip_address), int(100e6))
+  self.submodules.etherbone = LiteEthEtherbone(self.core.udp, 1234, mode="master")
+  self.add_wb_master(self.etherbone.wishbone.bus)
+
+  </nowiki>	
+
+Important limitations:
+
+* This only works with a *direct* network connection between the FPGA
+  and the host. NAT traversal seems to be broken, so if you're using a
+  VM to hold your litex build environment, try plugging a USB ethernet
+  dongle in and associating that directly with your VM, so you don't
+  have to traverse a NAT.
+* The code above puts the ethernet bridge into the "sys" domain, which
+  defaults to 100MHz. Because the etherbone packet engine contains a
+  full stack for unpacking and responding to packets, timing might be
+  tough to close at 100MHz.  It should be possible to use a clock
+  domain renamer to drop that frequency down, but I haven't tested
+  that solution yet.
+
+====Litescope Host====
+
+OK, now you've got an analyzer and a bridge. How do you actually pull
+the data out?  There is a helper program called litex_server which is
+meant to be run on your host -- either on the computer with the UART
+adapter, or the other side of the ethernet connection. litex_server
+can drive a multiplicity of bridge interfaces, as specified by command
+line arguments:
+
+* "litex_server udp 10.0.11.2 &" would start an ethernet server for the above example
+* "litex_server uart /dev/ttyUSB0 115200 &" would start a UART server, assuming an FTDI available on /dev/ttyUSB0
+
+Once you've got the server running in the background, you can connect
+to it with a wishbone client program. For example, you can read not just
+the litescope ILA, but you can read out anything on the wishbone, such as
+the XADC if you have it instantiated in your SoC:
+
+<nowiki>
+#!/usr/bin/env python3
+from litex.soc.tools.remote import RemoteClient
+
+wb = RemoteClient()
+wb.open()
+
+print("Temperature: ")
+t = wb.read(0xe0005800)
+t <<= 8
+t |= wb.read(0xe0005804)
+print(t * 503.975 / 4096 - 273.15, "C")
+
+wb.close()
+</nowiki>
+
+To read out the analyzer, you can use this script:
+
+<nowiki>
+#!/usr/bin/env python3
+import time
+
+from litex.soc.tools.remote import RemoteClient
+from litescope.software.driver.analyzer import LiteScopeAnalyzerDriver
+
+wb = RemoteClient()
+wb.open()
+
+# # #
+
+analyzer = LiteScopeAnalyzerDriver(wb.regs, "analyzer", debug=True)
+analyzer.configure_trigger(cond={"soc_videooverlaysoc_hdmi_in0_timing_payload_hsync" : 1}) # only if you need a trigge
+
+analyzer.configure_subsampler(1)  ## increase this to "skip" cycles, e.g. subsample
+analyzer.run(offset=32, length=128)  ### CHANGE THIS TO MATCH DEPTH
+analyzer.wait_done()
+analyzer.upload()
+analyzer.save("dump.vcd")
+
+# # #
+
+wb.close()
+</nowiki>
+
+Note that this assumes the files "analyzer.csv" and "csr.csv" are in
+the same directory.  They are both kicked out by the Litex build
+environment, and analyzer.csv contains the fully specified names of
+the signals you're monitoring, which you should use to set trigger
+conditions.
+
+The same analyzer wishbone readout script works regardless of the
+bridge interface you're using. The litex_server takes care of all of
+that.
+
+Once you've got your dump.vcd file, you can view it with a program
+like gtkwave.
+
 ===Netlist===
 To be written: looking in top.v is often the fastest way to pick out subtle bugs in your Python code
 
