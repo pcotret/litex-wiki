@@ -439,7 +439,7 @@ You'll need to modify three sections in your SoC description to add an analyzer.
 See below for the three sections called out:
 
 <pre><nowiki>
-  So there's supposed to be some code here, why isn't it rendering??
+  This line works around a github bug. Ignore it.
   
   class MySoC(BaseSoC):
     csr_peripherals += "analyzer"  ## 1. need this to create the wishbone interface
@@ -485,7 +485,10 @@ addresses and vice versa.
 
 Here's an example of a UART bridge:
 
-<pre><nowiki>  # 1. define the pins
+<pre><nowiki>
+  This line works around a github bug. Ignore it.
+
+  # 1. define the pins
   _io += [
     ("serial", 1,
         Subsignal("tx", Pins("B17")),
@@ -507,7 +510,10 @@ port. Apparently only 115200 is well-tested. You can try higher baud
 rates but you might have some bit errors.
 
 Here's an example of an Ethernet bridge:
-<pre><nowiki>  # 1. define the pins
+<pre><nowiki>
+  This line works around a github bug. Ignore it.
+
+  # 1. define the pins
   _io += [
     # RMII PHY Pads
     ("rmii_eth_clocks", 0,
@@ -557,7 +563,9 @@ was modified to add a 50 MHz tap driving a BUFG to create the clk_eth
 domain.
 
 <pre><nowiki>
-  from liteeth.phy.rmii import LiteEthPHYRMII
+  This line works around a github bug. Ignore it.
+
+from liteeth.phy.rmii import LiteEthPHYRMII
   from liteeth.core import LiteEthUDPIPCore
   from liteeth.frontend.etherbone import LiteEthEtherbone
 
@@ -602,7 +610,10 @@ to it with a wishbone client program. For example, you can read not just
 the litescope ILA, but you can read out anything on the wishbone, such as
 the XADC if you have it instantiated in your SoC:
 
-<pre><nowiki>#!/usr/bin/env python3
+<pre><nowiki>
+This line works around a github bug. Ignore it.
+
+#!/usr/bin/env python3
 from litex.soc.tools.remote import RemoteClient
 
 wb = RemoteClient()
