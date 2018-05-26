@@ -406,8 +406,6 @@ A final design pattern is to implement a synchronous buffer using a memory eleme
         ]
         self.sync += If(self.re, _inc(consume, depth))</nowiki>
 
- <nowiki> For some reason eliminating this tag causes the code above to disappear. A bug in github?
- </nowiki>
  
 This uses the "storage" paradigm plus pointer arithmetic. It has the advantage that the delay can be varied dynamically (not at compile time) and can also be more efficient for long delays, since instead of eating FD's for delays it's using a block RAM. It does require some additional logic to wrap around the SyncBuffer to let it "fill" first to the depth you need for the delay before draining it.
 
