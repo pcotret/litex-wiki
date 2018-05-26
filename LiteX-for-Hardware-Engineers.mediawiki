@@ -539,9 +539,7 @@ Here's an example of an Ethernet bridge:
   ip_address="10.0.11.2"
   self.submodules.core = LiteEthUDPIPCore(self.phy, mac_address, convert_ip(ip_address), int(100e6))
   self.submodules.etherbone = LiteEthEtherbone(self.core.udp, 1234, mode="master")
-  self.add_wb_master(self.etherbone.wishbone.bus)
-
-  </nowiki>	
+  self.add_wb_master(self.etherbone.wishbone.bus)</nowiki>	
 
 '''Important limitations:'''
 
@@ -613,8 +611,7 @@ analyzer.save("dump.vcd")
 
 # # #
 
-wb.close()
-</nowiki>
+wb.close()</nowiki>
 
 Note that this assumes the files "analyzer.csv" and "csr.csv" are in
 the same directory.  They are both kicked out by the Litex build
