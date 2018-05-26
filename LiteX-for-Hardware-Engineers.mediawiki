@@ -59,7 +59,9 @@ So let's look at what each of these attributes are, one at a time.
 ===Comb===
 The comb attribute is a list of "combinational" logic operations. The verilog equivalent is everything that occurs outside an always @(posedge) block, e.g. all your assign statements. Since comb is a list, you append operations onto the list using Python list syntax. "self" is a shortcut to your module object, and ".comb" is how you reference the "comb" attribute:
 
- <pre><nowiki>
+<pre><nowiki>
+This line works around a github bug. Ignore it.
+
  foo = Signal()  # these are all one-bit wide by default
  bar = Signal()
  baz = Signal()
@@ -70,8 +72,10 @@ The comb attribute is a list of "combinational" logic operations. The verilog eq
  ]</nowiki></pre>
 
 This is the verilog equivalent of:
- <pre><nowiki>
- wire foo;
+<pre><nowiki>
+This line works around a github bug. Ignore it.
+
+wire foo;
  wire bar;
  wire baz;
  wire mumble;
@@ -89,7 +93,9 @@ You can also specify which clock domain you want registers to go to by adding a 
 
 Clear as mud? Some examples will help. 
 
- <pre><nowiki>
+<pre><nowiki>
+This line works around a github bug. Ignore it.
+
  foo = Signal()
  bar = Signal()
  bar_r = Signal()
@@ -99,7 +105,10 @@ Clear as mud? Some examples will help.
  ]</nowiki></pre>
 
 This is the verilog equivalent of
- <pre><nowiki>
+
+<pre><nowiki>
+This line works around a github bug. Ignore it.
+
  wire bar;
  reg foo = 1'd0;  // yes, the autogen code will use decimal constants
  reg bar_r = 1'd0;
@@ -111,7 +120,10 @@ This is the verilog equivalent of
 Again, sys_clk is implicit because we used a "naked" self.sync. And, note that the "zero" initializer of every register is part of the migen spec (so if you forget to hook up an input to an output, you get zeros injected at the break and no warnings or errors thrown by the verilog compiler).
 
 If you wanted to do two clock domains, you might do something like this:
- <pre><nowiki>
+
+<pre><nowiki>
+This line works around a github bug. Ignore it.
+
  class Baz(Module):
    def __init__(self):
      foo = Signal()
@@ -121,7 +133,10 @@ If you wanted to do two clock domains, you might do something like this:
      self.sync.write += bar_w.eq(foo)</nowiki></pre>
 
 This is the verilog equivalent of
- <pre><nowiki>
+
+<pre><nowiki>
+This line works around a github bug. Ignore it.
+
    wire foo;
    reg bar_r = 1'd0;
    reg bar_w = 1'd0;
@@ -134,7 +149,9 @@ This is the verilog equivalent of
 
 Easy enough, but where does read_clk and write_clk come from? Notice how I encapsulated the Python in a module called Baz(). To assign them in an upper level function, do this:
 
- <pre><nowiki>
+<pre><nowiki>
+This line works around a github bug. Ignore it.
+
  mybaz = Baz()
  mybaz = ClockDomainsRenamer( {"write" : "sys", "read" : "pix"} )(mybaz)
  self.submodules += mybaz  # I'll describe why this is important later, but it's IMPORTANT</nowiki></pre>
@@ -145,7 +162,9 @@ The final re-assignment of mybaz to mybaz isn't mandatory, but since you never w
 
 There's one other trick for ClockDomainsRenamer. Quite often you're looking to actually rename the default "sys" clock to something else, because most modules are written just adding items to the base "sync" domain (and hence the default sys clock domain) This leads to this shortcut:
 
- <pre><nowiki>
+<pre><nowiki>
+This line works around a github bug. Ignore it.
+
  myfoo = Foo()
  myfoo = ClockDomainsRenamer("pix")(myfoo)
  self.submodules += myfoo</nowiki></pre>
@@ -159,14 +178,18 @@ Designs can be hierarchical in migen. That's a good thing, but you have to tell 
 
 Here's a simple example:
  
- <pre><nowiki>
+<pre><nowiki>
+This line works around a github bug. Ignore it.
+
  myfoo = Foo()
  myfoo = ClockDomainsRenamer("pix")(myfoo)
  self.submodules += myfoo</nowiki></pre>
 
 versus
 
- <pre><nowiki>
+<pre><nowiki>
+This line works around a github bug. Ignore it.
+
  myfoo = Foo()
  myfoo = ClockDomainsRenamer("pix")(myfoo)</nowiki></pre>
 
@@ -180,7 +203,9 @@ So I try to include that line in every example, even the short ones, to save you
 
 One other confusing bit about adding something to submodules is that later references go through self. Easier to see code than explain:
 
- <pre><nowiki>
+<pre><nowiki>
+This line works around a github bug. Ignore it.
+
  self.submodules.myfoo += Foo()
  self.comb += self.myfoo.subsignal.eq(othersignal)</nowiki></pre>
 
@@ -199,21 +224,26 @@ On the Xilinx platform, these are the specials I'm aware of:
 
 You might be tempted to stick a special in the "submodules" attribute, but that won't work because their template class is Special, not Module. Like all the other attributes, you add to a special by just using the += pattern:
 
- <pre><nowiki>
+<pre><nowiki>
+This line works around a github bug. Ignore it.
+
  self.specials += MultiReg(consume.q, consume_wdomain, "write")
  self.specials += Instance("BUFG", i_I=self.pll_sys, o_O=self.cd_sys.clk)
  </nowiki></pre>
 
 ====Instances====
 The "Instance" special is particularly handy. You use this to summon blocks like BUFGs, BUFIOs, BUFRs, PLLE2, MMCME2 and so forth. The format of an Instance special is as follows:
- <pre><nowiki> Instance( "VERILOG_MODULE_NAME", ...list of parameters or ios.... )
- </nowiki></pre>
+<pre><nowiki>
+This line works around a github bug. Ignore it.
 
- <pre><nowiki></nowiki></pre>
- 
+  Instance( "VERILOG_MODULE_NAME", ...list of parameters or ios.... )
+</nowiki></pre>
+
 So if a verilog module has a template like this:
 
- <pre><nowiki>
+<pre><nowiki>
+This line works around a github bug. Ignore it.
+
   foo #(
      .PARAM1("STRING_PARAM"),
      .PARAM2(5.0)
@@ -227,7 +257,9 @@ So if a verilog module has a template like this:
 
 The Instance format would look like this:
 
- <pre><nowiki>
+<pre><nowiki>
+This line works around a github bug. Ignore it.
+
   migen_sigA = Signal()
   migen_sigB = Signal()
   migen_sigC = Signal()
@@ -244,14 +276,19 @@ The Instance format would look like this:
 
 If you're looking to instance a module that's your own verilog and not part of the Xilinx primitives, you can add the verilog file with a platform command:
 
- <pre><nowiki>self.platform.add_source("full/path/to_module/module1.v")</nowiki></pre>
+<pre><nowiki>
+This line works around a github bug. Ignore it.
+
+self.platform.add_source("full/path/to_module/module1.v")</nowiki></pre>
 
 This leaves the module heirarchy intact, and you also have to add all submodules referenced by your verilog to the path as well.
 
 ====MultiReg====
 MultiReg is a one-bit synchronizer for crossing asynchronous domains. By default, it creates two registers that go into a "sys" clock domain, but you can change which domain it goes to by specifying an odomain parameter:
 
- <pre><nowiki>
+<pre><nowiki>
+This line works around a github bug. Ignore it.
+
  self.specials += MultiReg( input_domainA, output_domainB, "pix" )
  </nowiki></pre>
 
@@ -286,7 +323,9 @@ Timing delays -- inserting pipeline registers to equalize delays between control
 
 The simplest way to create a delay is to make it manually:
 
- <pre><nowiki>
+<pre><nowiki>
+This line works around a github bug. Ignore it.
+
  sig = Signal()
  sig1 = Signal()
  sig2 = Signal()
@@ -300,7 +339,9 @@ The simplest way to create a delay is to make it manually:
 
 This can get cumbersome for busses. Here's an example of creating a record that defines a bus, and then using a parameterizeable function that builds the delay pipe with a for loop.
 
- <pre><nowiki>
+<pre><nowiki>
+This line works around a github bug. Ignore it.
+
  rgb_layout = [  # define the bus layout as a record
     ("r", 8),
     ("g", 8),
@@ -349,15 +390,21 @@ Note that in the TimingDelayRGB() module, we're iterating through and using the 
 
 Breaking it down step by step:
 
- <pre><nowiki>next_s = Signal(len(s))</nowiki></pre>
+<pre><nowiki>
+This line works around a github bug. Ignore it.
+  next_s = Signal(len(s))</nowiki></pre>
 
 Is creating a new Signal() object, with a globally unique ID, and temporarily binding it to next_s. 
 
- <pre><nowiki>self.sync += next_s.eq(s)</nowiki></pre>
+<pre><nowiki>
+This line works around a github bug. Ignore it.
+  self.sync += next_s.eq(s)</nowiki></pre>
 
 This adds the next_s Signal to the sync list. What happens is migen automatically sees that the object referenced by next_s is unique, and resolves this by internally appending a unique number to next_s to make the instance unique. If you look at the generated verilog, you'll see next_s1, next_s2, next_s3, ... and so forth as it "uniquefies" the instances added to the sync attribute list.
 
- <pre><nowiki>s = next_s</nowiki></pre>
+<pre><nowiki>
+This line works around a github bug. Ignore it.
+  s = next_s</nowiki></pre>
 
 This line just stashes the reference to the Signal so the next iteration of the loop can wire up the daisy chain.
 
@@ -365,7 +412,10 @@ If instead of creating a new Signal() object and assigning it to next_s, but ins
 
 Here's another design pattern for doing timing delays.
 
- <pre><nowiki> for i in range(rgb2ycbcr.latency + chroma_downsampler.latency):
+<pre><nowiki>
+This line works around a github bug. Ignore it.
+
+  for i in range(rgb2ycbcr.latency + chroma_downsampler.latency):
      next_de = Signal()
      next_vsync = Signal()
      self.sync.pix += [
@@ -378,7 +428,10 @@ Here's another design pattern for doing timing delays.
 This is an in-line approach to creating the delays, reasonably compact and doesn't require templates to be defined for every signal group.
 
 A final design pattern is to implement a synchronous buffer using a memory element to implement a delay:
- <pre><nowiki> class _SyncBuffer(Module):
+<pre><nowiki>
+This line works around a github bug. Ignore it.
+
+ class _SyncBuffer(Module):
     def __init__(self, width, depth):
         self.din = Signal(width)
         self.dout = Signal(width)
