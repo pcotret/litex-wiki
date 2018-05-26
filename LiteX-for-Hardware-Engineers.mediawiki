@@ -444,7 +444,7 @@ See below for the three sections called out:
 (the code in this section is munged by github's wiki formatter -- sorry, pull
 it and view it in a proper text editor to extract it)
 
-<nowiki>  class MySoC(BaseSoC):
+<pre><nowiki>  class MySoC(BaseSoC):
     csr_peripherals += "analyzer"  ## 1. need this to create the wishbone interface
     csr_map_update(BaseSoC.csr_map, csr_peripherals)
     
@@ -460,7 +460,7 @@ it and view it in a proper text editor to extract it)
 
     # 3. also need to add this function to your SoC definition to generate the analyzer definition file
     def do_exit(self, vns):
-      self.analyzer.export_csv(vns, "test/analyzer.csv")</nowiki>
+      self.analyzer.export_csv(vns, "test/analyzer.csv")</nowiki></pre>
 
 
 Basically, you assign the signals to the analyzer_signals domain, and
