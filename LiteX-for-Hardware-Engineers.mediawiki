@@ -438,10 +438,9 @@ the sampler, and the wishbone readout bridge.
 You'll need to modify three sections in your SoC description to add an analyzer.
 See below for the three sections called out:
 
-(the code in this section is munged by github's wiki formatter -- sorry, pull
-it and view it in a proper text editor to extract it)
-
 <pre><nowiki>
+  So there's supposed to be some code here, why isn't it rendering??
+  
   class MySoC(BaseSoC):
     csr_peripherals += "analyzer"  ## 1. need this to create the wishbone interface
     csr_map_update(BaseSoC.csr_map, csr_peripherals)
