@@ -441,8 +441,7 @@ the sampler, and the wishbone readout bridge.
 You'll need to modify three sections in your SoC description to add an analyzer.
 See below for the three sections called out:
 
-<nowiki>
-  class MySoC(BaseSoC):
+<nowiki>  class MySoC(BaseSoC):
     csr_peripherals += "analyzer"  ## 1. need this to create the wishbone interface
     csr_map_update(BaseSoC.csr_map, csr_peripherals)
     
@@ -486,8 +485,7 @@ addresses and vice versa.
 
 Here's an example of a UART bridge:
 
-<nowiki>
-  # 1. define the pins
+<nowiki>  # 1. define the pins
   _io += [
     ("serial", 1,
         Subsignal("tx", Pins("B17")),
@@ -509,8 +507,7 @@ port. Apparently only 115200 is well-tested. You can try higher baud
 rates but you might have some bit errors.
 
 Here's an example of an Ethernet bridge:
-<nowiki>
-  # 1. define the pins
+<nowiki>  # 1. define the pins
   _io += [
     # RMII PHY Pads
     ("rmii_eth_clocks", 0,
@@ -543,7 +540,7 @@ Here's an example of an Ethernet bridge:
 
   </nowiki>	
 
-Important limitations:
+'''Important limitations:'''
 
 * This only works with a *direct* network connection between the FPGA
   and the host. NAT traversal seems to be broken, so if you're using a
@@ -574,8 +571,7 @@ to it with a wishbone client program. For example, you can read not just
 the litescope ILA, but you can read out anything on the wishbone, such as
 the XADC if you have it instantiated in your SoC:
 
-<nowiki>
-#!/usr/bin/env python3
+<nowiki>#!/usr/bin/env python3
 from litex.soc.tools.remote import RemoteClient
 
 wb = RemoteClient()
@@ -592,8 +588,7 @@ wb.close()
 
 To read out the analyzer, you can use this script:
 
-<nowiki>
-#!/usr/bin/env python3
+<nowiki>#!/usr/bin/env python3
 import time
 
 from litex.soc.tools.remote import RemoteClient
