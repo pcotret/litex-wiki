@@ -59,7 +59,7 @@ So let's look at what each of these attributes are, one at a time.
 ===Comb===
 The comb attribute is a list of "combinational" logic operations. The verilog equivalent is everything that occurs outside an always @(posedge) block, e.g. all your assign statements. Since comb is a list, you append operations onto the list using Python list syntax. "self" is a shortcut to your module object, and ".comb" is how you reference the "comb" attribute:
 
- <nowiki>
+ <pre><nowiki>
  foo = Signal()  # these are all one-bit wide by default
  bar = Signal()
  baz = Signal()
@@ -67,16 +67,16 @@ The comb attribute is a list of "combinational" logic operations. The verilog eq
  self.comb += [
    foo.eq(bar),
    baz.eq(foo & mumble),  # trailing commas at the end of a list are OK in python
- ]</nowiki>
+ ]</nowiki></pre>
 
 This is the verilog equivalent of:
- <nowiki>
+ <pre><nowiki>
  wire foo;
  wire bar;
  wire baz;
  wire mumble;
  assign foo = bar;
- assign baz = foo & mumble;</nowiki>
+ assign baz = foo & mumble;</nowiki></pre>
 
 You'll notice that there's no "=" operator -- assignment (and thus declaration of which signal in the source and sink) is done by invoking .eq() on the sink and putting the source as the argument for a signal. However, most arithmetic operations are available between Signals, e.g. ~ is invert, & is and, | is or, + is add, * is multiply. I think there's also divide and I have no idea about signed types. 
 
@@ -89,39 +89,39 @@ You can also specify which clock domain you want registers to go to by adding a 
 
 Clear as mud? Some examples will help. 
 
- <nowiki>
+ <pre><nowiki>
  foo = Signal()
  bar = Signal()
  bar_r = Signal()
  self.sync += [
     bar_r.eq(bar),
     foo.eq(bar & ~bar_r),
- ]</nowiki>
+ ]</nowiki></pre>
 
 This is the verilog equivalent of
- <nowiki>
+ <pre><nowiki>
  wire bar;
  reg foo = 1'd0;  // yes, the autogen code will use decimal constants
  reg bar_r = 1'd0;
  always(@posdege sys_clk) begin
     bar_r <= bar;
     foo <= bar & bar_r;
- end</nowiki>
+ end</nowiki></pre>
 
 Again, sys_clk is implicit because we used a "naked" self.sync. And, note that the "zero" initializer of every register is part of the migen spec (so if you forget to hook up an input to an output, you get zeros injected at the break and no warnings or errors thrown by the verilog compiler).
 
 If you wanted to do two clock domains, you might do something like this:
- <nowiki>
+ <pre><nowiki>
  class Baz(Module):
    def __init__(self):
      foo = Signal()
      bar_r = Signal()
      bar_w = Signal()
      self.sync.read += bar_r.eq(foo)   # when adding just one item to the list, you can use +=
-     self.sync.write += bar_w.eq(foo)</nowiki>
+     self.sync.write += bar_w.eq(foo)</nowiki></pre>
 
 This is the verilog equivalent of
- <nowiki>
+ <pre><nowiki>
    wire foo;
    reg bar_r = 1'd0;
    reg bar_w = 1'd0;
@@ -130,14 +130,14 @@ This is the verilog equivalent of
    end
    always(@posedge write_clk) begin
      bar_w <= foo;
-   end</nowiki>
+   end</nowiki></pre>
 
 Easy enough, but where does read_clk and write_clk come from? Notice how I encapsulated the Python in a module called Baz(). To assign them in an upper level function, do this:
 
- <nowiki>
+ <pre><nowiki>
  mybaz = Baz()
  mybaz = ClockDomainsRenamer( {"write" : "sys", "read" : "pix"} )(mybaz)
- self.submodules += mybaz  # I'll describe why this is important later, but it's IMPORTANT</nowiki>
+ self.submodules += mybaz  # I'll describe why this is important later, but it's IMPORTANT</nowiki></pre>
 
 What's happened here is the the "write" domain of this instance of Baz() got assigned to the (default) sys_clk domain, and the "read" domain got assigned to a pix_clk domain (which presumably, you've created in the ClockDomains attribute, more on how to do that later). As you can see here, the ClockDomainsRenamer lets us go from the local names of the function to the instance names used by the actual design, based on a Python dictionary that has the format {"submodule1_clock" : "actual1_clock", "submodule2_clock" : "actual2_clock", ...}. 
 
@@ -145,10 +145,10 @@ The final re-assignment of mybaz to mybaz isn't mandatory, but since you never w
 
 There's one other trick for ClockDomainsRenamer. Quite often you're looking to actually rename the default "sys" clock to something else, because most modules are written just adding items to the base "sync" domain (and hence the default sys clock domain) This leads to this shortcut:
 
- <nowiki>
+ <pre><nowiki>
  myfoo = Foo()
  myfoo = ClockDomainsRenamer("pix")(myfoo)
- self.submodules += myfoo</nowiki>
+ self.submodules += myfoo</nowiki></pre>
 
 The one argument is automatically expanded by the ClockDomainsRenamer to the dictionary {"sys":"lone_argument_clk"}.
 
@@ -159,16 +159,16 @@ Designs can be hierarchical in migen. That's a good thing, but you have to tell 
 
 Here's a simple example:
  
- <nowiki>
+ <pre><nowiki>
  myfoo = Foo()
  myfoo = ClockDomainsRenamer("pix")(myfoo)
- self.submodules += myfoo</nowiki>
+ self.submodules += myfoo</nowiki></pre>
 
 versus
 
- <nowiki>
+ <pre><nowiki>
  myfoo = Foo()
- myfoo = ClockDomainsRenamer("pix")(myfoo)</nowiki>
+ myfoo = ClockDomainsRenamer("pix")(myfoo)</nowiki></pre>
 
 What's the difference? In the first one, we remembered to add our module to the submodules list. In the second one, we created the submodule, did something to it, but didn't add it to the submodules list. 
 
@@ -180,9 +180,9 @@ So I try to include that line in every example, even the short ones, to save you
 
 One other confusing bit about adding something to submodules is that later references go through self. Easier to see code than explain:
 
- <nowiki>
+ <pre><nowiki>
  self.submodules.myfoo += Foo()
- self.comb += self.myfoo.subsignal.eq(othersignal)</nowiki>
+ self.comb += self.myfoo.subsignal.eq(othersignal)</nowiki></pre>
 
 In the example above, you added Foo() to submodules.myfoo, but later on you /reference/ it through self.myfoo. 
 
@@ -199,21 +199,21 @@ On the Xilinx platform, these are the specials I'm aware of:
 
 You might be tempted to stick a special in the "submodules" attribute, but that won't work because their template class is Special, not Module. Like all the other attributes, you add to a special by just using the += pattern:
 
- <nowiki>
+ <pre><nowiki>
  self.specials += MultiReg(consume.q, consume_wdomain, "write")
  self.specials += Instance("BUFG", i_I=self.pll_sys, o_O=self.cd_sys.clk)
- </nowiki>
+ </nowiki></pre>
 
 ====Instances====
 The "Instance" special is particularly handy. You use this to summon blocks like BUFGs, BUFIOs, BUFRs, PLLE2, MMCME2 and so forth. The format of an Instance special is as follows:
- <nowiki> Instance( "VERILOG_MODULE_NAME", ...list of parameters or ios.... )
- </nowiki>
+ <pre><nowiki> Instance( "VERILOG_MODULE_NAME", ...list of parameters or ios.... )
+ </nowiki></pre>
 
- <nowiki></nowiki>
+ <pre><nowiki></nowiki></pre>
  
 So if a verilog module has a template like this:
 
- <nowiki>
+ <pre><nowiki>
   foo #(
      .PARAM1("STRING_PARAM"),
      .PARAM2(5.0)
@@ -223,11 +223,11 @@ So if a verilog module has a template like this:
      .B(B_THING),  // input: B
      .C(C_THING),  // inout: C
   );
- </nowiki>
+ </nowiki></pre>
 
 The Instance format would look like this:
 
- <nowiki>
+ <pre><nowiki>
   migen_sigA = Signal()
   migen_sigB = Signal()
   migen_sigC = Signal()
@@ -240,20 +240,20 @@ The Instance format would look like this:
              io_C=migen_sigC
              ),
   ]
-  </nowiki>
+  </nowiki></pre>
 
 If you're looking to instance a module that's your own verilog and not part of the Xilinx primitives, you can add the verilog file with a platform command:
 
- <nowiki>self.platform.add_source("full/path/to_module/module1.v")</nowiki>
+ <pre><nowiki>self.platform.add_source("full/path/to_module/module1.v")</nowiki></pre>
 
 This leaves the module heirarchy intact, and you also have to add all submodules referenced by your verilog to the path as well.
 
 ====MultiReg====
 MultiReg is a one-bit synchronizer for crossing asynchronous domains. By default, it creates two registers that go into a "sys" clock domain, but you can change which domain it goes to by specifying an odomain parameter:
 
- <nowiki>
+ <pre><nowiki>
  self.specials += MultiReg( input_domainA, output_domainB, "pix" )
- </nowiki>
+ </nowiki></pre>
 
 Will take signal input_domainA, instiate two registers in the "pix" domain, and the output_domainB will be synchronized accordingly. The reason this is in a special block is there are some attributes added to prevent retiming optimization from modifying the synchronizer structure: presumably if you did this just using self.sync operations you might not get the expected outcome after optimizations.
 
@@ -286,7 +286,7 @@ Timing delays -- inserting pipeline registers to equalize delays between control
 
 The simplest way to create a delay is to make it manually:
 
- <nowiki>
+ <pre><nowiki>
  sig = Signal()
  sig1 = Signal()
  sig2 = Signal()
@@ -296,11 +296,11 @@ The simplest way to create a delay is to make it manually:
     sig2.eq(sig1),
     sig1.eq(sig),
  ]
- </nowiki>
+ </nowiki></pre>
 
 This can get cumbersome for busses. Here's an example of creating a record that defines a bus, and then using a parameterizeable function that builds the delay pipe with a for loop.
 
- <nowiki>
+ <pre><nowiki>
  rgb_layout = [  # define the bus layout as a record
     ("r", 8),
     ("g", 8),
@@ -341,7 +341,7 @@ This can get cumbersome for busses. Here's an example of creating a record that 
             #
             hdmi_out0_rgb_d.eq(timing_rgb_delay.source)    # hdmi_out0_rgb_d is 4 cycles delayed from hdmi_out0_rgb
      ]
-</nowiki>
+</nowiki></pre>
 
 So this uses a "record" with r,g,b fields, takes a latency parameter, and automatically iterates through the latency depth and creates a set of daisy-chained registers.
 
@@ -349,15 +349,15 @@ Note that in the TimingDelayRGB() module, we're iterating through and using the 
 
 Breaking it down step by step:
 
- <nowiki>next_s = Signal(len(s))</nowiki>
+ <pre><nowiki>next_s = Signal(len(s))</nowiki></pre>
 
 Is creating a new Signal() object, with a globally unique ID, and temporarily binding it to next_s. 
 
- <nowiki>self.sync += next_s.eq(s)</nowiki>
+ <pre><nowiki>self.sync += next_s.eq(s)</nowiki></pre>
 
 This adds the next_s Signal to the sync list. What happens is migen automatically sees that the object referenced by next_s is unique, and resolves this by internally appending a unique number to next_s to make the instance unique. If you look at the generated verilog, you'll see next_s1, next_s2, next_s3, ... and so forth as it "uniquefies" the instances added to the sync attribute list.
 
- <nowiki>s = next_s</nowiki>
+ <pre><nowiki>s = next_s</nowiki></pre>
 
 This line just stashes the reference to the Signal so the next iteration of the loop can wire up the daisy chain.
 
@@ -365,7 +365,7 @@ If instead of creating a new Signal() object and assigning it to next_s, but ins
 
 Here's another design pattern for doing timing delays.
 
- <nowiki> for i in range(rgb2ycbcr.latency + chroma_downsampler.latency):
+ <pre><nowiki> for i in range(rgb2ycbcr.latency + chroma_downsampler.latency):
      next_de = Signal()
      next_vsync = Signal()
      self.sync.pix += [
@@ -373,12 +373,12 @@ Here's another design pattern for doing timing delays.
          next_vsync.eq(vsync)
      ]
      de = next_de
-     vsync = next_vsync</nowiki>
+     vsync = next_vsync</nowiki></pre>
 
 This is an in-line approach to creating the delays, reasonably compact and doesn't require templates to be defined for every signal group.
 
 A final design pattern is to implement a synchronous buffer using a memory element to implement a delay:
- <nowiki> class _SyncBuffer(Module):
+ <pre><nowiki> class _SyncBuffer(Module):
     def __init__(self, width, depth):
         self.din = Signal(width)
         self.dout = Signal(width)
@@ -404,10 +404,10 @@ A final design pattern is to implement a synchronous buffer using a memory eleme
             rdport.adr.eq(consume),
             self.dout.eq(rdport.dat_r)
         ]
-        self.sync += If(self.re, _inc(consume, depth))</nowiki>
+        self.sync += If(self.re, _inc(consume, depth))</nowiki></pre>
 
- <nowiki> For some reason eliminating this tag causes the code above to disappear. A bug in github?
- </nowiki>
+ <pre><nowiki> For some reason eliminating this tag causes the code above to disappear. A bug in github?
+ </nowiki></pre>
  
 This uses the "storage" paradigm plus pointer arithmetic. It has the advantage that the delay can be varied dynamically (not at compile time) and can also be more efficient for long delays, since instead of eating FD's for delays it's using a block RAM. It does require some additional logic to wrap around the SyncBuffer to let it "fill" first to the depth you need for the delay before draining it.
 
@@ -488,7 +488,7 @@ addresses and vice versa.
 
 Here's an example of a UART bridge:
 
-<nowiki>  # 1. define the pins
+<pre><nowiki>  # 1. define the pins
   _io += [
     ("serial", 1,
         Subsignal("tx", Pins("B17")),
@@ -502,7 +502,7 @@ Here's an example of a UART bridge:
 	
   self.submodules.bridge = UARTWishboneBridge(platform.request("serial",1), 100e6, baudrate=115200)
   self.add_wb_master(self.bridge.wishbone)
-</nowiki>
+</nowiki></pre>
 
 In this case, the first argument are the pads, the second is the sys
 clock frequency, and the third is the baud rate of the serial
@@ -510,7 +510,7 @@ port. Apparently only 115200 is well-tested. You can try higher baud
 rates but you might have some bit errors.
 
 Here's an example of an Ethernet bridge:
-<nowiki>  # 1. define the pins
+<pre><nowiki>  # 1. define the pins
   _io += [
     # RMII PHY Pads
     ("rmii_eth_clocks", 0,
@@ -539,7 +539,7 @@ Here's an example of an Ethernet bridge:
   ip_address="10.0.11.2"
   self.submodules.core = LiteEthUDPIPCore(self.phy, mac_address, convert_ip(ip_address), int(100e6))
   self.submodules.etherbone = LiteEthEtherbone(self.core.udp, 1234, mode="master")
-  self.add_wb_master(self.etherbone.wishbone.bus)</nowiki>	
+  self.add_wb_master(self.etherbone.wishbone.bus)</nowiki></pre>	
 
 [[https://raw.githubusercontent.com/wiki/timvideos/litex-buildenv/warningSmall.png]]'''Important limitation!'''
 
@@ -559,7 +559,7 @@ that the "eth" domain is set at 50MHz. In this design, the master PLL
 was modified to add a 50 MHz tap driving a BUFG to create the clk_eth
 domain.
 
-<nowiki>
+<pre><nowiki>
   from liteeth.phy.rmii import LiteEthPHYRMII
   from liteeth.core import LiteEthUDPIPCore
   from liteeth.frontend.etherbone import LiteEthEtherbone
@@ -579,7 +579,7 @@ domain.
       etherbone_cd.rst.eq(ResetSignal("sys"))
   ]
   self.submodules.etherbone = LiteEthEtherbone(core.udp, 1234, mode="master", cd="etherbone")
-  self.add_wb_master(self.etherbone.wishbone.bus)</nowiki>
+  self.add_wb_master(self.etherbone.wishbone.bus)</nowiki></pre>
 
 There's no architectural reason why you can't have both a UART bridge
 and an etherbone bridge master in the same design. You could leave
@@ -605,7 +605,7 @@ to it with a wishbone client program. For example, you can read not just
 the litescope ILA, but you can read out anything on the wishbone, such as
 the XADC if you have it instantiated in your SoC:
 
-<nowiki>#!/usr/bin/env python3
+<pre><nowiki>#!/usr/bin/env python3
 from litex.soc.tools.remote import RemoteClient
 
 wb = RemoteClient()
@@ -618,11 +618,11 @@ t |= wb.read(0xe0005804)
 print(t * 503.975 / 4096 - 273.15, "C")
 
 wb.close()
-</nowiki>
+</nowiki></pre>
 
 To read out the analyzer, you can use this script:
 
-<nowiki>#!/usr/bin/env python3
+<pre><nowiki>#!/usr/bin/env python3
 import time
 
 from litex.soc.tools.remote import RemoteClient
@@ -644,7 +644,7 @@ analyzer.save("dump.vcd")
 
 # # #
 
-wb.close()</nowiki>
+wb.close()</nowiki></pre>
 
 Note that this assumes the files "analyzer.csv" and "csr.csv" are in
 the same directory.  They are both kicked out by the Litex build
