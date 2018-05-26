@@ -541,19 +541,47 @@ Here's an example of an Ethernet bridge:
   self.submodules.etherbone = LiteEthEtherbone(self.core.udp, 1234, mode="master")
   self.add_wb_master(self.etherbone.wishbone.bus)</nowiki>	
 
-'''Important limitations:'''
+[[https://raw.githubusercontent.com/wiki/timvideos/litex-buildenv/warningSmall.png]]'''Important limitation!'''
 
-* This only works with a *direct* network connection between the FPGA
-  and the host. NAT traversal seems to be broken, so if you're using a
-  VM to hold your litex build environment, try plugging a USB ethernet
-  dongle in and associating that directly with your VM, so you don't
-  have to traverse a NAT.
-* The code above puts the ethernet bridge into the "sys" domain, which
-  defaults to 100MHz. Because the etherbone packet engine contains a
-  full stack for unpacking and responding to packets, timing might be
-  tough to close at 100MHz.  It should be possible to use a clock
-  domain renamer to drop that frequency down, but I haven't tested
-  that solution yet.
+Etherbone only works with a *direct* network connection between the
+FPGA and the host. NAT traversal seems to be broken, so if you're
+using a VM to hold your litex build environment, try plugging a USB
+ethernet dongle in and associating that directly with your VM, so you
+don't have to traverse a NAT.
+  
+The code above puts the ethernet bridge into the "sys" domain, which
+defaults to 100MHz. Because the etherbone packet engine contains a
+full stack for unpacking and responding to packets, timing might be
+tough to close at 100MHz. Here's an example of how to instatiate a
+reduced-frequency bridge, which seems to work just as well as the
+above code but doesn't have the timing closure issues. This assumes
+that the "eth" domain is set at 50MHz. In this design, the master PLL
+was modified to add a 50 MHz tap driving a BUFG to create the clk_eth
+domain.
+
+<nowiki>
+  from liteeth.phy.rmii import LiteEthPHYRMII
+  from liteeth.core import LiteEthUDPIPCore
+  from liteeth.frontend.etherbone import LiteEthEtherbone
+
+  phy = LiteEthPHYRMII(platform.request("rmii_eth_clocks"), platform.request("rmii_eth"))
+  phy = ClockDomainsRenamer("eth")(phy)
+  mac_address = 0x1337320dbabe
+  ip_address="10.0.11.2"
+  core = LiteEthUDPIPCore(phy, mac_address, convert_ip(ip_address), int(50e6), with_icmp=True)
+  core = ClockDomainsRenamer("eth")(core)
+  self.submodules += phy, core
+
+  etherbone_cd = ClockDomain("etherbone")
+  self.clock_domains += etherbone_cd
+  self.comb += [
+      etherbone_cd.clk.eq(ClockSignal("sys")),
+      etherbone_cd.rst.eq(ResetSignal("sys"))
+  ]
+  self.submodules.etherbone = LiteEthEtherbone(core.udp, 1234, mode="master", cd="etherbone")
+  self.add_wb_master(self.etherbone.wishbone.bus)</nowiki>
+
+
 
 ====Litescope Host====
 
