@@ -406,6 +406,8 @@ A final design pattern is to implement a synchronous buffer using a memory eleme
         ]
         self.sync += If(self.re, _inc(consume, depth))</nowiki>
 
+ <nowiki> For some reason eliminating this tag causes the code above to disappear. A bug in github?
+ </nowiki>
  
 This uses the "storage" paradigm plus pointer arithmetic. It has the advantage that the delay can be varied dynamically (not at compile time) and can also be more efficient for long delays, since instead of eating FD's for delays it's using a block RAM. It does require some additional logic to wrap around the SyncBuffer to let it "fill" first to the depth you need for the delay before draining it.
 
@@ -439,6 +441,9 @@ the sampler, and the wishbone readout bridge.
 You'll need to modify three sections in your SoC description to add an analyzer.
 See below for the three sections called out:
 
+(the code in this section is munged by github's wiki formatter -- sorry, pull
+it and view it in a proper text editor to extract it)
+
 <nowiki>  class MySoC(BaseSoC):
     csr_peripherals += "analyzer"  ## 1. need this to create the wishbone interface
     csr_map_update(BaseSoC.csr_map, csr_peripherals)
@@ -456,6 +461,7 @@ See below for the three sections called out:
     # 3. also need to add this function to your SoC definition to generate the analyzer definition file
     def do_exit(self, vns):
       self.analyzer.export_csv(vns, "test/analyzer.csv")</nowiki>
+
 
 Basically, you assign the signals to the analyzer_signals domain, and
 then instantiate the LiteScopeAnalyzer(). Here's the arguments to
