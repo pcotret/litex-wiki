@@ -581,7 +581,12 @@ domain.
   self.submodules.etherbone = LiteEthEtherbone(core.udp, 1234, mode="master", cd="etherbone")
   self.add_wb_master(self.etherbone.wishbone.bus)</nowiki>
 
+There's no architectural reason why you can't have both a UART bridge
+and an etherbone bridge master in the same design. You could leave
+both in and just choose the interface you like to debug the chip.
 
+However, the extra hardware and complication in the wishbone fabric
+can cause timing closure and resource consumption issues.
 
 ====Litescope Host====
 
