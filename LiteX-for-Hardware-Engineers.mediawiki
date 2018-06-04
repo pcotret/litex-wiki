@@ -509,7 +509,7 @@ See below for the three sections called out:
          signal1,
          signal2,
       ]
-      self.submodules.analyzer = LiteScopeAnalyzer(analyzer_signals, 128, cd="pix_o", cd_ratio=2)
+      self.submodules.analyzer = LiteScopeAnalyzer(analyzer_signals, 128, cd="pix_o")
 
     # 3. also need to add this function to your SoC definition to generate the analyzer definition file
     def do_exit(self, vns):
@@ -523,7 +523,6 @@ LiteScopeAnalyzer:
 * analyzer_signals -- the array of signals to be sampled
 * depth -- in this case 128. Depth is limited by the capacity of your FPGA (so it's width of analyzer_signals * depth < available memory)
 * sampler domain -- the name of tho clock domain that your signals are coming from. "sys" by default.
-* cd_ratio -- set this to 1 if sampler domain frequency < "sys" frequency. Set to 2 if greater.
 
 You also need to hook do_exit() of your SoC description to generate
 the analyzer.csv file. You should change the path to wherever your
@@ -698,9 +697,15 @@ wb.open()
 # # #
 
 analyzer = LiteScopeAnalyzerDriver(wb.regs, "analyzer", debug=True)
-analyzer.configure_trigger(cond={"soc_videooverlaysoc_hdmi_in0_timing_payload_hsync" : 1}) # only if you need a trigge
 
 analyzer.configure_subsampler(1)  ## increase this to "skip" cycles, e.g. subsample
+analyzer.configure_group(0)
+
+# trigger conditions will depend upon each other in sequence
+analyzer.add_falling_edge_trigger("soc_videooverlaysoc_hdmi_in0_timing_payload_vsync")
+analyzer.add_rising_edge_trigger("soc_videooverlaysoc_hdmi_in0_timing_payload_de")
+analyzer.add_trigger(cond={"soc_videooverlaysoc_hdmi_in0_timing_payload_hsync" : 1}) 
+
 analyzer.run(offset=32, length=128)  ### CHANGE THIS TO MATCH DEPTH
 analyzer.wait_done()
 analyzer.upload()
