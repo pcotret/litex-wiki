@@ -1,0 +1,957 @@
+:toc:
+:toc-placement!:
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+endif::[]
+
+This is an introduction to LiteX written by and for hardware engineers
+who have experience designing FPGAs using Verilog and Vivado.
+
+NOTE: Experienced Python engineers can skip this and https://github.com/m-labs/migen[read the source code] for
+documentation.
+
+toc::[]
+
+== What is LiteX? ==
+
+LiteX is a Python "front-end" that generates
+Verilog netlists, and drives proprietary build "back-ends", such as
+Vivado or ISE, to create bitstreams ("gateware") for FPGAs.
+
+LiteX is relies on a Python toolbox called
+https://github.com/m-labs/migen[Migen]. In addition to a build
+environment, it provides a set of IP blocks. Some of the IP blocks
+include a DDR2/3 MIG equivalent, various softcore CPUs (lm32, or1k,
+RISCV), Ethernet controller, HDMI input/output, Wishbone routing
+fabrics, streams, and PCI express.
+
+LiteX naively supports Linux/x86. It requires Python3.5 or later. You'll
+need to manually download, install, and provision your back-end tools
+(e.g.: Vivado/ISE), and you'll also need to install a gcc cross-compiler
+to any softcore CPU you plan to use in your designs. Details later.
+
+Here's the design flow in a nutshell:
+
+. Describe your design in Python using the migen toolbox and LiteX IP by
+customizing a `Module` object (typically by subclassing `SoCSDRAM`,
+which is a subclass of `SoCCore` which subclasses the base `Module` class)
+. Describe your build environment by customizing a `Platform` object
+(typically by subclassing the `XilinxPlatform` class which itself
+sublcasses the `GenericPlatform` base class)
+. Run a function which passes your `Platform` object to a `Builder`
+object, and invokes the `build()` method which:
+.. Creates a `top.v` file: a single, flat verilog netlist of your entire
+design modulo a few exceptions to be noted later.
+.. Creates a `top.xdc` file: constraints that locate pins, defines
+clocks, and eliminates false paths
+.. If a CPU is configured, generates and builds a BIOS binary to be
+compiled into the design
+.. If a toolchain is configured, creates a `top.tcl` file which drives
+the proprietary synth/place/route/bitgen "backend" toolchain
+.. Attempts to run the proprietary back-end tool (Vivado will be assumed
+for this doc, but ISE is also supported)
+. Run `make` in the `firmware` directory, which builds your firmware
+binary (`firmware.bin`).
+. Upload `top.bit` to the FPGA -- typically over JTAG via openOCD
+. Upload `firmware.bin` to the FPGA -- typically via UART or Ethernet, using
+the `flterm` host-native application and the `serialboot` command
+. Interact with your firmware's REPL loop using flterm
+. If you designed a `litescope` into your design (an ILA like
+Chipscope), configure triggers and download traces using an analyzer
+script, which relies on a helper program called litex_server. Debugging
+occurs either through a supplementary UART or Ethernet that must be
+present in the hardware (either designed in or test leads connected to a
+header).
+. Find bugs & go back to step 1!
+
+LiteX-buildenv attempts to automate steps 3 and onwards. However, I
+don't use the master script, it's a bit too brittle yet for reliable
+development, so I tend to run each of the major steps one command at a
+time.
+
+== Editors and Environments ==
+
+It's extremely helpful to use a very
+featureful Python editor when coding with LiteX/migen. Just trying to
+code in a basic text editor will drive you nuts. I was introduced to
+https://www.jetbrains.com/pycharm/[PyCharm], and I would strongly
+recommend it if you don't already have a preferred editor. In particular
+you want to be able to "push" into object declarations by
+control-clicking on the name and method name autocompletion is extremely
+helpful when groping around for signal names.
+
+Furthermore, Python has several key limitations, a major one being
+package management. Namely, it's not a native feature of the language.
+Just running setup.py on various eggs will toss all your packages into
+your system dist-packages directory, which can break other dependencies
+in your Linux system. If you ask five Python developers how to deal with
+this, you'll get five different answers. Litex-buildenv I think tries to
+use Conda to get around this. Just be aware there's some weird stuff
+going on here that's totally obvious to the package maintainer and if
+you don't match your assumptions to theirs you'll be blindsided by a
+problem down the road.
+
+WARNING: Python3 is inherently nondeterministic. This is a
+"security feature" which causes, among other things, dictionaries and
+hash iterators to be visited in a different order every time a script is
+run. **This means your verilog netlist, register space addressing, and
+so forth will change with every run.** Some think this is a feature, I
+think this is a bug. I work around this by setting the PYTHONHASHSEED
+variable to a fixed value, and checking the setting within the Python
+script. It's not possible to change or set the variable once the program
+is started. You can only check it.
+
+== What is Migen? ==
+
+Migen is the Python toolbox that's used to create a
+description of your hardware design. It abuses the Python's
+object-oriented class and method system to create a design tree embodied
+as a single mega-object.
+
+For design description, the base class is a "Module". It has five key
+attributes used to organize the elements that describe any hardware
+design:
+
+* Comb
+* Sync
+* Submodules
+* Specials
+* ClockDomains
+
+Each of these attributes is a list, and a design is described by
+appending an element to the appropriate list. Once all the lists have
+been populated, the submodules are collected and then finalized into a
+single, huge verilog netlist.
+
+The elements that go into a design description are numerous, but the
+most common one you'll encounter is `Signal()`, followed distantly by
+`ClockDomain()` and `Instance()`.
+
+A `Signal()`, as its name implies, is a named net. By default, a `Signal()`
+has a bit width of 1. An n-bit signal is created by `Signal(n)`. Groups of
+Signals() can be bundled together in `Records()` and `Streams()`, more on
+that later. A `Signal()` has no inherent direction, clock domain, or
+meaning. It picks this all up based on how you use it: which attribute
+of the `Module` class you've assigned it to, and so forth.
+
+So let's look at what each of these attributes are, one at a time.
+
+=== Comb ===
+
+The `comb` attribute is a list of "combinational" logic
+operations. The verilog equivalent is everything that occurs outside an
+`always @(posedge)` block, e.g. all your assign statements. Since `comb` is
+a list, you append operations onto the list using Python list syntax.
+`self` is a shortcut to your module object, and `.comb` is how you
+reference the `comb` attribute:
+
+```python
+foo = Signal()  # these are all one-bit wide by default
+bar = Signal()
+baz = Signal()
+mumble = Signal()
+self.comb += [
+    foo.eq(bar),
+    baz.eq(foo & mumble),  # trailing commas at the end of a list are OK in python
+]
+```
+
+This is the verilog equivalent of:
+
+```verilog
+wire foo;
+wire bar;
+wire baz;
+wire mumble;
+assign foo = bar;
+assign baz = foo & mumble;
+```
+
+You'll notice that there's no `=` operator -- assignment (and thus
+declaration of which signal in the source and sink) is done by invoking
+`.eq()` on the sink and putting the source as the argument for a signal.
+However, most arithmetic operations are available between Signals, e.g.
+`~` is invert, `&` is and, `|` is or, `+` is add, `*` is multiply. I think there's
+also divide and I have no idea about signed types.
+
+=== Sync ===
+
+The `sync` attribute is the list of synchronous operations.
+Items added to this list will generally infer a clocked register.
+
+"But to what clock domain?" I hear you ask. Migen starts with a
+single, default clock domain called `sys`. Its frequency is defined by
+passing a mandatory `clk_freq` argument to the `SoCSDRAM` base class,
+and it's up to you to actually hook up a clock generator that is at the
+right frequency.
+
+You can also specify which clock domain you want registers to go to by
+adding a modifier to the `sync` attribute. The migen methodology
+prescribes _not_ assigning a clock domain until a module is
+instantiated. So if a sub-module's design can be implemented in a
+single, synchronous domain, just use the generic `sync` attribute. If
+the sub-module requires two clock domains, it's actually recommended to
+make up a "descriptive" name for the module, such as `write` and
+`read` clock domains for a FIFO. Then, when the modules are created,
+the all the clocks can be renamed to be consistent with the
+instantiating-module level clock names using a function called
+`ClockDomainsRenamer()`.
+
+Clear as mud? Some examples will help.
+
+```python
+foo = Signal()
+bar = Signal()
+bar_r = Signal()
+self.sync += [
+    bar_r.eq(bar),
+    foo.eq(bar & ~bar_r),
+]
+```
+
+This is the verilog equivalent of
+
+```verilog
+wire bar;
+reg foo = 1'd0;  // yes, the autogen code will use decimal constants
+reg bar_r = 1'd0;
+always(@posdege sys_clk) begin
+    bar_r <= bar;
+    foo <= bar & bar_r;
+end
+```
+
+Again, `sys_clk` is implicit because we used a "naked" `self.sync`. And,
+note that the "zero" initializer of every register is part of the
+migen spec (so if you forget to hook up an input to an output, you get
+zeros injected at the break and no warnings or errors thrown by the
+verilog compiler).
+
+If you wanted to do two clock domains, you might do something like this:
+
+```python
+class Baz(Module):
+    def (self):
+        foo = Signal()
+        bar_r = Signal()
+        bar_w = Signal()
+        self.sync.read += bar_r.eq(foo)   # when adding just one item to the list, you can use +=
+        self.sync.write += bar_w.eq(foo)
+```
+
+This is the verilog equivalent of
+
+```verilog
+wire foo;
+reg bar_r = 1'd0;
+reg bar_w = 1'd0;
+always(@posedge read_clk) begin
+    bar_r <= foo;
+end
+always(@posedge write_clk) begin
+    bar_w <= foo;
+end
+```
+
+Easy enough, but where does `read_clk` and `write_clk` come from? Notice how
+I encapsulated the Python in a module called `Baz()`. To assign them in an
+upper level function, do this:
+
+```python
+mybaz = Baz()
+mybaz = ClockDomainsRenamer( {"write" : "sys", "read" : "pix"} )(mybaz)
+self.submodules += mybaz  # I'll describe why this is important later, but it's IMPORTANT
+```
+
+What's happened here is the the `write` domain of this instance of
+`Baz()` got assigned to the (default) `sys_clk` domain, and the `read`
+domain got assigned to a `pix_clk` domain (which presumably, you've
+created in the `ClockDomains` attribute, more on how to do that later). As
+you can see here, the `ClockDomainsRenamer` lets us go from the local
+names of the function to the instance names used by the actual design,
+based on a Python dictionary that has the format `{"submodule1_clock"
+: "actual1_clock", "submodule2_clock" : "actual2_clock", ...}`.
+
+The final re-assignment of `mybaz` to `mybaz` isn't mandatory, but since you
+never want to use the original instance of it, it's helpful to discard
+any possibility of confusing yourself with the old an new versions by
+re-assigning the modified object to its original name.
+
+There's one other trick for `ClockDomainsRenamer`. Quite often you're
+looking to actually rename the default `sys` clock to something else,
+because most modules are written just adding items to the base `sync`
+domain (and hence the default sys clock domain) This leads to this
+shortcut:
+
+```python
+myfoo = Foo()
+myfoo = ClockDomainsRenamer("pix")(myfoo)
+self.submodules += myfoo
+```
+
+The one argument is automatically expanded by the ClockDomainsRenamer to
+the dictionary `{"sys":"lone_argument_clk"}`.
+
+== Submodules ==
+
+Noticed how above, I was particular to include a line
+`self.submodules += myfoo` or similar at the end of every example?
+This has to do with the submodules attribute.
+
+Designs can be hierarchical in migen. That's a good thing, but you have
+to tell migen about the submodules, or else they don't do anything. You
+tell migen about a submodule -- and thus include it for flattening and
+netlisting -- by adding it to the `submodule` attribute. Forgetting to do
+so will silently fail, throwing no errors and leaving you wondering why
+the submodule you thought you included is outputting nothing but 0.
+
+Here's a simple example:
+
+```python
+myfoo = Foo()
+myfoo = ClockDomainsRenamer("pix")(myfoo)
+self.submodules += myfoo
+```
+
+versus
+
+```python
+myfoo = Foo()
+myfoo = ClockDomainsRenamer("pix")(myfoo)
+```
+
+What's the difference? In the first one, we remembered to add our module
+to the submodules list. In the second one, we created the submodule, did
+something to it, but didn't add it to the submodules list.
+
+The second one is perfectly valid Python syntax; it will compile and
+run, and the verilog generated will throw no errors, but if you look at
+the netlist, the entire contents of the `myfoo` instance is missing
+from the generated netlist.
+
+In other words, it's extremely easy to forget to add something to the
+submodules list, and forgetting to do so means the submodule is never
+flattened during the build process and thus never sent to the code
+generator. And because migen initializes all registers to 0, the absence
+of the module will result in perfectly valid verilog being generated
+that throws no errors.
+
+So I try to include that line in every example, even the short ones, to
+save you the headache and trouble.
+
+One other confusing bit about adding something to submodules is that
+later references go through `self`. Easier to see code than explain:
+
+```python
+self.submodules.myfoo += Foo()
+self.comb += self.myfoo.subsignal.eq(othersignal)
+```
+
+In the example above, you added `Foo()` to `submodules.myfoo`, but later on
+you /reference/ it through `self.myfoo`.
+
+=== Specials ===
+
+Specials are how migen handles certain design elements
+that don't fit into the comb/sync paradigm or have to pierce the
+abstraction layer and do something platform or implementation-specific.
+
+On the Xilinx platform, these are the specials I'm aware of:
+
+* Instantiating a verilog module or primitive
+* MultiReg
+* AsyncResetSynchronizer
+* DifferentialInput
+* DifferentialOutput
+
+You might be tempted to stick a special in the `submodules` attribute,
+but that won't work because their template class is `Special`, not `Module`.
+Like all the other attributes, you add to a special by just using the `+=`
+pattern:
+
+```python
+self.specials += MultiReg(consume.q, consume_wdomain, "write")
+self.specials += Instance("BUFG", i_I=self.pll_sys, o_O=self.cd_sys.clk)
+```
+
+==== Instances ====
+
+The `Instance` special is particularly handy. You
+use this to summon blocks like `BUFG`s, `BUFIO`s, `BUFR`s, `PLLE2`, `MMCME2` and
+so forth. The format of an Instance special is as follows:
+
+```python
+Instance( "VERILOG_MODULE_NAME", ...list of parameters or ios.... )
+```
+
+So if a verilog module has a template like this:
+
+```verilog
+foo #(
+    .PARAM1("STRING_PARAM"),
+    .PARAM2(5.0)
+)
+foo_inst(
+    .A(A_THING),  // output: A
+    .B(B_THING),  // input: B
+    .C(C_THING),  // inout: C
+);
+```
+
+The Instance format would look like this:
+
+```python
+migen_sigA = Signal()
+migen_sigB = Signal()
+migen_sigC = Signal()
+self.specials += [
+Instance("foo",
+            p_PARAM1="STRING_PARAM",
+            p_PARAM2=5.0,
+            i_A=migen_sigA,
+            o_B=migen_sigB,
+            io_C=migen_sigC
+            ),
+]
+```
+
+If you're looking to instance a module that's your own verilog and not
+part of the Xilinx primitives, you can add the verilog file with a
+platform command:
+
+```python
+self.platform.add_source("full/path/to_module/module1.v")
+```
+
+This leaves the module heirarchy intact, and you also have to add all
+submodules referenced by your verilog to the path as well.
+
+==== MultiReg ====
+
+MultiReg is a one-bit synchronizer for crossing
+asynchronous domains. By default, it creates two registers that go into
+a `sys` clock domain, but you can change which domain it goes to by
+specifying an `odomain` parameter:
+
+```python
+self.specials += MultiReg( input_domainA, output_domainB, "pix" )
+```
+
+Will take signal `input_domainA`, instiate two registers in the `pix`
+domain, and the `output_domainB` will be synchronized accordingly. The
+reason this is in a special block is there are some attributes added to
+prevent retiming optimization from modifying the synchronizer structure:
+presumably if you did this just using `self.sync` operations you might not
+get the expected outcome after optimizations.
+
+Migen includes a whole bunch of clock-domain crossing tools, including a
+`PulseSynchronizer` and `Grey` counters. Take a look inside the
+`migen/genlib/cdc.py` file for some ideas.
+
+=== ClockDomains ===
+
+To be written
+
+== Physical Constraints ==
+
+=== Pin Constraints ===
+
+To be written -- how to add pin location constraints to your project.
+
+=== Timing Constraints ===
+To be written -- how to add additional timing constraints to your
+project.
+
+== Timing Reports & Schematics ==
+
+To be written -- how to use Vivado to view timing reports and schematics.
+
+== Softcores ==
+
+=== CSRs: Config and Status Registers ===
+
+To be written -- how to create CSRs, access bits, get them into your clock domain, and
+prevent false timing paths
+
+=== BaseSoC and Clockgen ===
+
+To be written -- simple walk-through of the
+basic stuff needed to implement an lm32 CPU with a clock generator
+
+== Design Patterns ==
+
+A collection of design patterns enabled by the migen toolbox.
+
+=== Timing Delays ===
+
+Timing delays -- inserting pipeline registers to
+equalize delays between control and data paths -- is a common task.
+There's a few ways to do it in Migen. Here's some examples.
+
+The simplest way to create a delay is to make it manually:
+
+```python
+sig = Signal()
+sig1 = Signal()
+sig2 = Signal()
+sig3 = Signal()
+self.sync += [
+    sig3.eq(sig2), # three clock cycles delay
+    sig2.eq(sig1),
+    sig1.eq(sig),
+]
+```
+
+This can get cumbersome for busses. Here's an example of creating a
+record that defines a bus, and then using a parameterizeable function
+that builds the delay pipe with a for loop.
+
+```python
+rgb_layout = [  # define the bus layout as a record
+    ("r", 8),
+    ("g", 8),
+    ("b", 8)
+] 
+
+class TimingDelayRGB(Module):
+    def (self, latency):
+        self.sink = stream.Endpoint(rgb_layout)    # "inputs"
+        self.source = stream.Endpoint(rgb_layout)  # "outputs"
+
+        for name in list_signals(rgb_layout):
+            s = getattr(self.sink, name)
+            for i in range(latency):
+                next_s = Signal(len(s))
+                self.sync += next_s.eq(s)          # self.sync means this module by default is using "sys" clock
+                s = next_s
+            self.comb += getattr(self.source, name).eq(s)
+
+class MyModule(Module):
+    def (self):
+        timing_rgb_delay = TimingDelayRGB(4) 
+        timing_rgb_delay = ClockDomainsRenamer("pix_o")(timing_rgb_delay)  # remap the default "sys" clock to local "pix_o" domain
+        self.submodules += timing_rgb_delay                   # if you forget this line, the timing delay won't be generated in the verilog netlist
+
+        self.hdmi_out0_rgb = hdmi_out0_rgb = stream.Endpoint(rgb_layout) 
+        self.hdmi_out0_rgb_d = hdmi_out0_rgb_d = stream.Endpoint(rgb_layout) 
+        self.comb += [
+            hdmi_out0_rgb.b.eq(core_source_data_d[0:8]),   # wire up the input record
+            hdmi_out0_rgb.g.eq(core_source_data_d[8:16]),
+            hdmi_out0_rgb.r.eq(core_source_data_d[16:24]),
+            hdmi_out0_rgb.valid.eq(core_source_valid_d),
+
+            timing_rgb_delay.sink.eq(hdmi_out0_rgb),       # wire the input record to the timingdelay element
+
+            hdmi_out0_rgb_d.eq(timing_rgb_delay.source)    # hdmi_out0_rgb_d is 4 cycles delayed from hdmi_out0_rgb
+        ]
+```
+
+So this uses a `record` with `r,g,b` fields, takes a latency parameter,
+and automatically iterates through the latency depth and creates a set
+of daisy-chained registers.
+
+Note that in the `TimingDelayRGB()` module, we're iterating through and
+using the same variable name, `next_s` over and over again. It would
+seem that this wouldn't make a delay, but rather a whole bunch of wires
+all tied to the same signal. However, `next_s` is just a temporary
+variable name, and the `Signal()` `**object**` assigned to it is always
+unique because every call to `Signal()` creates a brand new `Signal()`
+object.
+
+Breaking it down step by step:
+
+```python
+next_s = Signal(len(s))
+```
+
+Is creating a new `Signal()` object, with a globally unique ID, and
+temporarily binding it to `next_s`.
+
+```python
+self.sync += next_s.eq(s)
+```
+
+This adds the `next_s` `Signal` to the `sync` list. What happens is migen
+automatically sees that the object referenced by `next_s` is unique, and
+resolves this by internally appending a unique number to `next_s` to make
+the instance unique. If you look at the generated verilog, you'll see
+`next_s1`, `next_s2`, `next_s3`, ... and so forth as it "uniquefies" the
+instances added to the sync attribute list.
+
+```python
+s = next_s
+```
+
+This line just stashes the reference to the Signal so the next iteration
+of the loop can wire up the daisy chain.
+
+If instead of creating a new `Signal()` object and assigning it to `next_s`,
+but instead referencing an existing signal with the same globally unique
+ID, you would in fact have a whole series of `Signal`s just wire-OR'd
+together.
+
+Here's another design pattern for doing timing delays.
+
+```python
+for i in range(rgb2ycbcr.latency + chroma_downsampler.latency):
+    next_de = Signal()
+    next_vsync = Signal()
+    self.sync.pix += [
+        next_de.eq(de),
+        next_vsync.eq(vsync)
+    ]
+    de = next_de
+    vsync = next_vsync
+```
+
+This is an in-line approach to creating the delays, reasonably compact
+and doesn't require templates to be defined for every signal group.
+
+A final design pattern is to implement a synchronous buffer using a
+memory element to implement a delay:
+
+```python
+class _SyncBuffer(Module):
+    def (self, width, depth):
+        self.din = Signal(width)
+        self.dout = Signal(width)
+        self.re = Signal()
+
+        produce = Signal(max=depth)
+        consume = Signal(max=depth)
+        storage = Memory(width, depth)
+        self.specials += storage
+
+        wrport = storage.get_port(write_capable=True)
+        self.specials += wrport
+        self.comb += [
+            wrport.adr.eq(produce),
+            wrport.dat_w.eq(self.din),
+            wrport.we.eq(1)
+        ]
+        self.sync += _inc(produce, depth)
+
+        rdport = storage.get_port(async_read=True)
+        self.specials += rdport
+        self.comb += [
+            rdport.adr.eq(consume),
+            self.dout.eq(rdport.dat_r)
+        ]
+        self.sync += If(self.re, _inc(consume, depth))
+```
+
+This uses the "storage" paradigm plus pointer arithmetic. It has the
+advantage that the delay can be varied dynamically (not at compile time)
+and can also be more efficient for long delays, since instead of eating
+FD's for delays it's using a block RAM. It does require some additional
+logic to wrap around the `SyncBuffer` to let it "fill" first to the
+depth you need for the delay before draining it.
+
+=== Module I/O ===
+
+How streams & records can be used for module I/O
+
+=== Streams ===
+
+More about how streams a can be used (asyncfifo, upconverter, downconverter, etc.)
+
+=== Records ===
+
+...yah...i don't even know this one really, but it seems
+important...
+
+=== Multi-Domain Clocking ===
+
+Design patterns and strategies for dealing with multiple clock domains
+
+== Debugging ==
+
+=== Litescope ===
+
+Litescope is the equivalent of the Xilinx ILA for Litex. It samples a
+set of signals into holding registers that can be read out via wishbone.
+Because it's wishbone-based, the data read out can occur via any
+wishbone bridge -- UART, ethernet, or PCI.
+
+Only simple trigger conditions are supported (signal equals 1 or 0, no
+edges or compound statements)
+
+So, the architecture of a litescope instantiation consists of two parts:
+the sampler, and the wishbone readout bridge.
+
+==== Litescope Sampler ====
+
+You'll need to modify three sections in your
+SoC description to add an analyzer. See below for the three sections
+called out:
+
+```python
+class MySoC(BaseSoC):
+    csr_peripherals += "analyzer"  ## 1. need this to create the wishbone interface
+    csr_map_update(BaseSoC.csr_map, csr_peripherals)
+    
+    def (...):
+
+        # 2. add this inside your "init" function of your base SoC
+        from litescope import LiteScopeAnalyzer
+        analyzer_signals = [
+            signal1,
+            signal2,
+        ]
+        self.submodules.analyzer = LiteScopeAnalyzer(analyzer_signals, 128, cd="pix_o")
+
+    # 3. also need to add this function to your SoC definition to generate the analyzer definition file
+    def do_exit(self, vns):
+        self.analyzer.export_csv(vns, "test/analyzer.csv")
+```
+
+Basically, you assign the signals to the analyzer_signals domain, and
+then instantiate the LiteScopeAnalyzer(). Here's the arguments to
+LiteScopeAnalyzer:
+
+* analyzer_signals -- the array of signals to be sampled
+* depth -- in this case 128. Depth is limited by the capacity of your
+FPGA (so it's width of analyzer_signals * depth < available memory)
+* sampler domain -- the name of tho clock domain that your signals are
+coming from. `sys` by default.
+
+You also need to hook `do_exit()` of your SoC description to generate the
+`analyzer.csv` file. You should change the path to wherever your analyzer
+readout script is located (couple sections down for more on that one).
+You also need to add `analyzer` to the CSR peripherals list so it
+shows up in the firmware address space.
+
+==== Litescope Bridge ====
+
+You have many choices to extract data from the lightscope sampler. It's
+just another etherbone peripheral, so you could use the local softcore
+CPU to read out data. Or you can send commands over a bridge that
+translates e.g.┬áUART, PCI express, or ethernet to wishbone addresses and
+vice versa.
+
+Here's an example of a UART bridge:
+
+```python
+# 1. define the pins
+_io += [
+    ("serial", 1,
+        Subsignal("tx", Pins("B17")),
+        Subsignal("rx", Pins("A18")),
+        IOStandard("LVCMOS33")
+    ),
+]
+
+# 2. instantiate the bridge
+from litex.soc.cores.uart import UARTWishboneBridge
+
+self.submodules.bridge = UARTWishboneBridge(platform.request("serial",1), 100e6, baudrate=115200)
+self.add_wb_master(self.bridge.wishbone)
+```
+
+In this case, the first argument are the pads, the second is the sys
+clock frequency, and the third is the baud rate of the serial port.
+Apparently only 115200 is well-tested. You can try higher baud rates but
+you might have some bit errors.
+
+Here's an example of an Ethernet bridge:
+
+```python
+# 1. define the pins
+_io += [
+    # RMII PHY Pads
+    ("rmii_eth_clocks", 0,
+        Subsignal("ref_clk", Pins("D17"), IOStandard("LVCMOS33"))
+    ),
+    ("rmii_eth", 0,
+        Subsignal("rst_n", Pins("F16"), IOStandard("LVCMOS33")),
+        Subsignal("rx_data", Pins("A20 B18"), IOStandard("LVCMOS33")),
+        Subsignal("crs_dv", Pins("C20"), IOStandard("LVCMOS33")),
+        Subsignal("tx_en", Pins("A19"), IOStandard("LVCMOS33")),
+        Subsignal("tx_data", Pins("C18 C19"), IOStandard("LVCMOS33")),
+        Subsignal("mdc", Pins("F14"), IOStandard("LVCMOS33")),
+        Subsignal("mdio", Pins("F13"), IOStandard("LVCMOS33")),
+        Subsignal("rx_er", Pins("B20"), IOStandard("LVCMOS33")),
+        Subsignal("int_n", Pins("D21"), IOStandard("LVCMOS33")),
+    ),
+]
+
+# 2. instantiate the bridge
+from liteeth.phy.rmii import LiteEthPHYRMII
+from liteeth.core import LiteEthUDPIPCore
+from liteeth.frontend.etherbone import LiteEthEtherbone
+
+self.submodules.phy = phy = LiteEthPHYRMII(platform.request("rmii_eth_clocks"), platform.request("rmii_eth"))
+mac_address = 0x1337320dbabe
+ip_address="10.0.11.2"
+self.submodules.core = LiteEthUDPIPCore(self.phy, mac_address, convert_ip(ip_address), int(100e6))
+self.submodules.etherbone = LiteEthEtherbone(self.core.udp, 1234, mode="master")
+self.add_wb_master(self.etherbone.wishbone.bus)
+```
+
+CAUTION: Etherbone only works with a _direct_ network connection between the FPGA
+and the host. NAT traversal seems to be broken, so if you're using a VM
+to hold your litex build environment, try plugging a USB ethernet dongle
+in and associating that directly with your VM, so you don't have to
+traverse a NAT.
+
+The code above puts the ethernet bridge into the `sys` domain, which
+defaults to 100MHz. Because the etherbone packet engine contains a full
+stack for unpacking and responding to packets, timing might be tough to
+close at 100MHz. Here's an example of how to instatiate a
+reduced-frequency bridge, which seems to work just as well as the above
+code but doesn't have the timing closure issues. This assumes that the
+`eth` domain is set at 50MHz. In this design, the master PLL was
+modified to add a 50 MHz tap driving a `BUFG` to create the `clk_eth`
+domain.
+
+```python
+from liteeth.phy.rmii import LiteEthPHYRMII
+from liteeth.core import LiteEthUDPIPCore
+from liteeth.frontend.etherbone import LiteEthEtherbone
+
+phy = LiteEthPHYRMII(platform.request("rmii_eth_clocks"), platform.request("rmii_eth"))
+phy = ClockDomainsRenamer("eth")(phy)
+mac_address = 0x1337320dbabe
+ip_address="10.0.11.2"
+core = LiteEthUDPIPCore(phy, mac_address, convert_ip(ip_address), int(50e6), with_icmp=True)
+core = ClockDomainsRenamer("eth")(core)
+self.submodules += phy, core
+
+etherbone_cd = ClockDomain("etherbone")
+self.clock_domains += etherbone_cd
+self.comb += [
+    etherbone_cd.clk.eq(ClockSignal("sys")),
+    etherbone_cd.rst.eq(ResetSignal("sys"))
+]
+self.submodules.etherbone = LiteEthEtherbone(core.udp, 1234, mode="master", cd="etherbone")
+self.add_wb_master(self.etherbone.wishbone.bus)
+```
+
+There's no architectural reason why you can't have both a UART bridge
+and an etherbone bridge master in the same design. You could leave both
+in and just choose the interface you like to debug the chip.
+
+However, the extra hardware and complication in the wishbone fabric can
+cause timing closure and resource consumption issues.
+
+==== Litescope Host ====
+
+OK, now you've got an analyzer and a bridge. How do you actually pull
+the data out? There is a helper program called `litex_server` which is
+meant to be run on your host -- either on the computer with the UART
+adapter, or the other side of the ethernet connection. `litex_server` can
+drive a multiplicity of bridge interfaces, as specified by command line
+arguments:
+
+* `litex_server udp 10.0.11.2 &` would start an ethernet server for
+the above example
+* `litex_server uart /dev/ttyUSB0 115200 &` would start a UART server,
+assuming an FTDI available on `/dev/ttyUSB0`
+
+Once you've got the server running in the background, you can connect to
+it with a wishbone client program. For example, you can read not just
+the litescope ILA, but you can read out anything on the wishbone, such
+as the XADC if you have it instantiated in your SoC:
+
+```python
+#!/usr/bin/env python3
+from litex.soc.tools.remote import RemoteClient
+
+wb = RemoteClient()
+wb.open()
+
+print("Temperature: ")
+t = wb.read(0xe0005800)
+t <<= 8
+t |= wb.read(0xe0005804)
+print(t * 503.975 / 4096 - 273.15, "C")
+
+wb.close()
+```
+
+To read out the analyzer, you can use this script:
+
+```python
+from litex.soc.tools.remote import RemoteClient
+from litescope.software.driver.analyzer import LiteScopeAnalyzerDriver
+
+wb = RemoteClient()
+wb.open()
+
+analyzer = LiteScopeAnalyzerDriver(wb.regs, "analyzer", debug=True)
+
+analyzer.configure_subsampler(1)  ## increase this to "skip" cycles, e.g. subsample
+analyzer.configure_group(0)
+
+# trigger conditions will depend upon each other in sequence
+analyzer.add_falling_edge_trigger("soc_videooverlaysoc_hdmi_in0_timing_payload_vsync")
+analyzer.add_rising_edge_trigger("soc_videooverlaysoc_hdmi_in0_timing_payload_de")
+analyzer.add_trigger(cond={"soc_videooverlaysoc_hdmi_in0_timing_payload_hsync" : 1}) 
+
+analyzer.run(offset=32, length=128)  ### CHANGE THIS TO MATCH DEPTH
+analyzer.wait_done()
+analyzer.upload()
+analyzer.save("dump.vcd")
+
+wb.close()
+```
+
+Note that this assumes the files `analyzer.csv` and `csr.csv` are in
+the same directory. They are both kicked out by the Litex build
+environment, and `analyzer.csv` contains the fully specified names of the
+signals you're monitoring, which you should use to set trigger
+conditions.
+
+The same analyzer wishbone readout script works regardless of the bridge
+interface you're using. The `litex_server` takes care of all of that.
+
+Once you've got your `dump.vcd` file, you can view it with a program like
+`gtkwave`.
+
+=== Netlist ===
+
+To be written: looking in `top.v` is often the fastest way
+to pick out subtle bugs in your Python code
+
+== IP Cores ==
+
+Docs about the IP cores. It will take a long time to be
+comprehensive but initially populate with instantiation templates,
+explanation of options, plus inputs/outputs
+
+== Configuration ==
+
+LiteX/migen has the neat trick of being able to
+configure a SPI flash memory via JTAG, using the
+https://github.com/quartiq/bscan_spi_bitstreams[SPI programming via
+boundary scan repo]. Basically, it's a set of bitfiles that instantiate
+a `BSCANE2` block, couple it with a small state machine, and uses that to
+drive the SPI pins. On 7-series devices, the `CCLK` is dedicated, so it
+also instantiates a `STARTUPE2` block to drive the `CCLK`. It does a weird
+trick where it relies on the pad bond-outs to the SPI and JTAG pins to
+be invariant in terms of the on-die pads, so if you look at the code the
+pinout may not match your package but it doesn't matter since both SPI
+and JTAG are reserved pins that are invariant across all package options
+of a certain die type. One thing that is slightly suspect, however, is
+it calls for a 2.5V I/O. Haven't validated this thoroughly but it does
+seem to make the programming process a bit fussy; probing the SPINOR
+while programming, for example, might cause a bitstream error.
+
+Unfortunately, the design requires an older version of the `bscan-spi`
+protocol, so it doesn't work with the latest openocd. You will need to
+download and compile the http://github.com/m-labs/openocd[version of
+openocd maintained by m-labs] until the `bscan_spi_bitstreams` repo is
+updated.
+
+== Glossary ==
+
+[width="80%",options="header"]
+|=========
+|LiteX term | Meaning
+|Gateware   |Bitstream. The stuff that goes into an FPGA
+|Firmware   |Loadable application code, usually dropped into DRAM
+|BIOS       |Bootstrapping code baked into the bitsream of the FPGA
