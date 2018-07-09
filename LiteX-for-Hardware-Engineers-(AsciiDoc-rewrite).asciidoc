@@ -1,4 +1,3 @@
-= LiteX for Hardware Engineers
 :toc:
 :toc-placement!:
 ifdef::env-github[]
