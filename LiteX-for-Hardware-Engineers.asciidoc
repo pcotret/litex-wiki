@@ -912,6 +912,31 @@ interface you're using. The `litex_server` takes care of all of that.
 Once you've got your `dump.vcd` file, you can view it with a program like
 `gtkwave`.
 
+==== FSM Support ====
+FSM support is relatively new as of July 2018. See this commit:
+
+https://github.com/enjoy-digital/litescope/commit/bfd06f819ee20f7678bbfe96d03cc960fcbc97e8
+
+Note that for FSM support to work, the FSM has to be explicitly named
+as a submodule so you can instantiate it in the analyzer section. In
+other words, this does not work:
+
+```python
+  fsm = FSM()
+  self.submodules += fsm
+```
+
+Because in this case, there's no explicit name for the FSM in the submodules tree, and referring
+to the "fsm" element of the submodule won't resolve reliably. However, this works:
+
+```python
+  fsm = FSM()
+  self.submodules.fsm = fsm
+```
+
+In this case, you can refer to the fsm by name because you've given it
+the name "fsm" in the submodule tree.
+
 === Netlist ===
 
 To be written: looking in `top.v` is often the fastest way
