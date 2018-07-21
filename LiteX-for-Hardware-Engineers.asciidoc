@@ -474,8 +474,110 @@ To be written -- how to use Vivado to view timing reports and schematics.
 
 === CSRs: Config and Status Registers ===
 
-To be written -- how to create CSRs, access bits, get them into your clock domain, and
-prevent false timing paths
+You can add CSRs to modules (but not the top level SoC instantiation).
+
+CSRs are a bit odd, by default they are byte-wide registers that are on 32-bit word
+boundaries. So a "32-bit" CSR is actually broken into four bytes spanning a total
+address space of 16 bytes.
+
+To be written -- example on how to create CSRs, access bits, get them
+into your clock domain, and prevent false timing paths
+
+=== Interrupts (aka Events) ===
+
+Interrupts are generated using the EventManager module. There's a few ways to use
+it, but here's one of the most straightforward methods I know of.
+
+To add an interrupt to a module, you will need an EventManager() submodule, plus
+one or more EventSourceProcess() modules. Each EventSourceProcess() module is capable
+of taking in a trigger that results in an interrupt being dispatched to the CPU. The
+Python code looks a bit like this.
+
+```python
+class MyModule(Module, AutoCSR):
+  def __init__(self):
+        self.submodules.ev = EventManager()
+        self.ev.my_int1 = EventSourceProcess()
+	self.ev.my_int2 = EventSourceProcess()
+        self.ev.finalize()
+
+	self.comb += self.ev.my_int1.trigger.eq(falling_edge_interrupt_signal1)
+	self.comb += self.ev.my_int2.trigger.eq(falling_edge_interrupt_signal2)
+
+class MySoC(BaseSoC):
+    interrupt_map = {
+        "my_module" : 4,
+    }
+    interrupt_map.update(BaseSoC.interrupt_map)
+  def __init__(self, platform, *args, **kwargs):
+    self.submodules.my_module = my_module = MyModule()
+```
+
+This creates a module my_module which occupies a single interrupt
+vector (4) on the CPU with two sub-events that can be read out and
+handled by the firmware code.
+
+In the firmware, first you must add an ISR dispatch to your ISR table.
+There's typically a file called isr.c that has something like this in there:
+
+```c
+void isr(void)
+{
+	unsigned int irqs;
+
+	irqs = irq_pending() & irq_getmask();
+
+	if(irqs & (1 << UART_INTERRUPT))
+		uart_isr();
+
+#ifdef MY_MODULE_INTERRUPT
+	if(irqs & (1 << MY_MODULE_INTERRUPT))
+		my_module_isr();
+#endif
+}
+```
+
+It seems at least on lm32 and vexrisc SoC's, there's just a single
+interrupt line to the CPU, and this expands to one of 32 bits in
+an interrupt source register. This maps to the interrupt_map number
+provided in the Python code. The isr() routine is thus responsible
+for searching through the bits and dispatching accordingly.
+
+You also want to enable the interrupt, in some sort of init function:
+
+```c
+void my_module_init(void) {
+  // unmask the interrupts for MY_MODULE
+  unsigned int mask;
+  mask = irq_getmask();
+  mask |= 1 << MY_MODULE_INTERRUPT;
+  irq_setmask(mask);
+  
+  my_module_ev_enable_write(1); // in addition to unmasking irq, you also need to enable the event handler
+}
+```
+
+Handling the isr itself looks a bit like this:
+
+```c
+void my_module_isr(void) {
+  unsigned int status;
+
+  status = my_module_ev_pending_read(); // you don't need to do this if you just have one interrupt source
+  
+  // my_module_ev_pending_write(1); // You'd do this if you just had one interrupt
+
+  if( status & 1 ) {
+    printf("Hi! I got interrupt 1\n");
+    my_module_ev_pending_write(1);    // clear the interrupt so it doesn't keep on firing and wedge the CPU
+  } else if( status & 2 ) {
+    printf("Hi! I got interrupt 2\n");
+    my_module_ev_pending_write(2);
+  }
+
+  my_module_ev_enable_write(1);  // re-enable the event handler so we can catch the interrupt again
+}
+```
 
 === BaseSoC and Clockgen ===
 
