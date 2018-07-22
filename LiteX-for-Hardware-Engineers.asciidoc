@@ -474,14 +474,159 @@ To be written -- how to use Vivado to view timing reports and schematics.
 
 === CSRs: Config and Status Registers ===
 
-You can add CSRs to modules (but not the top level SoC instantiation).
+Configuration and status registers are how you get a softcore to "peek" and "poke" memory.
+They map addresses to lines that you can wiggle or observe.
 
-CSRs are a bit odd, by default they are byte-wide registers that are on 32-bit word
-boundaries. So a "32-bit" CSR is actually broken into four bytes spanning a total
-address space of 16 bytes.
+The nomenclature of migen is:
 
-To be written -- example on how to create CSRs, access bits, get them
-into your clock domain, and prevent false timing paths
+* "CSRStorage" = "output" (from CPU's perspective) = "write" or "stores"
+* "CSRStatus" = "input" (from CPU's perspective) = "read" or "loads"
+
+There's also a "generic" CSR which is both read and write. You can use this,
+but the width is limited to less than the CSR bus width.
+
+You can add CSRs to modules (but not the top level SoC instantiation), because CSR
+C-code APIs are auto-generated based on the module's name. No name, no API.
+
+CAUTION: CSRs are a bit odd, by default they are byte-wide registers
+that are on 32-bit word boundaries. So a "32-bit" CSR is actually
+broken into four bytes spanning a total address space of 16 bytes. You can
+zpecify 32-bit wide CSRs but you'll probably run into compatibility issues
+with other IP librariers that have hard-coded the 8-bit assumption.
+
+Here's a very simple example of how to use CSRs to talk to an external IP
+block written in verilog.
+
+```Python
+class I2Csnoop(Module, AutoCSR):
+    def __init__(self, pads):
+        self.edid_snoop_adr = CSRStorage(8)
+        self.edid_snoop_dat = CSRStatus(8)
+
+        reg_dout = Signal(8)
+        self.An = Signal(64)  
+        self.Aksv14_write = Signal() 
+        self.specials += [
+            Instance("i2c_snoop",
+                     i_SDA=~pads.sda,
+                     i_SCL=~pads.scl,
+                     i_clk=ClockSignal("eth"),
+                     i_reset=ResetSignal("eth"),
+                     i_i2c_snoop_addr=0x74,
+                     i_reg_addr=self.edid_snoop_adr.storage,
+                     o_reg_dout=reg_dout,
+                     o_An=self.An,
+                     o_Aksv14_write=self.Aksv14_write,
+                     )
+        ]
+        self.comb += self.edid_snoop_dat.status.eq(reg_dout)
+````
+
+Other sections talk more about using self.specials to create an
+external verilog block, but basically, there is a verilog module
+called i2c_snoop.v that's instantiated here, and the CPU is wired up
+to the snoop module to query what data has been captured by the
+snooper from a given address.  So, edid_snoop_adr is a CSRStorage(8)
+-- it's an "output" of the CPU that's 8 bits wide driving into the
+verilog block. And edid_snoop_dat is a CSRStatus(8) -- it's an "input"
+of the CPU that's 8 bits wide that reads the data presented by the
+verilog block. Note that all signals are assumed synchronous to the
+"sys" clock domain, but in this case i2c_snoop is plugged into the
+"eth" clock domain. For this purpose, it's OK because we guarantee at
+the firmware level we don't read the I2C block when the data is
+changing, but you will need to add MultiRegs or other forms of
+synchronizers if whatever you're driving from the CPU isn't in the
+"sys" clock domain.
+
+In order to trigger the auto-generation of the CSR code, you have to
+add it to the csr_peripherals block of your SoC. This is usually up near the
+top of your SoC definition, a bit like this:
+
+```Python
+class VideoOverlaySoC(BaseSoC):
+
+    csr_peripherals = [
+        "i2c_snoop",  # if this doesn't exist, the APIs won't get generated
+        "analyzer",
+    ]
+    csr_map_update(BaseSoC.csr_map, csr_peripherals)
+
+    def __init__(self, platform, *args, **kwargs):
+        BaseSoC.__init__(self, platform, *args, **kwargs)
+
+        platform.add_source(os.path.join("overlay", "i2c_snoop.v"))
+        self.submodules.i2c_snoop = i2c_snoop = I2Csnoop(hdmi_in0_pads)  # the submodule name here must match the csr_peripherals string
+````
+
+You'll end up getting a set of CSR helper functions located in the
+csr.h file.  You want to use the helper functions because they hide
+the wart CSR space being byte-wide data strided on word boundaries.
+
+```C
+/* i2c_snoop */
+#define CSR_I2C_SNOOP_BASE 0xe000b000
+#define CSR_I2C_SNOOP_EDID_SNOOP_ADR_ADDR 0xe000b000
+#define CSR_I2C_SNOOP_EDID_SNOOP_ADR_SIZE 1
+static inline unsigned char i2c_snoop_edid_snoop_adr_read(void) {
+	unsigned char r = MMPTR(0xe000b000);
+	return r;
+}
+static inline void i2c_snoop_edid_snoop_adr_write(unsigned char value) {
+	MMPTR(0xe000b000) = value;
+}
+#define CSR_I2C_SNOOP_EDID_SNOOP_DAT_ADDR 0xe000b004
+#define CSR_I2C_SNOOP_EDID_SNOOP_DAT_SIZE 1
+static inline unsigned char i2c_snoop_edid_snoop_dat_read(void) {
+	unsigned char r = MMPTR(0xe000b004);
+	return r;
+}
+
+///// included here to illustrate the CSR space byte-to-word weirdness
+#define CSR_HDMI_IN1_DMA_SLOT1_ADDRESS_ADDR 0xe00088f8
+#define CSR_HDMI_IN1_DMA_SLOT1_ADDRESS_SIZE 4
+static inline unsigned int hdmi_in1_dma_slot1_address_read(void) {
+	unsigned int r = MMPTR(0xe00088f8);
+	r <<= 8;
+	r |= MMPTR(0xe00088fc);
+	r <<= 8;
+	r |= MMPTR(0xe0008900);
+	r <<= 8;
+	r |= MMPTR(0xe0008904);
+	return r;
+}
+static inline void hdmi_in1_dma_slot1_address_write(unsigned int value) {
+	MMPTR(0xe00088f8) = value >> 24;
+	MMPTR(0xe00088fc) = value >> 16;
+	MMPTR(0xe0008900) = value >> 8;
+	MMPTR(0xe0008904) = value;
+}
+```
+
+With these helper functions, dumping the memory space of the I2C snooper is
+quite easy:
+
+```C
+  int i ;
+  for( i = 0; i < 256; i++ ) {
+    if( (i % 16) == 0 ) {
+      wprintf( "\r\n %02x: ", i );
+    }
+    i2c_snoop_edid_snoop_adr_write( i );
+    wprintf( "%02x ", i2c_snoop_edid_snoop_dat_read() );
+  }
+```
+
+In addition to providing convenient APIs on the C-code firmware side,
+CSRs also provide some convenience on the hardware Python side.
+
+* You can specify the reset value by passing the reset=value parameter (for both
+Storage and Status)
+* the .re attribute provides a single-cycle pulse when the CSRStorage is updated
+* the .we attribute shifts level whenever a write access happens to CSRStorage
+
+If you're using a straight-up CSR (not a Storage or Status), the accessors
+for the stored value is the .r attribute, and the data you're sending back
+to the CPU is connected via the .w attribute.
 
 === Interrupts (aka Events) ===
 
