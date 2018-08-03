@@ -633,10 +633,27 @@ to the CPU is connected via the .w attribute.
 Interrupts are generated using the EventManager module. There's a few ways to use
 it, but here's one of the most straightforward methods I know of.
 
-To add an interrupt to a module, you will need an EventManager() submodule, plus
-one or more EventSourceProcess() modules. Each EventSourceProcess() module is capable
-of taking in a trigger that results in an interrupt being dispatched to the CPU. The
-Python code looks a bit like this.
+To add an interrupt to a module, you will need an EventManager()
+submodule, plus one or more EventSourcePulse(), EventSourceProcess(),
+or EventSourceLevel() modules.
+
+EventSourcePulse() is a rising-edge triggered event. When a rising edge comes in,
+the corresponding .pending bit is set high. Write a 1 to .pending to clear the edge
+triggered event.
+
+EventSourceProcess() is a falling-edge triggered event. When a falling edge comes in,
+the corresponding .pending bit is set high. Write a 1 to .pending to clear the edge
+triggered event.
+
+EventSourceLevel() is a level-sensitive event. The CPU continues to
+receive the level-sensitive interrupt until the source causing the
+event is rectified (there is no "clear event" option -- if you don't
+lower the level, the CPU will jump right back into the ISR once you
+exit).
+
+Each EventSourceXXX() module is capable
+of taking in a trigger that results in an interrupt being dispatched
+to the CPU. The Python code looks a bit like this.
 
 ```python
 class MyModule(Module, AutoCSR):
