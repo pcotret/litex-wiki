@@ -622,7 +622,7 @@ CSRs also provide some convenience on the hardware Python side.
 * You can specify the reset value by passing the reset=value parameter (for both
 Storage and Status)
 * the .re attribute provides a single-cycle pulse when the CSRStorage is updated
-* the .we attribute shifts level whenever a write access happens to CSRStorage
+* if write_from_dev=True is passed as a parameter to CSRStorage, the device can flip the storage bit (allowing it to work as an input, oddly enough), by providing data on .dat_w, and strobing .we. Difference between this and CSR is reads are not guaranteed atomic when CSRStorage is made writeable.
 
 If you're using a straight-up CSR (not a Storage or Status), the accessors
 for the stored value is the .r attribute, and the data you're sending back
