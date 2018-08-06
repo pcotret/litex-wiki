@@ -505,6 +505,20 @@ FSM.act() call, and FPGAs by default initialize their registers to
    fsm = FSM(reset_state = "WAIT_SOF")
 ```
 
+The default clock domain of an FSM is, as always, "sysclk". You can
+remap this using the ClockDomainsRenamer:
+
+```python
+   fsm = ClockDomainsRenamer("new_clk_domain")(FSM())
+```
+
+Alternatively if you want the entire module to be synchronous and in a
+different domain, don't rename the FSM immediately upon creation, but
+rename the entire module at the point where it is instantiated (e.g.
+allow all the self.sync's to be default (sysclk) and then remap sysclk
+for the whole domain using the ClockDomainsRenamer at one level up the
+tree).
+
 === ClockDomains ===
 
 To be written
