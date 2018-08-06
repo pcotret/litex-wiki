@@ -452,6 +452,59 @@ Migen includes a whole bunch of clock-domain crossing tools, including a
 `PulseSynchronizer` and `Grey` counters. Take a look inside the
 `migen/genlib/cdc.py` file for some ideas.
 
+=== FSMs ==
+
+Migen supports a native syntax for creating FSMs. You can
+create an FSM in the current module by invoking the FSM() function,
+and then using .act() accessors to delineate new states within the
+FSM. Here's a basic example of how this works.
+
+```python
+        fsm = FSM()
+        self.submodules.fsm = fsm   # need this to enable litescope debugging
+
+        fsm.act("WAIT_SOF",
+            reset_words.eq(1),
+            If(self.address_valid &
+               self.frame.sof,
+               NextState("TRANSFER_PIXELS")
+            )
+        )
+        fsm.act("TRANSFER_PIXELS",
+	    self.transfer_enable.eq(1),
+            If(self.address_count == self.frame_length,
+               NextState("EOF")
+            )
+        )
+        fsm.act("EOF",
+            If(~dram_port.wdata.valid,
+                NextState("WAIT_SOF")
+            )
+        )
+```
+
+This FSM creates three states, WAIT_SOF, TRANSFER_PIXELS, and EOF, and cycles
+between them based on the cnoditions coded in the If() statements.
+
+One important convention to note is that all signals referred to in
+the FSM effectivelly gets reset to zero at the beginning of every
+cycle. So, for example, the statement "self.transfer_enable.eq(1)"
+inside "TRANSFER_PIXELS" has no corresponding
+"self.transfer_enable.eq(0)", because this is implicitly executed at
+the top of the FSM code loop, and only if the conditions of the FSM are
+met would the transfer_enable bit be flipped to 1.
+
+It seems that by convention, the first FSM.act() entry is also the
+reset state of the FSM. This is because as far as I can tell the state
+bits are encoded staring from 0 going up with each successive
+FSM.act() call, and FPGAs by default initialize their registers to
+0. If you want to explicitly designate a reset state, use the
+"reset_state=" argument when creating the FSM object, e.g.:
+
+```python
+   fsm = FSM(reset_state = "WAIT_SOF")
+```
+
 === ClockDomains ===
 
 To be written
