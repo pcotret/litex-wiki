@@ -587,7 +587,7 @@ class I2Csnoop(Module, AutoCSR):
                      )
         ]
         self.comb += self.edid_snoop_dat.status.eq(reg_dout)
-````
+```
 
 Other sections talk more about using self.specials to create an
 external verilog block, but basically, there is a verilog module
