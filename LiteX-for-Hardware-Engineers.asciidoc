@@ -452,7 +452,7 @@ Migen includes a whole bunch of clock-domain crossing tools, including a
 `PulseSynchronizer` and `Grey` counters. Take a look inside the
 `migen/genlib/cdc.py` file for some ideas.
 
-=== FSMs ==
+=== FSMs ===
 
 Migen supports a native syntax for creating FSMs. You can
 create an FSM in the current module by invoking the FSM() function,
