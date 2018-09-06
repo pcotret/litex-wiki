@@ -101,7 +101,7 @@ To load the gateware:
 make gateware-load
 ```
 
-## Building MicroPython (FμPy)
+## Building and running MicroPython (FμPy)
 
 Next we will build the MicroPython firmware and load it onto the soft CPU:
 
@@ -115,6 +115,9 @@ Once the output pauses in the USB serial console, hit the enter key, you should 
 ```
 serialboot
 ```
+
+(If you do not see a `BIOS>` prompt even after pressing enter a few times, instead try pressing the "RSET" -- reset -- button in the corner of the Arty A7 to make the board restart the gateware and BIOS again.)
+
 This will then upload the MicroPython firmware to the soft CPU running on the Arty A7.  Once the upload finishes (several seconds) MicroPython should boot, and then you should reach a MicroPython REPL:
 
 ```
