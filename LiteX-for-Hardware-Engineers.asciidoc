@@ -1037,7 +1037,7 @@ class MySoC(BaseSoC):
         analyzer_clock_domain = "sys"
         self.submodules.analyzer = LiteScopeAnalyzer(analyzer_signals,
                                                      analyzer_depth,
-                                                     cd=analyzer_clock_domain)
+                                                     clock_domain=analyzer_clock_domain)
 
     # 3. Add this function to your SoC definition to generate the analyzer definition file.
     builder = Builder(soc, output_dir="build",
