@@ -1025,7 +1025,7 @@ class MySoC(BaseSoC):
     csr_peripherals += "analyzer"  ## 1. need this to create the wishbone interface
     csr_map_update(BaseSoC.csr_map, csr_peripherals)
     
-    def (...):
+    def __init__(self, ...):
 
         # 2. add this inside your "init" function of your base SoC
         from litescope import LiteScopeAnalyzer
@@ -1033,9 +1033,14 @@ class MySoC(BaseSoC):
             signal1,
             signal2,
         ]
-        self.submodules.analyzer = LiteScopeAnalyzer(analyzer_signals, 128, cd="pix_o")
+        analyzer_depth = 128 # samples
+        analyzer_clock_domain = "sys"
+        self.submodules.analyzer = LiteScopeAnalyzer(analyzer_signals,
+                                                     analyzer_depth,
+                                                     cd=analyzer_clock_domain)
 
-    # 3. also need to add this function to your SoC definition to generate the analyzer definition file
+    # 3. Add this function to your SoC definition to generate the analyzer definition file.
+    # If `do_exit()` exists, it will get called by the builder automatically.
     def do_exit(self, vns):
         self.analyzer.export_csv(vns, "test/analyzer.csv")
 ```
@@ -1054,14 +1059,15 @@ You also need to hook `do_exit()` of your SoC description to generate the
 `analyzer.csv` file. You should change the path to wherever your analyzer
 readout script is located (couple sections down for more on that one).
 You also need to add `analyzer` to the CSR peripherals list so it
-shows up in the firmware address space.
+shows up in the firmware address space.  This function gets called
+automatically if it exists.
 
 ==== Litescope Bridge ====
 
 You have many choices to extract data from the lightscope sampler. It's
 just another etherbone peripheral, so you could use the local softcore
 CPU to read out data. Or you can send commands over a bridge that
-translates e.g.┬áUART, PCI express, or ethernet to wishbone addresses and
+translates e.g. UART, PCI express, or Wthernet to wishbone addresses and
 vice versa.
 
 Here's an example of a UART bridge:
