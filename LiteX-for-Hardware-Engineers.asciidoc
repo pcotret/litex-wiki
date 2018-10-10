@@ -178,6 +178,27 @@ However, most arithmetic operations are available between Signals, e.g.
 `~` is invert, `&` is and, `|` is or, `+` is add, `*` is multiply. I think there's
 also divide and I have no idea about signed types.
 
+Smaller bit-width `Signal()`s can be combined together using the `Cat()` function.
+Note that `Cat()` combines from LSB-to-MSB order (*opposite* of verilog), as follows:
+
+```python
+foo = Signal(7)
+bar = Signal(2)
+baz = Signal()
+self.comb += [
+  foo.eq(Cat(0, 0, bar, 0, baz, 1)),
+]
+```
+
+This is the verilog equivalent of:
+
+```verilog
+wire[6:0] foo;
+wire[1:0] bar;
+wire baz;
+assign foo = {1'b1, baz, 0, bar[1:0], 1'b0, 1'b0};
+```
+
 === Sync ===
 
 The `sync` attribute is the list of synchronous operations.
