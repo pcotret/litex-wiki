@@ -1091,7 +1091,7 @@ automatically if it exists.
 You have many choices to extract data from the lightscope sampler. It's
 just another etherbone peripheral, so you could use the local softcore
 CPU to read out data. Or you can send commands over a bridge that
-translates e.g. UART, PCI express, or Wthernet to wishbone addresses and
+translates e.g. UART, PCI express, or Ethernet to wishbone addresses and
 vice versa.
 
 Here's an example of a UART bridge:
