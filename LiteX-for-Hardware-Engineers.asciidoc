@@ -582,6 +582,8 @@ broken into four bytes spanning a total address space of 16 bytes. You can
 zpecify 32-bit wide CSRs but you'll probably run into compatibility issues
 with other IP librariers that have hard-coded the 8-bit assumption.
 
+WARNING: If you allocate too many CSRs, you can overflow the CSR address space width without warning. If you find your CPU isn't booting after a recompile, try adding the line "csr_address_width=15" to your BaseSoC arguments. The default width is 14 bits.
+
 Here's a very simple example of how to use CSRs to talk to an external IP
 block written in verilog.
 
