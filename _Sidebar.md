@@ -1,3 +1,3 @@
-###  Installation
-### OS support
-### Projects
+* [[Installation]]
+* [[OS support]]
+* [[Projects]]
