@@ -8,7 +8,8 @@
                 Build your hardware, easily!
               Copyright 2012-2019 / EnjoyDigital
 ```
-[![License](https://img.shields.io/badge/License-BSD%202--Clause-orange.svg)](https://opensource.org/licenses/BSD-2-Clause)
+![](https://travis-ci.com/enjoy-digital/litex.svg?branch=master)
+![License](https://img.shields.io/badge/License-BSD%202--Clause-orange.svg)
 # Welcome to LiteX wiki!
 LiteX is a FPGA design/SoC builder that can be used to build cores, create
 SoCs and full FPGA designs.
