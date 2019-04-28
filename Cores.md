@@ -1,4 +1,4 @@
-
+External LiteXXX cores
 
 | **[LiteDRAM](http://github.com/enjoy-digital/litedram)** | |
 | ----------------------|-------------------------------------------------------------------------------|
