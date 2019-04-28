@@ -49,7 +49,7 @@ and is compatible with the LiteX's Cores Ecosystem:
 - LiteSATA: ![](https://travis-ci.com/enjoy-digital/litesata.svg?branch=master) http://github.com/enjoy-digital/litesata
 - LiteUSB: ![](https://travis-ci.com/enjoy-digital/liteusb.svg?branch=master) http://github.com/enjoy-digital/liteusb
 - LiteSDCard: ![](https://travis-ci.com/enjoy-digital/litesdcard.svg?branch=master) http://github.com/enjoy-digital/litesdcard
-- LiteICLink: ![](https://travis-ci.com/enjoy-digital/liteiclink.svg?branch=master) http://github.com/enjoy-digital/liteiclink
-- LiteJESD204B: ![](https://travis-ci.com/enjoy-digital/litejesd204b.svg?branch=master) http://github.com/enjoy-digital/litejesd204b
+- LiteICLink: [![](https://travis-ci.com/enjoy-digital/liteiclink.svg?branch=master)](https://travis-ci.com/enjoy-digital/liteiclink) http://github.com/enjoy-digital/liteiclink
+- LiteJESD204B: [![](https://travis-ci.com/enjoy-digital/litejesd204b.svg?branch=master)](https://travis-ci.com/enjoy-digital/litejesd204b) http://github.com/enjoy-digital/litejesd204b
 - LiteVideo: ![](https://travis-ci.com/enjoy-digital/litevideo.svg?branch=master) http://github.com/enjoy-digital/litevideo
 - LiteScope: ![](https://travis-ci.com/enjoy-digital/litescope.svg?branch=master) http://github.com/enjoy-digital/litescope
