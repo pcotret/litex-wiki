@@ -1,13 +1,72 @@
 
-| Name                                                         | Build Status                                                            | Description                   | Supported Standards                                                            | Supported Hardware                                                                                                           |
-| ------------------------------------------------------------ | ----------------------------------------------------------------------- | ----------------------------- | ------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------- |
-| [LiteDRAM](http://github.com/enjoy-digital/litedram)         | ![](https://travis-ci.org/enjoy-digital/litedram.svg?branch=master)     | Dynamic RAM controller        | SDRAM, DDR, LPDDR, DDR2, DDR3, DDR4                                            | Generic&nbsp;Verilog,<br>Xilinx&nbsp;Spartan&nbsp;6&nbsp;+&nbsp;7&nbsp;Series&nbsp;+&nbsp;Ultrascale,<br>Lattice&nbsp;ECP5   |
-| [LiteEth](http://github.com/enjoy-digital/liteeth)           | ![](https://travis-ci.com/enjoy-digital/liteth.svg?branch=master)       | Ethernet                      | 100, 1000 Mbit, MII, GMII & RGMII and many high speed tranceivers              | Generic&nbsp;Verilog,<br>Xilinx&nbsp;Spartan&nbsp;6&nbsp;+&nbsp;7&nbsp;Series&nbsp;+&nbsp;Ultrascale,<br>Lattice&nbsp;ECP5   |
-| [LitePCIe](http://github.com/enjoy-digital/litepcie)         | ![](https://travis-ci.com/enjoy-digital/litepcie.svg?branch=master)     | PCIe                          | Gen1, Gen2, x1, x2 x4                                                          | Xilinx&nbsp;7&#8209;series,<br>Intel Cyclone V,&nbsp;and<br>soon Lattice ECP5                                                |
-| [LiteSATA](http://github.com/enjoy-digital/litesata)         | ![](https://travis-ci.com/enjoy-digital/litesata.svg?branch=master)     | SATA                          | 1.5/3.0/6.0 GBps                                                               | Xilinx&nbsp;7&#8209;series                                                                                                   |
-| [LiteUSB](http://github.com/enjoy-digital/liteusb)           | ![](https://travis-ci.com/enjoy-digital/liteusb.svg?branch=master)      | USB transfer                  |                                                                                |                                                                                                                              |
-| [LiteSDCard](http://github.com/enjoy-digital/litesdcard)     | ![](https://travis-ci.com/enjoy-digital/litesdcard.svg?branch=master)   | SD card                       | SD / SDHC / SDXC / SDUC, Default Speed, High Speed, UHS-I                      | Xilinx&nbsp;Spartan&nbsp;6&nbsp;+&nbsp;7&nbsp;Series                                                                         |
-| [LiteICLink](http://github.com/enjoy-digital/liteiclink)     | ![](https://travis-ci.com/enjoy-digital/liteiclink.svg?branch=master)   | Inter-Chip communication      | Custom protocol over Single Ended or LVDS Pair                                 | Xilinx&nbsp;7&#8209;series&nbsp;+&nbsp;Ultrascale                                                                            |
-| [LiteJESD204B](http://github.com/enjoy-digital/litejesd204b) | ![](https://travis-ci.com/enjoy-digital/litejesd204b.svg?branch=master) | JESD204B                      |                                                                                | Xilinx&nbsp;7&#8209;series&nbsp;+&nbsp;Ultrascale                                                                            |
-| [LiteVideo](http://github.com/enjoy-digital/litevideo)       | ![](https://travis-ci.com/enjoy-digital/litevideo.svg?branch=master)    | DVI, HDMI                     | DVI, HDMI                                                                      | Xilinx&nbsp;Spartan&nbsp;6&nbsp;+&nbsp;7&#8209;series                                                                        |
-| [LiteScope](http://github.com/enjoy-digital/litescope)       | ![](https://travis-ci.com/enjoy-digital/litescope.svg?branch=master)    | Embedded FPGA logic analyzer  | PCIe, UART, Ethernet                                                           | Generic&nbsp;Verilog                                                                                                         |
+
+| **[LiteDRAM](http://github.com/enjoy-digital/litedram)** | |
+| ----------------------|-------------------------------------------------------------------------------|
+| Build Status          | ![](https://travis-ci.org/enjoy-digital/litedram.svg?branch=master)           |
+| Description           | Dynamic RAM controller                                                        |
+| Supported Standards   | SDRAM, DDR, LPDDR, DDR2, DDR3, DDR4                                           |
+| Supported Hardware    | Generic Verilog,<br>Xilinx Spartan 6 + 7 Series + Ultrascale,<br>Lattice ECP5 |
+
+| **[LiteEth](http://github.com/enjoy-digital/liteeth)** | |
+| ----------------------|-------------------------------------------------------------------------------|
+| Build Status          | ![](https://travis-ci.com/enjoy-digital/liteth.svg?branch=master)             |
+| Description           | Ethernet                                                                      |
+| Supported Standards   | 100, 1000 Mbit, MII, GMII & RGMII and many high speed tranceivers             |
+| Supported Hardware    | Generic Verilog,<br>Xilinx Spartan 6 + 7 Series + Ultrascale,<br>Lattice ECP5 |
+
+| **[LitePCIe](http://github.com/enjoy-digital/litepcie)** | |
+| ----------------------|-------------------------------------------------------------------------------|
+| Build Status          | ![](https://travis-ci.com/enjoy-digital/litepcie.svg?branch=master)           |
+| Description           | PCIe                                                                          |
+| Supported Standards   | Gen1, Gen2, x1, x2 x4                                                         |
+| Supported Hardware    | Xilinx 7-series,<br>Intel Cyclone V, and<br>soon Lattice ECP5                 |
+
+| **[LiteSATA](http://github.com/enjoy-digital/litesata)** | |
+| ----------------------|-------------------------------------------------------------------------------|
+| Build Status          | ![](https://travis-ci.com/enjoy-digital/litesata.svg?branch=master)           |
+| Description           | SATA                                                                          |
+| Supported Standards   | 1.5/3.0/6.0 GBps                                                              |
+| Supported Hardware    | Xilinx 7-series                                                               |
+
+| **[LiteUSB](http://github.com/enjoy-digital/liteusb)** | |
+| ----------------------|-------------------------------------------------------------------------------|
+| Build Status          | ![](https://travis-ci.com/enjoy-digital/liteusb.svg?branch=master)            |
+| Description           | USB transfer                                                                  |
+| Supported Standards   |                                                                               |
+| Supported Hardware    |                                                                               |
+
+| **[LiteSDCard](http://github.com/enjoy-digital/litesdcard)** | |
+| ----------------------|-------------------------------------------------------------------------------|
+| Build Status          | ![](https://travis-ci.com/enjoy-digital/litesdcard.svg?branch=master)         |
+| Description           | SD card                                                                       |
+| Supported Standards   | SD / SDHC / SDXC / SDUC, Default Speed, High Speed, UHS-I                     |
+| Supported Hardware    | Xilinx Spartan 6 + 7 Series                                                   |
+
+| **[LiteICLink](http://github.com/enjoy-digital/liteiclink)** | |
+| ----------------------|-------------------------------------------------------------------------------|
+| Build Status          | ![](https://travis-ci.com/enjoy-digital/liteiclink.svg?branch=master)         |
+| Description           | Inter-Chip communication                                                      |
+| Supported Standards   | Custom protocol over Single Ended or LVDS Pair                                |
+| Supported Hardware    | Xilinx 7-series + Ultrascale                                                  |
+
+| **[LiteJESD204B](http://github.com/enjoy-digital/litejesd204b)** | |
+| ----------------------|-------------------------------------------------------------------------------|
+| Build Status          | ![](https://travis-ci.com/enjoy-digital/litejesd204b.svg?branch=master)       |
+| Description           | JESD204B                                                                      |
+| Supported Standards   |                                                                               |
+| Supported Hardware    | Xilinx 7-series + Ultrascale                                                  |
+
+| **[LiteVideo](http://github.com/enjoy-digital/litevideo)** | |
+| ----------------------|-------------------------------------------------------------------------------|
+| Build Status          | ![](https://travis-ci.com/enjoy-digital/litevideo.svg?branch=master)          |
+| Description           | DVI, HDMI                                                                     |
+| Supported Standards   |                                                                               |
+| Supported Hardware    | Xilinx Spartan 6 + 7-series                                                   |
+
+| **[LiteScope](http://github.com/enjoy-digital/litescope)** | |
+| ----------------------|-------------------------------------------------------------------------------|
+| Build Status          | ![](https://travis-ci.com/enjoy-digital/litescope.svg?branch=master)          |
+| Description           | Embedded FPGA logic analyzer                                                  |
+| Supported Standards   | PCIe, UART, Ethernet                                                          |
+| Supported Hardware    | Generic Verilog                                                               |
+
