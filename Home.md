@@ -45,13 +45,13 @@ and is compatible with the LiteX's Cores Ecosystem:
 
 | Name                                                         | Build Status                                                            | Description                   |
 | ------------------------------------------------------------ | ----------------------------------------------------------------------- | ----------------------------- |
-| [LiteDRAM](http://github.com/enjoy-digital/litedram)         | ![](https://travis-ci.org/enjoy-digital/litedram.svg?branch=master)     | Dynamic RAM controller        |
-| [LiteEth](http://github.com/enjoy-digital/liteeth)           | ![](https://travis-ci.com/enjoy-digital/liteth.svg?branch=master)       | Ethernet                      |
-| [LitePCIe](http://github.com/enjoy-digital/litepcie)         | ![](https://travis-ci.com/enjoy-digital/litepcie.svg?branch=master)     | PCIe                          |
-| [LiteSATA](http://github.com/enjoy-digital/litesata)         | ![](https://travis-ci.com/enjoy-digital/litesata.svg?branch=master)     | SATA                          |
-| [LiteUSB](http://github.com/enjoy-digital/liteusb)           | ![](https://travis-ci.com/enjoy-digital/liteusb.svg?branch=master)      | USB transfer                  |
-| [LiteSDCard](http://github.com/enjoy-digital/litesdcard)     | ![](https://travis-ci.com/enjoy-digital/litesdcard.svg?branch=master)   | SD card                       |
-| [LiteICLink](http://github.com/enjoy-digital/liteiclink)     | ![](https://travis-ci.com/enjoy-digital/liteiclink.svg?branch=master)   | Inter-Chip communication      |
-| [LiteJESD204B](http://github.com/enjoy-digital/litejesd204b) | ![](https://travis-ci.com/enjoy-digital/litejesd204b.svg?branch=master) | JESD204B                      |
-| [LiteVideo](http://github.com/enjoy-digital/litevideo)       | ![](https://travis-ci.com/enjoy-digital/litevideo.svg?branch=master)    | DVI, HDMI                     |
-| [LiteScope](http://github.com/enjoy-digital/litescope)       | ![](https://travis-ci.com/enjoy-digital/litescope.svg?branch=master)    | Embedded FPGA logic analyzer  |
+| [LiteDRAM](http://github.com/enjoy-digital/litedram)         | [![](https://travis-ci.org/enjoy-digital/litedram.svg?branch=master)](https://travis-ci.org/enjoy-digital/litedram)     | DRAM        |
+| [LiteEth](http://github.com/enjoy-digital/liteeth)           | [![](https://travis-ci.com/enjoy-digital/liteth.svg?branch=master)](https://travis-ci.com/enjoy-digital/liteth)       | Ethernet                      |
+| [LitePCIe](http://github.com/enjoy-digital/litepcie)         | [![](https://travis-ci.com/enjoy-digital/litepcie.svg?branch=master)](https://travis-ci.com/enjoy-digital/litpcie)     | PCIe                          |
+| [LiteSATA](http://github.com/enjoy-digital/litesata)         | [![](https://travis-ci.com/enjoy-digital/litesata.svg?branch=master)](https://travis-ci.com/enjoy-digital/litesata)     | SATA                          |
+| [LiteUSB](http://github.com/enjoy-digital/liteusb)           | [![](https://travis-ci.com/enjoy-digital/liteusb.svg?branch=master)](https://travis-ci.com/enjoy-digital/liteusb)      | USB                         |
+| [LiteSDCard](http://github.com/enjoy-digital/litesdcard)     | [![](https://travis-ci.com/enjoy-digital/litesdcard.svg?branch=master)](https://travis-ci.com/enjoy-digital/litesdcard)   | SD card                       |
+| [LiteICLink](http://github.com/enjoy-digital/liteiclink)     | [![](https://travis-ci.com/enjoy-digital/liteiclink.svg?branch=master)](https://travis-ci.com/enjoy-digital/liteiclink)   | Inter-Chip communication      |
+| [LiteJESD204B](http://github.com/enjoy-digital/litejesd204b) | [![](https://travis-ci.com/enjoy-digital/litejesd204b.svg?branch=master)](https://travis-ci.com/enjoy-digital/litejesd204b) | JESD204B                      |
+| [LiteVideo](http://github.com/enjoy-digital/litevideo)       | [![](https://travis-ci.com/enjoy-digital/litevideo.svg?branch=master)](https://travis-ci.com/enjoy-digital/litevideo)    | VGA, DVI, HDMI                     |
+| [LiteScope](http://github.com/enjoy-digital/litescope)       | [![](https://travis-ci.com/enjoy-digital/litescope.svg?branch=master)](https://travis-ci.com/enjoy-digital/litescope)    | Logic analyzer  |
