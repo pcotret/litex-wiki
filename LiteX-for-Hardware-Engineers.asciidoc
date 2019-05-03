@@ -1384,8 +1384,8 @@ Ports:
 
 * *idomain* clockstring: input clock domain (typicaly a string, like "sys" for cd_sys)
 * *odomain* clockstring: output clock domain (also a string)
-* *i* Signal() _implicit_: input signal to synchronize
-* *o* Signal() _implicit_: output signal to synchronize
+* *self.i* Signal() _implicit_: input signal to synchronize
+* *self.o* Signal() _implicit_: output signal to synchronize
 
 Notes:
 
