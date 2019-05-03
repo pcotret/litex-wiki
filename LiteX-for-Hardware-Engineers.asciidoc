@@ -1333,6 +1333,8 @@ Docs about the IP cores.
 
 CAUTION: Migen has a terrible abstraction layer for ports, in that it doesn't. Python offers a perfectly sensible way to define the inputs and outputs of a function, as in, f(a, b, c) would make you think the ports to a function f might just be a, b, and c. However, Migen coders severely abuse the ability in Python to, __post-facto__, reach through the function call abstraction and manipulate local variables within a Migen instance. Migen coders think this is a "feature" because it saves you the hell of modifying layers of Verilog function call templates to break out a deeply buried signal for debugging purposes or when refactoring code. However, it makes figuring out exactly what you can or can't do with IP in migen extremely hard, and most Migen coders make no attempt at all to document what the inputs and outputs of their IP is actually intended to be -- mostly by unwritten convention, familiar mostly to the authors of the IP.
 
+CAUTION: But wait there's more. When specifying clocks, names can be global and referred to explicitly within implementations, or overridden through a completely separate mechanism using clock domain renamers. Or they may not be specified at all in which case they default to "sys"
+
 Here we try to unwind some of that, bit by bit. However, for the "ports" specification, I will refer to only the "typical" variables one might manipulate inside an IP core. Remember, technically, *every* signal inside an IP core can be manipulated using Migen (feature not bug, supposedly).
 
 So:
@@ -1343,6 +1345,25 @@ So:
 ```python
   self.submodules.foo = FooModule(in_port, out_port)
   self.comb += self.foo.implicit_signal.eq(1)  # set implicit_signal inside "foo" to 1
+```
+
+* If listed as "clock", then you need access via the clock & reset domains mechanism, that is:
+```python
+   foo = FooModule(in_port, out_port)
+
+   # in the case of two clocks inside foo named module_clock1, and module_clock2 that need to be
+   # mapped to external_clock1 and external_clock2, respectively:
+   foo = ClockDomainsRenamer({"module_clock1":"external_clock1", "module_clock2":"external_clock"})(foo)
+   # in the case of a single internal named clock called "myclock" that you want to connect to "fastclock":
+   foo = ClockDomainsRenamer({"myclock:fastclock"})
+   # in the case of no internally specified clock, but you want to assign a clock to the module, say, "extclk".
+   # The internal name defaults to "sys". So this is how to do it explicitly:
+   foo = ClockDomainsRenamer({"sys:"extclk"})
+   # But more typically, the "sys" is dropped and it's done just like this:
+   foo = ClockDomainsRenamer("extclk")
+
+   # don't forget to add the module to submodules after doing all the clock stuff!
+   self.submodules += foo
 ```
 
 === MultiReg ===
