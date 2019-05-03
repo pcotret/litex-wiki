@@ -105,6 +105,34 @@ variable to a fixed value, and checking the setting within the Python
 script. It's not possible to change or set the variable once the program
 is started. You can only check it.
 
+== Bit Ordering and Array Indices ==
+One tricking bit on going to Python that always trips me up is bit ordering and array indices, so it's getting a section of its own near the top.
+
+Array indices in Python are foo[offset:offset+length]. So if you want to select the bottom 10 bits of a signal, you do a_python[:10] instead of a_verilog[9:0] (an empty spot has implicit meaning in Python it seems). The next 10 bits is b_python[10:20], instead of b_verilog[19:10]. You can't "reverse" MSB/LSB in Python like you can in Verilog by changing the index order in the brackets.
+
+This is known as the standard Python "slicing" syntax - https://www.pythoncentral.io/how-to-slice-listsarrays-and-tuples-in-python/
+
+Smaller bit-width `Signal()`s can be combined together using the `Cat()` function.
+Note that `Cat()` combines from LSB-to-MSB order (*opposite* of verilog), as follows:
+
+```python
+foo = Signal(7)
+bar = Signal(2)
+baz = Signal()
+self.comb += [
+  foo.eq(Cat(0, 0, bar, 0, baz, 1)),
+]
+```
+
+This is the verilog equivalent of:
+
+```verilog
+wire[6:0] foo;
+wire[1:0] bar;
+wire baz;
+assign foo = {1'b1, baz, 0, bar[1:0], 1'b0, 1'b0};
+```
+
 == What is Migen? ==
 
 Migen is the Python toolbox that's used to create a
@@ -178,26 +206,6 @@ However, most arithmetic operations are available between Signals, e.g.
 `~` is invert, `&` is and, `|` is or, `+` is add, `*` is multiply. I think there's
 also divide and I have no idea about signed types.
 
-Smaller bit-width `Signal()`s can be combined together using the `Cat()` function.
-Note that `Cat()` combines from LSB-to-MSB order (*opposite* of verilog), as follows:
-
-```python
-foo = Signal(7)
-bar = Signal(2)
-baz = Signal()
-self.comb += [
-  foo.eq(Cat(0, 0, bar, 0, baz, 1)),
-]
-```
-
-This is the verilog equivalent of:
-
-```verilog
-wire[6:0] foo;
-wire[1:0] bar;
-wire baz;
-assign foo = {1'b1, baz, 0, bar[1:0], 1'b0, 1'b0};
-```
 
 === Sync ===
 
