@@ -513,17 +513,24 @@ FSM. Here's a basic example of how this works.
 ```
 
 This FSM creates three states, WAIT_SOF, TRANSFER_PIXELS, and EOF, and cycles
-between them based on the cnoditions coded in the If() statements.
+between them based on the conditions coded in the If() statements.
 
-One important convention to note is that all signals referred to in
-the FSM effectivelly gets reset to zero at the beginning of every
-cycle. So, for example, the statement "self.transfer_enable.eq(1)"
-inside "TRANSFER_PIXELS" has no corresponding
-"self.transfer_enable.eq(0)", because this is implicitly executed at
-the top of the FSM code loop, and only if the conditions of the FSM are
-met would the transfer_enable bit be flipped to 1.
+WARNING: *Direct vs. NextValue* There are two ways to set outputs within
+an FSM: direct, and NextValue(). The example above only uses the direct method.
+Direct value settings clear to zero in every state where they are not
+mentioned. Thus, the statement "self.transfer_enable.eq(1)" inside of "TRANSFER_PIXELS"
+only sets transfer_enable to 1 during that state only, and in all other states,
+the value is zero. Furthermore, transfer_enable is a result of an purely combinational
+computation on the state bit, so it changes to 1 upon entering TRANSFER_PIXELS. 
+Alternatively, one can use NextValue(signal, value), as in, 
+"NextValue(self.transfer_enable, 1)". This macro does two things: (1) the value
+is latched, so it persists even after leaving the state (it does not clear
+to zero unless explicitly cleared) and (2) the value will not change until one
+clock edge later. It appears one can use both direct and NextValue at the same
+time, and this will cause the value to change upon entering the state and it
+will persist until cleared. 
 
-It seems that by convention, the first FSM.act() entry is also the
+By convention, the first FSM.act() entry is also the
 reset state of the FSM. This is because as far as I can tell the state
 bits are encoded staring from 0 going up with each successive
 FSM.act() call, and FPGAs by default initialize their registers to
