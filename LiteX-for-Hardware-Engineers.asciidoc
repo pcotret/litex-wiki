@@ -1371,21 +1371,21 @@ Instantiate 2 or more flip flops in a chain to synchronize between clock domains
 
 Ports:
 
-* i Signal(): input (from an asynchronous clock domain)
-* o Signal(): output
-* odmain clockstring (default: "sys"): output clock domain
-* n integer (default 2): depth of flip flop chain
-* reset integer (default 0): reset value
+* *i* Signal(): input (from an asynchronous clock domain)
+* *o* Signal(): output
+* *odmain* clockstring (default: "sys"): output clock domain
+* *n* integer (default 2): parameter, depth of flip flop chain
+* *reset* integer (default 0): parameter, reset value
 
 === PulseSynchronizer ===
 Attempt to synchronize signals between two disparate clock domains. Works only for clocks of similar frequencies. 
 
 Ports:
 
-* idomain clockstring: input clock domain (typicaly a string, like "sys" for cd_sys)
-* odomain clockstring: output clock domain (also a string)
-* i Signal() _implicit_: input signal to synchronize
-* o Signal() _implicit_: output signal to synchronize
+* *idomain* clockstring: input clock domain (typicaly a string, like "sys" for cd_sys)
+* *odomain* clockstring: output clock domain (also a string)
+* *i* Signal() _implicit_: input signal to synchronize
+* *o* Signal() _implicit_: output signal to synchronize
 
 Notes:
 
