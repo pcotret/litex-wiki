@@ -1344,7 +1344,7 @@ So:
 
 ```python
    self.submodules.foo = FooModule(in_port, out_port)
-   self.comb += self.foo.implicit_signal.eq(1)  # set implicit_signal inside "foo" to 1
+   self.comb += self.foo.implicit_signal.eq(1)  # set self.implicit_signal inside "foo" to 1
 ```
 
 * If listed as "clock", then you need access via the clock & reset domains mechanism, that is:
@@ -1384,8 +1384,8 @@ Ports:
 
 * *idomain* clockstring: input clock domain (typicaly a string, like "sys" for cd_sys)
 * *odomain* clockstring: output clock domain (also a string)
-* *self.i* Signal() _implicit_: input signal to synchronize
-* *self.o* Signal() _implicit_: output signal to synchronize
+* self.*i* Signal() _implicit_: input signal to synchronize
+* self.*o* Signal() _implicit_: output signal to synchronize
 
 Notes:
 
