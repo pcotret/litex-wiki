@@ -1339,12 +1339,12 @@ Here we try to unwind some of that, bit by bit. However, for the "ports" specifi
 
 So:
 
-* For "Ports", if listed as a simple name, then it's specifiable as a function parameter.
+* For "Ports", if listed as a simple name, then it's specifiable as a function parameter. Of course "Ports" are untyped in Python, thus since every type of object can be passed, every type of object has been passed. Sometimes it's a Signal(), sometimes it's a clock string, sometimes it's just a configuration flag. If not mentioned, it's a Signal, but clarified on a case by case basis. 
 * If listed as "implicit", then you need to access the port by reaching into the instantiated object, that is:
 
 ```python
-  self.submodules.foo = FooModule(in_port, out_port)
-  self.comb += self.foo.implicit_signal.eq(1)  # set implicit_signal inside "foo" to 1
+   self.submodules.foo = FooModule(in_port, out_port)
+   self.comb += self.foo.implicit_signal.eq(1)  # set implicit_signal inside "foo" to 1
 ```
 
 * If listed as "clock", then you need access via the clock & reset domains mechanism, that is:
@@ -1371,21 +1371,21 @@ Instantiate 2 or more flip flops in a chain to synchronize between clock domains
 
 Ports:
 
-* i: input (from an asynchronous clock domain)
-* o: output
-* odmain (default: sys): output clock domain
-* n (default 2): depth of flip flop chain
-* reset (default 0): reset state
+* i Signal(): input (from an asynchronous clock domain)
+* o Signal(): output
+* odmain clockstring (default: "sys"): output clock domain
+* n integer (default 2): depth of flip flop chain
+* reset integer (default 0): reset value
 
 === PulseSynchronizer ===
 Attempt to synchronize signals between two disparate clock domains. Works only for clocks of similar frequencies. 
 
 Ports:
 
-* idomain: input clock domain (typicaly a string, like "sys" for cd_sys)
-* odomain: output clock domain (also a string)
-* i _implicit_: input signal to synchronize
-* o _implicit_: output signal to synchronize
+* idomain clockstring: input clock domain (typicaly a string, like "sys" for cd_sys)
+* odomain clockstring: output clock domain (also a string)
+* i Signal() _implicit_: input signal to synchronize
+* o Signal() _implicit_: output signal to synchronize
 
 Notes:
 
