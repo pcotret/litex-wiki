@@ -1308,13 +1308,12 @@ to pick out subtle bugs in your Python code
 == IP Cores ==
 Docs about the IP cores.
 
-Migen has a terrible abstraction layer for ports, in that it doesn't. Python offers a perfectly sensible way to define the inputs and outputs of a function, as in, f(a, b, c) would make you think the ports to a function f might just be a, b, and c. However, Migen coders severely abuse the ability in Python to, __post-facto__, reach through the function call abstraction and manipulate local variables within a Migen instance. 
-
-Migen coders think this is a "feature" because it saves you the hell of modifying layers of Verilog function call templates to break out a deeply buried signal for debugging purposes. However, it makes figuring out exactly what you can or can't do with IP in migen extremely hard, and most Migen coders make no attempt at all to document what the inputs and outputs of their IP is actually intended to be -- mostly by unwritten convention, familiar mostly to the authors of the IP.
+CAUTION: Migen has a terrible abstraction layer for ports, in that it doesn't. Python offers a perfectly sensible way to define the inputs and outputs of a function, as in, f(a, b, c) would make you think the ports to a function f might just be a, b, and c. However, Migen coders severely abuse the ability in Python to, __post-facto__, reach through the function call abstraction and manipulate local variables within a Migen instance. Migen coders think this is a "feature" because it saves you the hell of modifying layers of Verilog function call templates to break out a deeply buried signal for debugging purposes. However, it makes figuring out exactly what you can or can't do with IP in migen extremely hard, and most Migen coders make no attempt at all to document what the inputs and outputs of their IP is actually intended to be -- mostly by unwritten convention, familiar mostly to the authors of the IP.
 
 Here we try to unwind some of that, bit by bit. However, for the "ports" specification, I will refer to only the "typical" variables one might manipulate inside an IP core. Remember, technically, *every* signal inside an IP core can be manipulated using Migen (feature not bug, supposedly).
 
 So:
+
 * For "Ports", if listed as a simple name, then it's specifiable as a function parameter.
 * If listed as "implicit", then you need to access the port by reaching into the instantiated object, that is:
 
@@ -1327,6 +1326,7 @@ So:
 Instantiate 2 or more flip flops in a chain to synchronize between clock domains
 
 Ports:
+
 * i: input (from an asynchronous clock domain)
 * o: output
 * odmain (default: sys): output clock domain
@@ -1337,15 +1337,18 @@ Ports:
 Attempt to synchronize signals between two disparate clock domains. Works only for clocks of similar frequencies. 
 
 Ports:
+
 * idomain: input clock domain (typicaly a string, like "sys" for cd_sys)
 * odomain: output clock domain (also a string)
 * i _implicit_: input signal to synchronize
 * o _implicit_: output signal to synchronize
 
 Notes:
+
 I believe this block was designed to synchronize signals between similar-frequency, but asynchronous domains. That is, two 100 MHz clocks, but originating from different crystals. Generally the block's function make sense if the ratio of frequencies is within a factor of 2.
 
 However, if the idomain and odomain clocks are of very different frequencies (e.g. 20MHz to 100MHz), the following caveats have been observed:
+
 * idomain faster than odomain: short idomain pulses are lost. pulsing behavior of the output depends on relative timing of the input pulse to the output pulse
 * odmain faster than idomain: incoming pulses get turned into a pulse train toggling at the rate of the incoming pulse. e.g. even if you have a single idomain-synchronized pulse, at a minimum you will always get two odomain-synchronized pulses.
 
@@ -1357,6 +1360,7 @@ I've prepared a simple template you can use to run simulations at https://github
 This template simulates the PulseSynchronizer primitive that's part of the Migen CDC suite. It demonstrates how to create multiple clocks, connect them, and draw test vectors out of a Python array. Finally, the system automatically starts a GUI so you can run the simulation and browse the results in the native Vivado waveform environment. 
 
 I did my best to incorporate documentation into the example file itself. Please note that it has the following external dependencies:
+
 * lxbuildenv_sim.py -- this is needed to force the Python runtime enviroment into a sane state
 * glbl.v -- this is Xilinx-specific and needed to setup the FPGA's internal global state
 * run/ -- this is where the actual run data is stored. The sim_pulsesync.py script will create a top.v and top_tb.v file in here, and invoke the simulator in this directory. Any data in this directory should be considered temporary.
