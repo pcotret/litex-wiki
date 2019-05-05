@@ -396,6 +396,7 @@ On the Xilinx platform, these are the specials I'm aware of:
 * AsyncResetSynchronizer
 * DifferentialInput
 * DifferentialOutput
+* Memory
 
 You might be tempted to stick a special in the `submodules` attribute,
 but that won't work because their template class is `Special`, not `Module`.
@@ -859,6 +860,202 @@ void my_module_isr(void) {
 To be written -- simple walk-through of the
 basic stuff needed to implement an lm32 CPU with a clock generator
 
+=== Memory ===
+
+Memory is a "special" in migen, as in, it doesn't fit into self.comb
+or self.sync, and requires platform-specific code to support. This one
+actually has some documentation in the Migen manual
+(https://m-labs.hk/migen/manual/fhdl.html#memories), but we expand
+upon it here with examples.
+
+The Memory() function takes the following arguments:
+
+* width (mandatory) - width in bits
+* depth (mandotory) - depth in width-wide units (so width=32, depth=16 is 64 bytes of memory)
+* init (optional) - an array of numbers which sets the initial value of the memory
+* name (optional) - override the default name of "mem" for the memory
+
+For example, this will make a 16-entry, 32-bit wide memory:
+
+```python
+   self.specials.mem = Memory( 32, 16 )
+```
+
+If you just included this one line of code in your design, it creates
+a memory object that has an implicit and automatically generated
+read/write interface to the CPU via wishbone, sharing a portion of CSR
+register space. You should find a reference to the memory inside
+build/software/include/generated/csr.h, and the memory will be
+automatically placed in the lowest CSR bank.
+
+This is pretty handy if you just want some scratchpad ram for your CPU,
+but more typically you want to interact with the memory from your own
+hardware. There's three typical configurations for this:
+
+1. Wishbone r/w, local logic read-only
+2. Wishbone read-only, local logic write-only
+3. No wishbone interface, just local logic read/write
+
+Basically, you're allowed just one write port without also inferring
+an arbiter. Although the RAMB36E1 primitive supports two write ports,
+the verilog template used to infer them is rejected by Vivado (as of
+2018.2).
+
+In general, to gain access to a Memory object from logic, you will
+call the get_port() function on the logic. This returns a "port"
+object, which contains the signals you need to connect to the memory.
+
+Memory.get_port() takes the following arguments:
+
+* *adr* Signal(aw): input address to the RAM. Up to the caller to guarantee correct width.
+* *dat_r* Signal(dw): output data from the RAM. Up to the caller to guarantee correct width.
+* *write_capable* boolean (default: False) - set to True if you need the
+port to have write capability.
+* *async_read* boolean (default: False) - The master docs claim this
+would infer an asynchronous read port, but block RAM doesn't support this.
+So perhaps this uses distributed RAM, which would make it resource-inefficient?
+* *has_re* boolean (default: False) - adds a read clock enable, ignored
+for asynchronous ports
+* *we_granularity* integer (default: 0) - infer write enable masks. The
+width of the "we" signal grows automatically to be data width / we_granularity.
+If zero, the "we" signal will write the entire word width.
+* *mode* range (default: WRITE_FIRST) - In synchronous memory, defines behavior
+of simultaneous read/writes. One of WRITE_FIRST, READ_FIRST, NO_CHANGE. WRITE_FIST
+means the simultaneously written value is returned. READ_FIRST means the previous
+value is returned. NO_CHANGE means that during writes, the data signal holds its
+previous value. Presumably if the address changes during a write the read value
+would not update to reflect the new address.
+* *clock_domain* clockstring (default: "sys"): clock domain of the returned port object.
+
+The returned port object has the following signals:
+
+* self.*adr* Signal(aw) _implicit_: the adr argument
+* self.*dat_r* Signal(dw) _implicit_: the dat_r argument
+* self.*we* Signal(dw/we_granularity) _implicit_: write enable. Width depends
+on the we_granularity parameter, defaults to a single bit.
+* self.*dat_w* Signal(dw) _implicit_: data to write to RAM
+* self.*re* Signal() _implicit_: read enable signal, if synchronous
+
+==== Wishbone r/w, logic ro ====
+
+This design pattern is fairly straightforward. Create the Memory() object,
+call get_port() on it with no arguments to create a MemoryPort() object,
+and then acess the port using the .adr and .dat_r Signals().
+
+```python
+   self.specials.mem = Memory( data_width, depth )
+   self.specials.rdport = self.mem.get_port()
+   self.comb += self.rdport.adr.eq( some_address_signal )
+   self.comb += data_destination.eq( self.rdport.dat_r )
+```
+
+This creates a memory object in the CSR space that the CPU can
+write data to, and then your local logic can retrieve parameters
+out of this memory as needed by indexing into the address.
+
+==== Wishbone ro, logic wo ====
+
+This design pattern is a bit more complicated. Here, we fail to
+add Memory() as a "specials", but just keep the variable local
+to the function. This prevents it from being caught in the CSR
+"finalizer" sweep, so no wishbone CSR port is inferred, clearing
+the way for you to add your local logic port.
+
+Here's how you would make the memory in the logic module:
+```python
+   class Logic_with_memory(Module):
+      mem = Memory( data_width, depth )
+      self.specials.port = mem.get_port( write_capable=True )
+      
+      # connect the write port to local logic
+      self.comb += [
+         self.port.adr.eq( local_adr ),
+         self.port.dat_w.eq( logic_write_data ),
+         self.port.we.eq( logic_write_enable_signal )
+      ]
+      
+      # attach a wishbone interface to the Memory() object, with a read-only port
+      self.submodules.wb_sram_if = wishbone.SRAM(mem, read_only=True)
+      
+      # get the wishbone Interface accessor object
+      self.bus = wishbone.Interface()
+      
+      # build an address filter object. This is a migen expression returns 1
+      # when the address "a" matches the RAM address space. Useful for precisely
+      # targeting the RAM relative to other wishbone-connected objects within
+      # the logic, e.g. other RAM blocks or registers.
+      # 
+      # This filter means the RAM object will occupy its entire own CSR block,
+      # with aliased copies of the RAM filling the entire block
+      def slave_filter(a):
+          return 1
+      # This filter constrains the RAM to just its own address space
+      decoder_offset = log2_int(sram_depth, need_pow2=False)
+      def slave_filter_noalias(a):
+          return a[decoder_offset:32 - decoder_offset] == 0
+      
+      # connect the Wishbone bus to the Memory wishbone port, using the address filter
+      # to help decode the address.
+      # The decdoder address filter as a list with entries as follows:
+      #   (filter_function, wishbone_interface.bus)
+      # This is useful if you need to attach multiple local logic memories into the
+      # same wishbone address bank.
+      wb_con = wishbone.Decoder(self.bus, [(slave_filter, self.wb_sram_if.bus)], register=True)
+      # add the decoder as a submodule so it gets pulled into the finalize sweep
+      self.submodules += wb_con
+ ```
+
+And to integrate the logic module into your top level SoC code:
+ ```python
+
+   # Now we are at the top level SoC module, wherever that may be
+   class MySoC(SoCCore):
+     mem_map = {
+        "logic_memory": 0x30000000,  # this just needs to be a unique block
+     }
+     mem_map.update(SoCCore.mem_map)
+     def __init__(self, **kwargs):
+        # top-level logic stuff
+	# infer the logic block with memory
+	self.submodules.logicmem = Logic_with_memory() # the above function
+
+	# add the wishbone slave mapping to the mem_map entry made above
+        self.add_wb_slave(mem_decoder(self.mem_map["logic_memory"]), self.logicmem.bus)
+
+        # define the memory region size/location
+	# memdepth is the depth of the memory inferred in your logic block
+	# the length is in bytes, so for example if the data_width of your memory
+	# block is 32 bits, the total length is memdepth * 4
+        self.add_memory_region("logic_memory", self.mem_map["logic_memory"] |
+	                       self.shadow_base, memdepth * data_width//8)
+	
+```
+
+==== No wishbone, logic r/w ====
+
+This design pattern is fairly straightforward. Just create the Memory()
+object, don't add it as a special, but create local read and write ports
+using get_port().
+
+```python
+     storage = Memory(width, depth)
+
+     wrport = storage.get_port(write_capable=True)
+     self.specials += wrport
+     self.comb += [
+         wrport.adr.eq(produce),
+         wrport.dat_w.eq(self.din),
+         wrport.we.eq(1)
+     ]
+	
+     rdport = storage.get_port()
+     self.specials += rdport
+     self.comb += [
+         rdport.adr.eq(consume),
+         self.dout.eq(rdport.dat_r)
+     ]
+```
+
 == Design Patterns ==
 
 A collection of design patterns enabled by the migen toolbox.
@@ -1021,7 +1218,7 @@ class _SyncBuffer(Module):
         self.sync += If(self.re, _inc(consume, depth))
 ```
 
-This uses the "storage" paradigm plus pointer arithmetic. It has the
+This uses the "Memory" paradigm plus pointer arithmetic. It has the
 advantage that the delay can be varied dynamically (not at compile time)
 and can also be more efficient for long delays, since instead of eating
 FD's for delays it's using a block RAM. It does require some additional
