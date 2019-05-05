@@ -1,5 +1,6 @@
 :toc:
 :toc-placement!:
+:toclevels: 3
 ifdef::env-github[]
 :tip-caption: :bulb:
 :note-caption: :information_source:
@@ -1003,10 +1004,10 @@ Here's how you would make the memory in the logic module:
       wb_con = wishbone.Decoder(self.bus, [(slave_filter, self.wb_sram_if.bus)], register=True)
       # add the decoder as a submodule so it gets pulled into the finalize sweep
       self.submodules += wb_con
- ```
+```
 
 And to integrate the logic module into your top level SoC code:
- ```python
+```python
 
    # Now we are at the top level SoC module, wherever that may be
    class MySoC(SoCCore):
