@@ -175,7 +175,7 @@ to have an IDE with a debug mode that allows you to click into a stack level
 and then inspect variables at various stack levels to try and identify where
 you went wrong. 
 
-CAUTION: forgetting to add new objects to one of the five key Module
+CAUTION: Forgetting to add new objects to one of the five key Module
 attributes means it will not be finalized. Thus, _you_ might see your logic
 in the Python code, but if it doesn't get finalized, it might as well just be
 commented out as far as migen is concerned.
@@ -876,13 +876,13 @@ basic stuff needed to implement an lm32 CPU with a clock generator
 
 === Memory ===
 
-Memory is a "special" in migen, as in, it doesn't fit into self.comb
-or self.sync, and requires platform-specific code to support. This one
+Memory is a `special` in migen, as in, it doesn't fit into `self.comb`
+or `self.sync`, and requires platform-specific code to support. This one
 actually has some documentation in the Migen manual
 (https://m-labs.hk/migen/manual/fhdl.html#memories), but we expand
 upon it here with examples.
 
-The Memory() function takes the following arguments:
+The `Memory()` function takes the following arguments:
 
 * width (mandatory) - width in bits
 * depth (mandotory) - depth in width-wide units (so width=32, depth=16 is 64 bytes of memory)
@@ -916,13 +916,13 @@ the verilog template used to infer them is rejected by Vivado (as of
 2018.2).
 
 In general, to gain access to a Memory object from logic, you will
-call the get_port() function on the logic. This returns a "port"
+call the `get_port()` function on the logic. This returns a "port"
 object, which contains the signals you need to connect to the memory.
 
-Memory.get_port() takes the following arguments:
+`Memory.get_port()` takes the following arguments:
 
-* *adr* Signal(aw): input address to the RAM. Up to the caller to guarantee correct width.
-* *dat_r* Signal(dw): output data from the RAM. Up to the caller to guarantee correct width.
+* *adr* `Signal(aw)`: input address to the RAM. Up to the caller to guarantee correct width.
+* *dat_r* `Signal(dw)`: output data from the RAM. Up to the caller to guarantee correct width.
 * *write_capable* boolean (default: False) - set to True if you need the
 port to have write capability.
 * *async_read* boolean (default: False) - The master docs claim this
@@ -943,18 +943,18 @@ would not update to reflect the new address.
 
 The returned port object has the following signals:
 
-* self.*adr* Signal(aw) _implicit_: the adr argument
-* self.*dat_r* Signal(dw) _implicit_: the dat_r argument
-* self.*we* Signal(dw/we_granularity) _implicit_: write enable. Width depends
+* self.*adr* `Signal(aw)` _implicit_: the adr argument
+* self.*dat_r* `Signal(dw)` _implicit_: the dat_r argument
+* self.*we* `Signal(dw/we_granularity)` _implicit_: write enable. Width depends
 on the we_granularity parameter, defaults to a single bit.
-* self.*dat_w* Signal(dw) _implicit_: data to write to RAM
-* self.*re* Signal() _implicit_: read enable signal, if synchronous
+* self.*dat_w* `Signal(dw)` _implicit_: data to write to RAM
+* self.*re* `Signal()` _implicit_: read enable signal, if synchronous
 
 ==== Wishbone r/w, logic ro ====
 
-This design pattern is fairly straightforward. Create the Memory() object,
-call get_port() on it with no arguments to create a MemoryPort() object,
-and then acess the port using the .adr and .dat_r Signals().
+This design pattern is fairly straightforward. Create the `Memory()` object,
+call `get_port()` on it with no arguments to create a `MemoryPort()` object,
+and then acess the port using the `.adr` and `.dat_r` `Signals()`.
 
 ```python
    self.specials.mem = Memory( data_width, depth )
@@ -970,7 +970,7 @@ out of this memory as needed by indexing into the address.
 ==== Wishbone ro, logic wo ====
 
 This design pattern is a bit more complicated. Here, we fail to
-add Memory() as a "specials", but just keep the variable local
+add `Memory()` as a "specials", but just keep the variable local
 to the function. This prevents it from being caught in the CSR
 "finalizer" sweep, so no wishbone CSR port is inferred, clearing
 the way for you to add your local logic port.
@@ -1047,9 +1047,9 @@ And to integrate the logic module into your top level SoC code:
 
 ==== No wishbone, logic r/w ====
 
-This design pattern is fairly straightforward. Just create the Memory()
+This design pattern is fairly straightforward. Just create the `Memory()`
 object, don't add it as a special, but create local read and write ports
-using get_port().
+using `get_port()`.
 
 ```python
      storage = Memory(width, depth)
@@ -1550,7 +1550,7 @@ Here we try to unwind some of that, bit by bit. However, for the "ports" specifi
 
 So:
 
-* For "Ports", if listed as a simple name, then it's specifiable as a function parameter. Of course "Ports" are untyped in Python, thus since every type of object can be passed, every type of object has been passed. Sometimes it's a Signal(), sometimes it's a clock string, sometimes it's just a configuration flag. If not mentioned, it's a Signal, but clarified on a case by case basis. 
+* For "Ports", if listed as a simple name, then it's specifiable as a function parameter. Of course "Ports" are untyped in Python, thus since every type of object can be passed, every type of object has been passed. Sometimes it's a `Signal()`, sometimes it's a clock string, sometimes it's just a configuration flag. If not mentioned, it's a `Signal()`, but clarified on a case by case basis. 
 * If listed as "implicit", then you need to access the port by reaching into the instantiated object, that is:
 
 ```python
@@ -1582,8 +1582,8 @@ Instantiate 2 or more flip flops in a chain to synchronize between clock domains
 
 Ports:
 
-* *i* Signal(): input (from an asynchronous clock domain)
-* *o* Signal(): output
+* *i* `Signal()`: input (from an asynchronous clock domain)
+* *o* `Signal()`: output
 * *odmain* clockstring (default: "sys"): output clock domain
 * *n* integer (default 2): parameter, depth of flip flop chain
 * *reset* integer (default 0): parameter, reset value
@@ -1595,8 +1595,8 @@ Ports:
 
 * *idomain* clockstring: input clock domain (typicaly a string, like "sys" for cd_sys)
 * *odomain* clockstring: output clock domain (also a string)
-* self.*i* Signal() _implicit_: input signal to synchronize
-* self.*o* Signal() _implicit_: output signal to synchronize
+* self.*i* `Signal()` _implicit_: input signal to synchronize
+* self.*o* `Signal()` _implicit_: output signal to synchronize
 
 Notes:
 
