@@ -136,10 +136,10 @@ assign foo = {1'b1, baz, 0, bar[1:0], 1'b0, 1'b0};
 
 == What is Migen? ==
 
-Migen is the Python toolbox that's used to create a
+Migen is the Python toolbox that is used to create a
 description of your hardware design. It abuses the Python's
 object-oriented class and method system to create a design tree embodied
-as a single mega-object.
+as a single mega-object using a process called "finalization". 
 
 For design description, the base class is a "Module". It has five key
 attributes used to organize the elements that describe any hardware
@@ -167,7 +167,20 @@ that later. A `Signal()` has no inherent direction, clock domain, or
 meaning. It picks this all up based on how you use it: which attribute
 of the `Module` class you've assigned it to, and so forth.
 
-So let's look at what each of these attributes are, one at a time.
+TIP: Dangling references and signal name typos will result in Python crashes during
+the finalization process, and you are expected to dig through the stack
+trace to find the problem. Because finalization disassociates the locality
+of a reference from the code that created it, this can be difficult. It helps
+to have an IDE with a debug mode that allows you to click into a stack level
+and then inspect variables at various stack levels to try and identify where
+you went wrong. 
+
+CAUTION: forgetting to add new objects to one of the five key Module
+attributes means it will not be finalized. Thus, _you_ might see your logic
+in the Python code, but if it doesn't get finalized, it might as well just be
+commented out as far as migen is concerned.
+
+Let's look at what each of these five attributes are, one at a time.
 
 === Comb ===
 
