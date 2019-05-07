@@ -1581,6 +1581,7 @@ So:
 Instantiate 2 or more flip flops in a chain to synchronize between clock domains
 
 Class: `specials`
+
 Ports:
 
 * *i* `Signal()`: input (from an asynchronous clock domain)
@@ -1594,6 +1595,7 @@ Ports:
 Attempt to synchronize signals between two disparate clock domains. Works only for clocks of similar frequencies. 
 
 Class: `submodules`
+
 Ports:
 
 * *idomain* clockstring: input clock domain (typicaly a string, like "sys" for cd_sys)
@@ -1614,6 +1616,7 @@ However, if the idomain and odomain clocks are of very different frequencies (e.
 Synchronize a group of signals between clock domains.
 
 Class: `submodules`
+
 Ports:
 
 * *width* integer: parameter, width of the bus to synchronize
