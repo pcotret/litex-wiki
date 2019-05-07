@@ -1580,6 +1580,7 @@ So:
 === MultiReg ===
 Instantiate 2 or more flip flops in a chain to synchronize between clock domains
 
+Class: `specials`
 Ports:
 
 * *i* `Signal()`: input (from an asynchronous clock domain)
@@ -1589,8 +1590,10 @@ Ports:
 * *reset* integer (default 0): parameter, reset value
 
 === PulseSynchronizer ===
+
 Attempt to synchronize signals between two disparate clock domains. Works only for clocks of similar frequencies. 
 
+Class: `submodules`
 Ports:
 
 * *idomain* clockstring: input clock domain (typicaly a string, like "sys" for cd_sys)
@@ -1606,6 +1609,33 @@ However, if the idomain and odomain clocks are of very different frequencies (e.
 
 * idomain faster than odomain: short idomain pulses are lost. pulsing behavior of the output depends on relative timing of the input pulse to the output pulse
 * odmain faster than idomain: incoming pulses get turned into a pulse train toggling at the rate of the incoming pulse. e.g. even if you have a single idomain-synchronized pulse, at a minimum you will always get two odomain-synchronized pulses.
+
+=== BusSynchronizer ===
+Synchronize a group of signals between clock domains.
+
+Class: `submodules`
+Ports:
+
+* *width* integer: parameter, width of the bus to synchronize
+* *idomain* clockstring: input clock domain (typicaly a string, like "sys" for cd_sys)
+* *odomain* clockstring: output clock domain (also a string)
+* *timeout* integer: parameter, max idomain cycles to wait before just declaring the bus is synchronized
+* self.*i* `Signal(width)` _implicit_: input signal to synchronize
+* self.*o* `Signal(width)` _implicit_: output signal to synchronize
+
+Notes:
+
+If width is 1, falls back to a simple MultiReg.
+
+Use a pair of PulseSynchronizers to create a ping/pong signal that
+frames a sampling window to update the bus that's away from the odomain's
+rising edge. 
+
+There's a few hacks (like the timeout parameter) to try and get it to
+work with very disparate clock speeds and problems like reset glitches.
+I've had at least one difficult bug due to a failure of the module to
+work properly, but generally pretty handy especially if the input
+and output clock domains are close in frequency.
 
 == Simulation ==
 There are many simulation flows available in migen/litex. I've only used one, which relies on xvlog from the native Xilinx toolchain. I prefer this one because I have greater confidence that it simulates internal hard IP macros (like SERDES and PLL) correctly. 
