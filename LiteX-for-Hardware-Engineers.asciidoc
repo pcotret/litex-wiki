@@ -1640,6 +1640,46 @@ I've had at least one difficult bug due to a failure of the module to
 work properly, but generally pretty handy especially if the input
 and output clock domains are close in frequency.
 
+=== PWM ===
+Instantiate a PWM controller
+
+Class: `submodules`
+Project: https://github.com/timvideos/litex-buildenv
+Import: from gateware.PWM import pwm 
+
+Ports:
+
+* *pwm* `Signal()`: PWM output signal
+* CSR enable (wo, 1) - write 1 to enable PWM output
+* CSR width (wo, 32) - width of PWM "high" in PWM clock units
+* CSR period (wo, 32) - width of total PWM cycle in PWM clock units
+
+Notes:
+
+The default clock units for the PWM module is whatever the "sys" domain is,
+but you can use a `ClockDomainsRenamer()` to change that. 
+
+Output is guaranteed to be 0 when enable is not set.
+
+=== ClassicLed ===
+Convenience macro for connecting a GPIO pin to a CSR (often useful
+for status LEDs)
+
+Class: `submodules`
+Project: https://github.com/timvideos/litex-buildenv
+Import: from gateware import pwm 
+
+Ports:
+
+* pads PadGroup - PARAMETER, may be a variable-width `Signal()`
+* CSR out_write (wo, N) - automatic CSR to control GPIOs, based on width of PadGroup
+Notes:
+
+Connects the pads in the PadGroup to a CSR. Note that the mapping of pads
+to bits goes from "LSB ... MSB". The pads are typically derived by calling
+platform.request() to return the respective `Signal()`.
+
+
 == Simulation ==
 There are many simulation flows available in migen/litex. I've only used one, which relies on xvlog from the native Xilinx toolchain. I prefer this one because I have greater confidence that it simulates internal hard IP macros (like SERDES and PLL) correctly. 
 
