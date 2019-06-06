@@ -474,6 +474,18 @@ self.platform.add_source("full/path/to_module/module1.v")
 This leaves the module heirarchy intact, and you also have to add all
 submodules referenced by your verilog to the path as well.
 
+Specials can also be used to refer to vendor IP.  eg.
+
+```python
+        # ila
+        platform.add_source("ila_0/ila_0.xci")
+        probe0 = Signal(6)
+        self.comb += probe0.eq(Cat(spi_pads.clk, spi_pads.cs_n, spi_pads.wp, spi_pads.hold, spi_pads.miso, spi_pads.mosi))
+        self.specials += [
+            Instance("ila_0", i_clk=self.crg.cd_sys.clk, i_probe0=probe0),
+            ]
+```
+
 ==== MultiReg ====
 
 MultiReg is a one-bit synchronizer for crossing
