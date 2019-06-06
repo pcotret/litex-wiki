@@ -484,6 +484,9 @@ Specials can also be used to refer to vendor IP.  eg.
         self.specials += [
             Instance("ila_0", i_clk=self.crg.cd_sys.clk, i_probe0=probe0),
             ]
+        platform.toolchain.additional_commands +=  [
+            "write_debug_probes -force {build_name}.ltx",
+        ]
 ```
 
 ==== MultiReg ====
