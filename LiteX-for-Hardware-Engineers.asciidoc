@@ -26,7 +26,7 @@ Vivado or ISE, to create bitstreams ("gateware") for FPGAs.
 LiteX is relies on a Python toolbox called
 https://github.com/m-labs/migen[Migen]. In addition to a build
 environment, it provides a set of IP blocks. Some of the IP blocks
-include a DDR2/3 MIG equivalent, various softcore CPUs (lm32, or1k,
+include a DDR2/3 MIG equivalent, various softcore CPUs (lm32, openrisc,
 RISCV), Ethernet controller, HDMI input/output, Wishbone routing
 fabrics, streams, and PCI express.
 
