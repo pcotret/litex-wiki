@@ -699,7 +699,7 @@ class VideoOverlaySoC(BaseSoC):
 
         platform.add_source(os.path.join("overlay", "i2c_snoop.v"))
         self.submodules.i2c_snoop = i2c_snoop = I2Csnoop(hdmi_in0_pads)  # the submodule name here must match the csr_peripherals string
-````
+```
 
 You'll end up getting a set of CSR helper functions located in the
 csr.h file.  You want to use the helper functions because they hide
