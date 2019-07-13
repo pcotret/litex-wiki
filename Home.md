@@ -3,9 +3,8 @@
                       / /  (_) /____ | |/_/
                      / /__/ / __/ -_)>  <
                     /____/_/\__/\__/_/|_|
-                         Migen inside
+                  Build your hardware, easily!
 
-                Build your hardware, easily!
               Copyright 2012-2019 / EnjoyDigital
 ```
 [![](https://travis-ci.com/enjoy-digital/litex.svg?branch=master)](https://travis-ci.com/enjoy-digital/litex)
