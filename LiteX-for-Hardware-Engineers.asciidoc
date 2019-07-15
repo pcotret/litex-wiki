@@ -1459,9 +1459,9 @@ adapter, or the other side of the ethernet connection. `litex_server` can
 drive a multiplicity of bridge interfaces, as specified by command line
 arguments:
 
-* `litex_server udp 10.0.11.2 &` would start an ethernet server for
+* `litex_server --udp --udp-ip 10.0.11.2 &` would start an ethernet server for
 the above example
-* `litex_server uart /dev/ttyUSB0 115200 &` would start a UART server,
+* `litex_server --uart --uart-port /dev/ttyUSB0 --uart-baudrate 115200 &` would start a UART server,
 assuming an FTDI available on `/dev/ttyUSB0`
 
 Once you've got the server running in the background, you can connect to
@@ -1471,7 +1471,7 @@ as the XADC if you have it instantiated in your SoC:
 
 ```python
 #!/usr/bin/env python3
-from litex.soc.tools.remote import RemoteClient
+from litex.tools.litex_client import RemoteClient
 
 wb = RemoteClient()
 wb.open()
@@ -1488,7 +1488,7 @@ wb.close()
 To read out the analyzer, you can use this script:
 
 ```python
-from litex.soc.tools.remote import RemoteClient
+from litex.tools.litex_client import RemoteClient
 from litescope.software.driver.analyzer import LiteScopeAnalyzerDriver
 
 wb = RemoteClient()
