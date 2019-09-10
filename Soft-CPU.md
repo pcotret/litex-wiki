@@ -297,7 +297,7 @@ The Rocket Chip is a full-featured, configurable CPU core that implements up to 
 
 ### OS support
 
- * Full upstream Linux support
+ * Full upstream Linux support (for models with MMU enabled)
 
 ### Community
 
