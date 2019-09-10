@@ -14,6 +14,8 @@ Currently the supported Soft CPUs are:
 
 *   [`minerva`](https://github.com/enjoy-digital/litex/tree/master/litex/soc/cores/cpu/minerva) -- a CPU core that currently implements the RISC-V RV32I instruction set with its microarchitecture described in plain Python code using the [nMigen toolbox](https://github.com/m-labs/nmigen).
 
+*   [`rocket`](https://github.com/enjoy-digital/litex/tree/master/litex/soc/cores/cpu/rocket) -- [Rocket Chip](https://github.com/chipsalliance/rocket-chip), a configurable, fully featured, 64-bit `rv64imafdc` capable core.
+
 # Soft CPU Variants
 
 Most of these CPUs have multiple configuration variants which customize the configuration to target a specific type of firmware, performance and resource usage. All these CPUs can be used with your own bare metal firmware.
@@ -59,6 +61,7 @@ Standard is the default configuration which should work well for bare metal firm
  * picorv32
  * or1k
  * vexriscv
+ * rocket
 
 ### Recommended FPGAs
 
@@ -77,6 +80,7 @@ This target enables **all** features of each CPU.
  * (TODO) - picorv32
  * (TODO) - or1k
  * vexriscv
+ * rocket
 
 
 ## `linux`
@@ -87,6 +91,7 @@ This target enables CPU features such as MMU that are required to get Linux boot
 
  * or1k
  * vexriscv
+ * rocket
 
 ---
 
@@ -131,7 +136,7 @@ The `fpu` extension enables a floating point acceleration unit.
 
  * lm32 support was added to upstream GCC around ~2009, no clang support.
  * or1k support was added to upstream GCC in version 9.0.0, clang support was added upstream in version XXX
- * riscv support (VexRISCV, PicoRV32 and Minerva) was added to upstream GCC in version 7.1.0, clang support was added upstream in version 3.1
+ * riscv support (VexRISCV, PicoRV32, Minerva, and Rocket) was added to upstream GCC in version 7.1.0, clang support was added upstream in version 3.1
 
 You can compile your own compiler, download a precompiled toolchain or use an environment like [TimVideos LiteX BuildEnv](https://github.com/timvideos/litex-buildenv/) which provides precompiled toolchain for all three architectures.
 
@@ -274,3 +279,27 @@ The Minerva is a CPU core that currently implements the RISC-V RV32I instruction
 ### Community
 
  * Some activity
+## RISC-V - [`rocket`](https://github.com/enjoy-digital/litex/tree/master/litex/soc/cores/cpu/rocket)
+
+The Rocket Chip is a full-featured, configurable CPU core that implements up to the full RISC-V RV64IMAFDC (a.k.a. RV64GC) instruction set, with its microarchitecture described in [Chisel](https://github.com/freechipsproject/chisel3).
+
+### CPU Variants
+
+ * standard (`rv64imac` without MMU support)
+ * linux (`rv64imac` with enabled hardware MMU)
+ * full (`rv64imafdc` with enabled hardware MMU and FPU)
+
+### Tooling support
+
+ * Upstream GCC
+ * Upstream Binutils
+ * Upstream clang
+
+### OS support
+
+ * Full upstream Linux support
+
+### Community
+
+ * [Lots of activity](https://github.com/chipsalliance/rocket-chip)
+ * Reference design for several taped-out ASICs (e.g., from [SiFive](https://www.sifive.com/risc-v-core-ip))
