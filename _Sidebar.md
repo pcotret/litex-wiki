@@ -9,7 +9,6 @@
   * [Tutorials](Tutorials)
   * [Projects](Projects)
 * LiteX's internals
-  * [SoC builder](SoC-builder)
   * [Cores](Cores)
   * [CPUs](CPUs)
   * [Wishbone Bus](Wishbone-Bus)
@@ -18,7 +17,9 @@
   * [Streams](Streams)
   * [Host Bridges](Host-Bridges)
   * [Build Backends](Build-Backends)
-  * [Simulator](Simulator)
+  * [SoC Builder](SoC-builder)
+  * [SoC Simulator](SoC-Simulator)
+  * [SoC Documentation](SoC-Documentation)
 * How to
   * [Create a minimal SoC](Create-A-minimal-SoC)
   * [Add a new Board](Add-A-New-Board)
@@ -27,7 +28,8 @@
   * [Reuse a Verilog/VHDL Core](Add-A-Verilog-VHDL-Core)
   * [Create and load software to the CPU](Create-And-Load-Software-To-The-CPU)
   * [Use Host Bridges to control/debug a SoC](Use-Host-Bridge-To-Control/Debug-A-SoC)
-  * [Use LiteScope to debug a SoC](Use-LiteScope-To-Debug-A)
+  * [Use LiteScope to debug a SoC](Use-LiteScope-To-Debug-A-SoC)
+  * [Document a SoC](Document-a-SoC)
 * How to (Advanced)
   * [Create a complex SoC with cores from the Ecosystem](Create-A-complex-SoC-With-Cores-From-The-Ecosystem)
   * [Run MicroPython/CircuitPython on your SoC](Run-MicroPython-CircuitPython-On-Your-SoC)
