@@ -1,3 +1,37 @@
-* [[Installation]]
-* [[OS support]]
-* [[Projects]]
+## LiteX Wiki
+---
+* Welcome to LiteX
+  * [Presentation](Presentation)
+  * [Installation](Installation)
+  * [Capabilities](Capabilities)
+  * [Cores-Ecosystem](Cores-Ecosystem)
+  * [OSes-Ecosystem](OSes-Ecosystem)
+  * [Tutorials](Tutorials)
+  * [Projects](Projects)
+* LiteX's internals
+  * [SoC builder](SoC-builder)
+  * [Cores](Cores)
+  * [CPUs](CPUs)
+  * [Wishbone Bus](Wishbone-Bus)
+  * [AXI Bus](AXI-Bus)
+  * [CSR Bus](CSR-Bus)
+  * [Streams](Streams)
+  * [Host Bridges](Host-Bridges)
+  * [Build Backends](Build-Backends)
+  * [Simulator](Simulator)
+* How to
+  * [Create a minimal SoC](Create-A-minimal-SoC)
+  * [Add a new Board](Add-A-New-Board)
+  * [Add a new Core](Add-A-New-Core)
+  * [Add a new CPU](Add-A-New-CPU)
+  * [Reuse a Verilog/VHDL Core](Add-A-Verilog-VHDL-Core)
+  * [Create and load software to the CPU](Create-And-Load-Software-To-The-CPU)
+  * [Use Host Bridges to control/debug a SoC](Use-Host-Bridge-To-Control/Debug-A-SoC)
+  * [Use LiteScope to debug a SoC](Use-LiteScope-To-Debug-A)
+* How to (Advanced)
+  * [Create a complex SoC with cores from the Ecosystem](Create-A-complex-SoC-With-Cores-From-The-Ecosystem)
+  * [Run MicroPython/CircuitPython on your SoC](Run-MicroPython-CircuitPython-On-Your-SoC)
+  * [Run Zephyr on your SoC](Run-Zephyr-On-Your-SoC)
+  * [Run Linux on your SoC](Run-Linux-On-Your-SoC)
+  * [Export your Core/SoC to Verilog](Export-Your-Core-SoC-To-Verilog)
+  * [Create a PCIe SoC](Create-A-PCIe-SoC)
