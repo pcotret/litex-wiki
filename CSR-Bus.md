@@ -121,7 +121,7 @@ up to `csr_data_width` bits. Supported values for `csr_data_width` are
        `csr_data_width > 32` for the time being, and resolve to fix this in
        the future?
 
-A register with more than `csr_data_wdth` bits is spread across multiple
+A register with more than `csr_data_width` bits is spread across multiple
 adjacent "subregisters", with subregisters holding more significant bits
 stored at lower addresses, in a way similar to the Big Endian model.
 
@@ -146,7 +146,39 @@ address.
 
 3. CSR Software Programmer's API
 
-**FIXME**: write this section once the above FIXMEs have been resolved. Mainly,
-it is important to know how the intra-subregister endianness works, before
-we can either document this behavior authoritatively, or, further use this
-information to write a universal OS-kernel bus driver for the LiteX CSR Bus!
+Accessors for CSR (sub)registers are provided in `litex/soc/software/include/hw/common.h`.
+
+The address of an individual CSR subregister must always be aligned at the native CPU word width (which means that `csr_data_width <= cpu_word_width` must always hold true). Accessors for individual (simple) CSR
+subregisters are provided as
+```
+#define MMPTR(a) (*((volatile unsigned long *)(a)))
+
+static inline void csr_write_simple(unsigned long v, unsigned long a)
+{
+        MMPTR(a) = v;
+}
+
+static inline unsigned long csr_read_simple(unsigned long a)
+{
+        return MMPTR(a);
+}
+```
+with the use of `unsigned long` and `unsigned long *` ensuring that the appropriate alignment (matching the CPU word width) is used, regardless of the underlying architecture.
+
+These `csr_[read|write]_simple()` accessors are used to auto-generate the appropriate "access-and-shift" methods for full LiteX CSRs (of up to 64 bits in size, and which may be potentially spread across multiple adjacent simple CSRs) found in `<build_dir>/software/include/generated/csr.h` (the LiteX Python code responsible for generating `csr.h` is found in `litex/soc/integration/export.py:get_csr_header()`).
+
+Besides `csr_[read|write]_simple()`, `litex/soc/software/include/hw/common.h` also provides accessors capable of handling 8/16/32/64-bit wide "compound" LiteX CSRs automatically (regardless of `csr_data_width` or `csr_alignment`), in the form of `csr_[rd|wr]_uint[8|16|32|64]()`. These accessors are all based upon
+```
+static inline uint64_t _csr_rd(volatile unsigned long *a, int csr_bytes)
+static inline void _csr_wr(volatile unsigned long *a, uint64_t v, int csr_bytes)
+```
+which internally access simple CSRs by indexing the address as an array (`a[i]`) rather than dereferencing a pointer (`*a`), but which results in the same load/store CPU opcodes once compiled to binary form.
+
+Finally, (mainly for compound LiteX CSRs wider than 64 bits), a set of automatic accessors is provided which treat the compound CSR as an array or buffer of standard unsigned C integer elements (of 8, 16, 32, or 64 bits each). These accessors are named `csr_[rd|wr]_buf_uint[8|16|32|64]()`. For example, if we wish to treat a 256-bit compound LiteX CSR (starting at address `a`) as an array of 8 32-bit elements, we would use
+```
+static inline void csr_rd_buf_uint32(unsigned long a, uint32_t *buf, int cnt)
+static inline void csr_wr_buf_uint32(unsigned long a, const uint32_t *buf, int cnt)
+```
+making sure that `buf` has room for at least 8 32-bit integers, and setting `cnt = 8`.
+
+**NOTE**: Reports exist that using "automatic" accessors for compound LiteX CSRs results in suboptimal code under certain circumstances. However, testing with `vexriscv`, `gcc 9.2.0`, and the standard LiteX bios CFLAGS, resulted in the generation of identical opcodes to "shift-and-access" accessors based on `csr_[read|write]_simple()`. It is expected that, with newer gcc versions the number of problems will diminish over time, but YMMV!
