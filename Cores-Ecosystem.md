@@ -1,15 +1,15 @@
-External LiteXXX cores
+LiteX cores Ecosystem
 
 | **[LiteDRAM](http://github.com/enjoy-digital/litedram)** | |
 | ----------------------|-------------------------------------------------------------------------------|
-| Build Status          | ![](https://travis-ci.org/enjoy-digital/litedram.svg?branch=master)           |
+| Build Status          | ![](https://travis-ci.com/enjoy-digital/litedram.svg?branch=master)           |
 | Description           | Dynamic RAM controller                                                        |
 | Supported Standards   | SDRAM, DDR, LPDDR, DDR2, DDR3, DDR4                                           |
 | Supported Hardware    | Generic Verilog,<br>Xilinx Spartan 6 + 7 Series + Ultrascale,<br>Lattice ECP5 |
 
 | **[LiteEth](http://github.com/enjoy-digital/liteeth)** | |
 | ----------------------|-------------------------------------------------------------------------------|
-| Build Status          | ![](https://travis-ci.com/enjoy-digital/liteth.svg?branch=master)             |
+| Build Status          | ![](https://travis-ci.com/enjoy-digital/liteeth.svg?branch=master)             |
 | Description           | Ethernet                                                                      |
 | Supported Standards   | 100, 1000 Mbit, MII, GMII & RGMII and many high speed tranceivers             |
 | Supported Hardware    | Generic Verilog,<br>Xilinx Spartan 6 + 7 Series + Ultrascale,<br>Lattice ECP5 |
@@ -28,16 +28,9 @@ External LiteXXX cores
 | Supported Standards   | 1.5/3.0/6.0 GBps                                                              |
 | Supported Hardware    | Xilinx 7-series                                                               |
 
-| **[LiteUSB](http://github.com/enjoy-digital/liteusb)** | |
-| ----------------------|-------------------------------------------------------------------------------|
-| Build Status          | ![](https://travis-ci.com/enjoy-digital/liteusb.svg?branch=master)            |
-| Description           | USB transfer                                                                  |
-| Supported Standards   |                                                                               |
-| Supported Hardware    |                                                                               |
-
 | **[LiteSDCard](http://github.com/enjoy-digital/litesdcard)** | |
 | ----------------------|-------------------------------------------------------------------------------|
-| Build Status          | ![](https://travis-ci.com/enjoy-digital/litesdcard.svg?branch=master)         |
+| Build Status          | ![](https://travis-ci.org/enjoy-digital/litesdcard.svg?branch=master)         |
 | Description           | SD card                                                                       |
 | Supported Standards   | SD / SDHC / SDXC / SDUC, Default Speed, High Speed, UHS-I                     |
 | Supported Hardware    | Xilinx Spartan 6 + 7 Series                                                   |
