@@ -1,7 +1,7 @@
 ## LiteX Wiki
 ---
 * Welcome to LiteX
-  * [Presentation](Presentation)
+  * [Presentation](Home)
   * [Installation](Installation)
   * [Capabilities](Capabilities)
   * [Cores-Ecosystem](Cores-Ecosystem)
