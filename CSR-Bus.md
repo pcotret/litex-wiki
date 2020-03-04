@@ -1,7 +1,6 @@
-LiteX CSRs: A Developer's Overview
-----------------------------------
+# LiteX CSRs: A Developer's Overview
 
-1. LiteX CSR definition and terminology
+## 1. LiteX CSR definition and terminology
 
 LiteX CSRs are MMIO Configuration/Status Registers used to interact with
 and control various hardware peripheral devices included on a LiteX SoC.
@@ -14,9 +13,9 @@ way (see below) when discussing "hardware peripheral MMIO registers" that
 belong to the SoC, and are accessed by the CPU at the direction of various
 pieces of system software (e.g., the Bios, bootloader, or OS kernel).
 
-2. LiteX CSR Addressing
+## 2. LiteX CSR Addressing
 
-2.1. CSR Address Space: Base Address and `csr_address_width`
+### 2.1. CSR Address Space: Base Address and `csr_address_width`
 
 LiteX CSRs are placed in an MMIO segment starting at a Base Address
 (`mem_map["csr"]` in `litex/soc/integration/soc_core.py:SoCCore:__init__()`).
@@ -51,7 +50,7 @@ subsystem to the Wishbone bus.
 the Wishbone bus, alignment is NOT enforced (this FIXME does not have anything
 to do with CSRs per se, but wanted to make sure I remember)
 
-2.2. CSR Bank ID
+### 2.2. CSR Bank ID
 
 All CSRs that belong to the same hardware device are grouped together in
 a "bank", and given a common ID or "map address". 
@@ -106,7 +105,7 @@ uart.ev_enable MMIO addr: 0xe000_2014:
                 <-------------- CSR Bus Address ---------------->
 ```
 
-2.3. Intra-Bank CSR (sub)register selection and `csr_data_width`
+### 2.3. Intra-Bank CSR (sub)register selection and `csr_data_width`
 
 Within a CSR Bank, registers are stored in "slices" or "subregisters" of
 up to `csr_data_width` bits. Supported values for `csr_data_width` are
@@ -144,7 +143,7 @@ in `litex/soc/interconnect/csr_bus.py:CSRBank()` for how an individual
 subregister is selected based on the lesser bits of the provided CSR Bus
 address.
 
-3. CSR Software Programmer's API
+## 3. CSR Software Programmer's API
 
 Accessors for CSR (sub)registers are provided in `litex/soc/software/include/hw/common.h`.
 
