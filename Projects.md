@@ -1,21 +1,11 @@
+
 # LiteX Projects
 
 Collections of projects with LiteX involved that could be useful for users to better understand LiteX, go further and/or find some inspiration.
 
 ## [Linux-on-LiteX-VexRiscv](https://github.com/litex-hub/linux-on-litex-vexriscv)
-```
-                                   __   _
-                                  / /  (_)__  __ ____ __
-                                 / /__/ / _ \/ // /\ \ /
-                                /____/_/_//_/\_,_//_\_\
-                                      / _ \/ _ \
-                      __   _ __      _\___/_//_/ __             _
-                     / /  (_) /____ | |/_/__| | / /____ __ ____(_)__ _____  __
-                    / /__/ / __/ -_)>  </___/ |/ / -_) \ // __/ (_-</ __/ |/ /
-                   /____/_/\__/\__/_/|_|    |___/\__/_\_\/_/ /_/___/\__/|___/
-
-                   Copyright (c) 2019-2020, Linux on LiteX VexRiscv Developers
-```
+![OrangeCrab FPGA board](https://linuxgizmos.com/files/gsd_orangecrab_frontback.jpg)![Linux-on-LiteX-VexRiscv Buildroot prompt](https://pbs.twimg.com/media/EM6jskWXUAAflwE.jpg)
+ 
  - Have an FPGA board with 32MB of RAM and want to test Linux on it? 
  - Want to study/explore a RISC-V Linux capable SoC?
  - Want to create a full autonomous SoC with LiteX and its peripherals (SPI, I2C, SDCard, FrameBuffer, etc...) managed by Linux?
@@ -39,7 +29,7 @@ The [libre SoC](https://github.com/enjoy-digital/netv2) makes use of the PCIe Ge
 The [Fomu](https://www.crowdsupply.com/sutajio-kosagi/fomu) is a tiny FPGA board that fits in your USB port. The SoC of the FPGA is built with LiteX,  a custom version of [VexRiscv](https://github.com/SpinalHDL/VexRiscv) CPU is used for the control and the [ValentyUSB](https://github.com/im-tomu/valentyusb) core allows the board to communicate with the Host computer and emulate various USB devices. Fomu demonstrates how iCE40 designs can be **tiny** and **powerful**: Fomu can run Micropython/Zephyr on its RISC-V CPU while allowing **software debug** over GDB and **gateware debug** over the USB bridge and is able to **reprogram itself** directly from USB with [Foboot](https://github.com/im-tomu/foboot). The [Fomu Workshop](https://workshop.fomu.im/en/latest/) workshop is also a great introduction to FPGA design.
 
 ## [A Trustworthy, Free (Libre), Linux Capable,  Self-Hosting 64bit RISC-V Computer](http://www.contrib.andrew.cmu.edu/~somlo/BTCP/)
-
+FIXME: add description.
 
 ## [USB3 PIPE](https://github.com/enjoy-digital/usb3_pipe)
 ![enter image description here](https://raw.githubusercontent.com/enjoy-digital/usb3_pipe/master/doc/breakout_board.jpg)
