@@ -1,4 +1,3 @@
-
 # LiteX Projects
 
 Collections of projects with LiteX involved that could be useful for users to better understand LiteX, go further and/or find some inspiration.
@@ -28,38 +27,35 @@ This project demonstrates **how high level HDLs (Spinal HDL, Migen) enable new p
 ## [NeTV2](https://www.crowdsupply.com/alphamax/netv2)
 ![enter image description here](https://bunniefoo.com/netv2/netv2-slogan-white.png)
 ![enter image description here](https://www.crowdsupply.com/img/222e/netv2-board-angle-bgd_jpg_project-body.jpg)
+The NeTV2 is a HDMI capture/playback board based on an Xilinx Artix7 FPGA.
 
-FIXME: add description
+The [official SoC](https://github.com/AlphamaxMedia/netv2-fpga) is doing an overlay (up to 1080p60) from the Raspberry Pi 3B+ on an HDMI stream with or without HDCP. The SoC of the Artix7 FPGA is built with LiteX, a VexRiscv CPU is used for the control, [LiteDRAM](https://github.com/enjoy-digital/litedram) as the DDR3 controller to store the CPU firmware and the do HDMI buffering and LiteVideo](https://github.com/enjoy-digital/litevideo)  for the HDMI playback/capture.
+
+The [libre SoC](https://github.com/enjoy-digital/netv2) makes use of the PCIe Gen2 X4 connector of the board with [LitePCIe](https://github.com/enjoy-digital/litepcie) to create a HDMI capture/playback device.
 
 ## [Fomu](https://www.crowdsupply.com/sutajio-kosagi/fomu)
 ![enter image description here](https://www.crowdsupply.com/img/9023/updated-fomu-penny_png_project-body.jpg)
 
-FIXME: add description
-
+The [Fomu](https://www.crowdsupply.com/sutajio-kosagi/fomu) is a tiny FPGA board that fits in your USB port. The SoC of the FPGA is built with LiteX,  a custom version of [VexRiscv](https://github.com/SpinalHDL/VexRiscv) CPU is used for the control and the [ValentyUSB](https://github.com/im-tomu/valentyusb) core allows the board to communicate with the Host computer and emulate various USB devices. Fomu demonstrates how iCE40 designs can be **tiny** and **powerful**: Fomu can run Micropython/Zephyr on its RISC-V CPU while allowing **software debug** over GDB and **gateware debug** over the USB bridge and is able to **reprogram itself** directly from USB with [Foboot](https://github.com/im-tomu/foboot). The [Fomu Workshop](https://workshop.fomu.im/en/latest/) workshop is also a great introduction to FPGA design.
 
 ## [A Trustworthy, Free (Libre), Linux Capable,  Self-Hosting 64bit RISC-V Computer](http://www.contrib.andrew.cmu.edu/~somlo/BTCP/)
 FIXME: add description
 
 ## [USB3 PIPE](https://github.com/enjoy-digital/usb3_pipe)
 ![enter image description here](https://raw.githubusercontent.com/enjoy-digital/usb3_pipe/master/doc/breakout_board.jpg)
-
 FIXME: add description
 
 ## [PCIe Analyzer](https://github.com/enjoy-digital/pcie_analyzer)
 ![enter image description here](https://github.com/enjoy-digital/pcie_analyzer/raw/master/doc/banner.jpg)
-
 FIXME: add description
 
 ## [Betrusted.io](https://betrusted.io/)
 ![enter image description here](https://betrusted.io/assets/images/betrusted-banner.png)
-
 FIXME: add description
 
 ## [Chubby75](https://github.com/q3k/chubby75)
 ![enter image description here](https://github.com/q3k/chubby75/raw/master/5a-75b/images/cl-5a-75b-v61-front-annotated.jpg)
-
 FIXME: add description
 
 ## [LiteX Build Environment](https://github.com/timvideos/litex-buildenv)
-
 FIXME: add description
