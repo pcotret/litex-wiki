@@ -5,8 +5,8 @@ Collections of projects with LiteX involved that could be useful for users to be
 
 ## [Linux-on-LiteX-VexRiscv](https://github.com/litex-hub/linux-on-litex-vexriscv)
 <div>
-<img src="https://linuxgizmos.com/files/gsd_orangecrab_frontback.jpg" width="400">
-<img src="https://pbs.twimg.com/media/EM6jskWXUAAflwE.jpg" width="400">
+<img src="https://linuxgizmos.com/files/gsd_orangecrab_frontback.jpg" width="300">
+<img src="https://pbs.twimg.com/media/EM6jskWXUAAflwE.jpg" width="300">
 </div>
  
  - Have an FPGA board with 32MB of RAM and want to test Linux on it? 
@@ -19,8 +19,8 @@ This project demonstrates **how high level HDLs (Spinal HDL, Migen) enable new p
 
 ## [NeTV2](https://www.crowdsupply.com/alphamax/netv2)
 <div>
-<img src="https://bunniefoo.com/netv2/netv2-slogan-white.png" width="400">
-<img src="https://www.crowdsupply.com/img/222e/netv2-board-angle-bgd_jpg_project-body.jpg" width="400">
+<img src="https://bunniefoo.com/netv2/netv2-slogan-white.png" width="300">
+<img src="https://www.crowdsupply.com/img/222e/netv2-board-angle-bgd_jpg_project-body.jpg" width="300">
 </div>
 
 The NeTV2 is a HDMI capture/playback board based on an Xilinx Artix7 FPGA.
