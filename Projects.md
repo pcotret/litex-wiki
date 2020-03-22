@@ -4,7 +4,10 @@
 Collections of projects with LiteX involved that could be useful for users to better understand LiteX, go further and/or find some inspiration.
 
 ## [Linux-on-LiteX-VexRiscv](https://github.com/litex-hub/linux-on-litex-vexriscv)
-![OrangeCrab FPGA board](https://linuxgizmos.com/files/gsd_orangecrab_frontback.jpg)![Linux-on-LiteX-VexRiscv Buildroot prompt](https://pbs.twimg.com/media/EM6jskWXUAAflwE.jpg)
+<div>
+<img src="https://linuxgizmos.com/files/gsd_orangecrab_frontback.jpg" width="400">
+<img src="https://pbs.twimg.com/media/EM6jskWXUAAflwE.jpg" width="400">
+</div>
  
  - Have an FPGA board with 32MB of RAM and want to test Linux on it? 
  - Want to study/explore a RISC-V Linux capable SoC?
@@ -15,8 +18,11 @@ Collections of projects with LiteX involved that could be useful for users to be
 This project demonstrates **how high level HDLs (Spinal HDL, Migen) enable new possibilities and complement each other**. Results shown there are the results of a productive collaboration between open-source communities.ant to test easily control LiteX cores.
 
 ## [NeTV2](https://www.crowdsupply.com/alphamax/netv2)
-![enter image description here](https://bunniefoo.com/netv2/netv2-slogan-white.png)
-![enter image description here](https://www.crowdsupply.com/img/222e/netv2-board-angle-bgd_jpg_project-body.jpg)
+<div>
+<img src="https://bunniefoo.com/netv2/netv2-slogan-white.png" width="400">
+<img src="https://www.crowdsupply.com/img/222e/netv2-board-angle-bgd_jpg_project-body.jpg" width="400">
+</div>
+
 The NeTV2 is a HDMI capture/playback board based on an Xilinx Artix7 FPGA.
 
 The [official SoC](https://github.com/AlphamaxMedia/netv2-fpga) is doing an overlay (up to 1080p60) from the Raspberry Pi 3B+ on an HDMI stream with or without HDCP. The SoC of the Artix7 FPGA is built with LiteX, a VexRiscv CPU is used for the control, [LiteDRAM](https://github.com/enjoy-digital/litedram) as the DDR3 controller to store the CPU firmware and the do HDMI buffering and LiteVideo](https://github.com/enjoy-digital/litevideo)  for the HDMI playback/capture.
