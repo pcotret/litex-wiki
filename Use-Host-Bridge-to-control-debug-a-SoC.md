@@ -32,6 +32,14 @@ Once your bitstream is built and loaded to the board, start *litex_server* in UA
 litex_server --uart --uart-port=/dev/ttyUSBX
 ```
 
+# Add a Ethernet bridge to your SoC:
+FIXME: TODO
+
+# Add a PCIe bridge to your SoC:
+FIXME: TODO
+
+# Create scripts to communicate from the Host PC with the bridge:
+
 You can now easily create scripts to read/write from/to the main bus of your SoC:
 ```python3
 #!/usr/bin/env python3
