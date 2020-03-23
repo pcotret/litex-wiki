@@ -49,7 +49,7 @@ value = wb.read(0x40000000)
 
 # Access SDRAM (with wb.mems and base address)
 wb.write(wb.mems.main_ram.base, 0x12345678)
-wb.read(wb.mems.main_ram.base)
+value = wb.read(wb.mems.main_ram.base)
 
 # Trigger a reset of the SoC
 wb.regs.ctrl_reset.write(1)
