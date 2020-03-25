@@ -34,8 +34,14 @@ The [libre SoC](https://github.com/enjoy-digital/netv2) makes use of the PCIe Ge
 
 The [Fomu](https://www.crowdsupply.com/sutajio-kosagi/fomu) is a tiny FPGA board that fits in your USB port. The SoC of the FPGA is built with LiteX,  a custom version of [VexRiscv](https://github.com/SpinalHDL/VexRiscv) CPU is used for the control and the [ValentyUSB](https://github.com/im-tomu/valentyusb) core allows the board to communicate with the Host computer and emulate various USB devices. Fomu demonstrates how iCE40 designs can be **tiny** and **powerful**: Fomu can run Micropython/Zephyr on its RISC-V CPU while allowing **software debug** over GDB and **gateware debug** over the USB bridge and is able to **reprogram itself** directly from USB with [Foboot](https://github.com/im-tomu/foboot). The [Fomu Workshop](https://workshop.fomu.im/en/latest/) workshop is also a great introduction to FPGA design.
 
-## [A Trustworthy, Free (Libre), Linux Capable,  Self-Hosting 64bit RISC-V Computer](http://www.contrib.andrew.cmu.edu/~somlo/BTCP/)
-FIXME: add description.
+## [A Trustworthy, Libre, Self-Hosting 64bit RISC-V Linux Computer](http://www.contrib.andrew.cmu.edu/~somlo/BTCP/)
+<img src="http://www.contrib.andrew.cmu.edu/~somlo/BTCP/RocketLiteX.png">
+
+Adding the [Rocket Chip](https://github.com/chipsalliance/rocket-chip) (64-bit RISC-V CPU) to the LiteX ecosystem, this project is capable of booting a *nearly* unmodified 64-bit upstream Linux kernel (with only the LiteEth network driver currently patched in).
+
+Targeted toward the [ECP5-5G-Versa](https://www.latticesemi.com/en/Products/DevelopmentBoardsAndKits/ECP55GVersaDevKit) and the [TrellisBoard](https://github.com/daveshah1/TrellisBoard) (but also known to work on the [Nexys 4 DDR](https://store.digilentinc.com/nexys-a7-fpga-trainer-board-recommended-for-ece-curriculum/)), the ultimate goal is to boot a Linux distro (e.g., [Fedora](https://fedoraproject.org/wiki/Architectures/RISC-V)), and use native riscv64 builds of the Libre FPGA toolchain ([yosys](https://github.com/YosysHQ/yosys)/[trellis](https://github.com/SymbiFlow/prjtrellis)/[nextpnr](https://github.com/YosysHQ/nextpnr)) to build the underlying FPGA-based computer's **_own_** bitstream!
+
+For the latest details, check out [http://www.contrib.andrew.cmu.edu/~somlo/BTCP](http://www.contrib.andrew.cmu.edu/~somlo/BTCP).
 
 ## [USB3 PIPE](https://github.com/enjoy-digital/usb3_pipe)
 <img src="https://raw.githubusercontent.com/enjoy-digital/usb3_pipe/master/doc/breakout_board.jpg" width="600">
