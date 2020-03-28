@@ -35,7 +35,7 @@ The [libre SoC](https://github.com/enjoy-digital/netv2) makes use of the PCIe Ge
 The [Fomu](https://www.crowdsupply.com/sutajio-kosagi/fomu) is a tiny FPGA board that fits in your USB port. The SoC of the FPGA is built with LiteX,  a custom version of [VexRiscv](https://github.com/SpinalHDL/VexRiscv) CPU is used for the control and the [ValentyUSB](https://github.com/im-tomu/valentyusb) core allows the board to communicate with the Host computer and emulate various USB devices. Fomu demonstrates how iCE40 designs can be **tiny** and **powerful**: Fomu can run Micropython/Zephyr on its RISC-V CPU while allowing **software debug** over GDB and **gateware debug** over the USB bridge and is able to **reprogram itself** directly from USB with [Foboot](https://github.com/im-tomu/foboot). The [Fomu Workshop](https://workshop.fomu.im/en/latest/) workshop is also a great introduction to FPGA design.
 
 ## [A Trustworthy, Libre, Self-Hosting 64bit RISC-V Linux Computer](http://www.contrib.andrew.cmu.edu/~somlo/BTCP/)
-<img src="http://www.contrib.andrew.cmu.edu/~somlo/BTCP/RocketLiteX.png">
+<img src="http://www.contrib.andrew.cmu.edu/~somlo/BTCP/RocketLitexHi.png">
 
 Adding the [Rocket Chip](https://github.com/chipsalliance/rocket-chip) (64-bit RISC-V CPU) to the LiteX ecosystem, this project is capable of booting a *nearly* unmodified 64-bit upstream Linux kernel (with only the LiteEth network driver currently patched in).
 
