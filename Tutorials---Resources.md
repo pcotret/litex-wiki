@@ -15,3 +15,7 @@ The [Fomu](https://www.crowdsupply.com/sutajio-kosagi/fomu) is a tiny FPGA board
 ![enter image description here](https://www.crowdsupply.com/img/301a/icebreaker-iso_png_project-body.jpg)
 The [iCEBreaker](https://www.crowdsupply.com/1bitsquared/icebreaker-fpga) is the first open source iCE40 FPGA development board designed for teachers and students. The iCEBreaker [target](https://github.com/litex-hub/litex-boards/blob/master/litex_boards/targets/icebreaker.py) integrated in [LiteX-Boards](https://github.com/litex-hub/litex-boards) provides a minimal LiteX SoC for the iCEBreaker with a CPU, its ROM (in SPI Flash), its SRAM, close to the others LiteX targets. A more complete example of LiteX SoC for the iCEBreaker with more features, examples to run C/Rust code on the RISC-V CPU and documentation can be found in the [iCEBreaker LiteX examples](https://github.com/icebreaker-fpga/icebreaker-litex-examples) tutorial.
 
+# Useful resources
+
+## [LiteX SoftCPU on the ULX3S](https://gojimmypi.blogspot.com/2020/03/litex-soft-cpu-on-ulx3s-reloading.html) 
+Blogpost by gojimmypi testing LiteX on the ULX3S board and experimenting with the Soft CPU.
