@@ -6,7 +6,7 @@
   * [Capabilities](Capabilities)
   * [Cores-Ecosystem](Cores-Ecosystem)
   * [OSes-Ecosystem](OSes-Ecosystem)
-  * [Tutorials](Tutorials)
+  * [Tutorials-Resources](Tutorials-Resources)
   * [Projects](Projects)
 * LiteX's internals
   * [Cores](Cores)
