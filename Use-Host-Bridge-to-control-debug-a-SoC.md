@@ -31,7 +31,7 @@ Once your bitstream is built and loaded to the board, start *litex_server* in UA
 litex_server --uart --uart-port=/dev/ttyUSBX
 ```
 
-# Add a Ethernet bridge to your SoC:
+# Add an Ethernet bridge to your SoC:
 Another very convenient way to debug a SoC is to add an Ethernet Bridge to it this allows debugging your SoC over your local ethernet network and provide better speeds.
 
 If your Platform file already has a an unused Ethernet PHY you can just use it, otherwise you can simply add the Ethernet pins to your Platform file by adapting the following template (here for a RMII PHY):
