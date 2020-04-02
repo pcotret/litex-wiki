@@ -1,5 +1,22 @@
+# LiteX industry projects
 
-# LiteX Projects
+LiteX is developed and used by Enjoy-Digital since 2012 to co-develop full-systems with our partners and provide an convenient and efficient solutions to create SoCs on FPGA based systems. Here are some of the last project we worked on with our partners:
+
+## PCIe Software Defined Radio board with 2 Artix7, PCIe Gen2 X8 and 2 AD937X. 
+<p align="center"><img src="http://enjoy-digital.fr/experience/pcie_ad937x.jpg"></p>
+
+The SoC is built with LiteX, [LitePCIe](https://github.com/enjoy-digital/litepcie) is used for the communication with the Host and [LiteJESD204B](https://github.com/enjoy-digital/litejesd204b) is used between the AD937Xs and FPGAs. 
+
+## PCIe 3G SDI  with Artix7, PCIe Gen2 X4. 
+<p align="center"><img src="http://enjoy-digital.fr/experience/pcie_3g_sdi.jpg"></p>
+
+The SoC is built with LiteX, [LitePCIe](http://github.com/enjoy-digital/litepcie) is used to communicate with the Host and the Xilinx TripleRateSDI core is wrapped with custom datapath modules and gearboxes to make efficient use of the PCIe bus without any external buffering.
+
+More projects can be found at [Enjoy-Digital website](http://enjoy-digital.fr/).
+
+Even if these projects are still unfortunately proprietary, LiteX has been originally developed to create these systems and most of the open-source features/cores come directly from these projects. Working on these systems allow us to keep track of the industry standards/constraints, force us to be practical, use efficient solutions and motivate us to continue improving the tools/adding new features, because that's what we like: creating systems!
+
+# LiteX open-source projects
 
 Collections of projects with LiteX involved that could be useful for users to better understand LiteX, go further and/or find some inspiration.
 
