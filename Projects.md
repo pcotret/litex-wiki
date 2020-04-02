@@ -7,7 +7,7 @@ LiteX is developed and used by Enjoy-Digital since 2012 to co-develop full-syste
 
 The SoC is built with LiteX, [LitePCIe](https://github.com/enjoy-digital/litepcie) is used for the communication with the Host and [LiteJESD204B](https://github.com/enjoy-digital/litejesd204b) is used between the AD937Xs and FPGAs. 
 
-## PCIe 3G SDI  with Artix7, PCIe Gen2 X4. 
+## PCIe 3G SDI  with Artix7 board, PCIe Gen2 X4. 
 <p align="center"><img src="http://enjoy-digital.fr/experience/pcie_3g_sdi.jpg"></p>
 
 The SoC is built with LiteX, [LitePCIe](http://github.com/enjoy-digital/litepcie) is used to communicate with the Host and the Xilinx TripleRateSDI core is wrapped with custom datapath modules and gearboxes to make efficient use of the PCIe bus without any external buffering.
