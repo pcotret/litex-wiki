@@ -37,7 +37,7 @@ This project demonstrates **how high level HDLs (Spinal HDL, Migen) enable new p
 ## [NeTV2](https://www.crowdsupply.com/alphamax/netv2)
 <div>
 <img src="https://bunniefoo.com/netv2/netv2-slogan-white.png" width="300">
-<img src="https://www.crowdsupply.com/img/222e/netv2-board-angle-bgd_jpg_project-body.jpg" width="300">
+<img src="http://enjoy-digital.fr/experience/netv2.jpg" width="300">
 </div>
 
 The NeTV2 is a HDMI capture/playback board based on an Xilinx Artix7 FPGA.
