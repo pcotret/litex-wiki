@@ -1,4 +1,4 @@
-# LiteX industry projects
+# LiteX industrial projects
 
 LiteX is developed and used by Enjoy-Digital since 2012 to co-develop full-systems with our partners and provide an convenient and efficient solutions to create SoCs on FPGA based systems. Here are some of the last project we worked on with our partners:
 
@@ -42,7 +42,7 @@ This project demonstrates **how high level HDLs (Spinal HDL, Migen) enable new p
 
 The NeTV2 is a HDMI capture/playback board based on an Xilinx Artix7 FPGA.
 
-The [official SoC](https://github.com/AlphamaxMedia/netv2-fpga) is doing an overlay (up to 1080p60) from the Raspberry Pi 3B+ on an HDMI stream with or without HDCP. The SoC of the Artix7 FPGA is built with LiteX, a VexRiscv CPU is used for the control, [LiteDRAM](https://github.com/enjoy-digital/litedram) as the DDR3 controller to store the CPU firmware and the do HDMI buffering and LiteVideo](https://github.com/enjoy-digital/litevideo)  for the HDMI playback/capture.
+The [official SoC](https://github.com/AlphamaxMedia/netv2-fpga) is doing an overlay (up to 1080p60) from the Raspberry Pi 3B+ on an HDMI stream with or without HDCP. The SoC of the Artix7 FPGA is built with LiteX, a VexRiscv CPU is used for the control, [LiteDRAM](https://github.com/enjoy-digital/litedram) as the DDR3 controller to store the CPU firmware and the do HDMI buffering and [LiteVideo](https://github.com/enjoy-digital/litevideo) for the HDMI playback/capture.
 
 The [libre SoC](https://github.com/enjoy-digital/netv2) makes use of the PCIe Gen2 X4 connector of the board with [LitePCIe](https://github.com/enjoy-digital/litepcie) to create a HDMI capture/playback device.
 
