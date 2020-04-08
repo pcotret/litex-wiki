@@ -1,5 +1,7 @@
 Being able to easily read/write the addressable space of the SoC from a Host PC with simple scripts can be very powerful and greatly help/speed up debugging.
 
+<p align="center"><img src="https://pbs.twimg.com/media/ERmuvmFWoAQXqQl?format=png&name=small"></p>
+
 # Add a UART bridge to your SoC:
 The easiest way to add a UART bridge to a SoC is to use an unused UART of your FPGA board. If your Platform file already has a an unused UART you can just use it, otherwise you can simply add UART pins to your Platform file by adapting the following template:
 ```python3
