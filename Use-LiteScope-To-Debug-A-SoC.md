@@ -18,7 +18,38 @@ Alternative ways to create a bridges have also been developed, such as USB/SPI (
 
 # Add a LiteScope Analyzer to your SoC:
 
-TODO
+Let's say we have a CPU in our design and want to be able to visualize the Wishbone accesses of the instruction bus, the first thing we do is creating the list of Migen signals we want to be observe:
+
+```python3
+analyzer_signals = [
+    self.cpu.ibus.stb,
+    self.cpu.ibus.cyc,
+    self.cpu.ibus.adr,
+    self.cpu.ibus.we,
+    self.cpu.ibus.ack,
+    self.cpu.ibus.sel,
+    self.cpu.ibus.dat_w,
+    self.cpu.ibus.dat_r,
+]
+```
+
+Then we create the Litescope Analyzer that will be able to capture these signals:
+
+```python3
+self.submodules.analyzer = LiteScopeAnalyzer(analyzer_signals,
+    depth        = 512,
+    clock_domain = "sys",
+    csr_csv      = "analyzer.csv")
+self.add_csr("analyzer")
+```
+
+The Analyzer is configured with a `depth` of *512* samples, doing the capture in the *sys* `clock domain` of the SoC and exporting the its configuration (`csr_csv`) to *analyzer.csv* file that will be used by the software during the trigger/capture.
+
+> Note: Since samples are stored in embedded block rams of the FPGA, the depth will be limited by the number of available block rams in your design/FPGA. The total number of bits used for the capture is len(analyzer_signals)*depth.
+
+> Note: LiteScope also accepts Migen's Records, so in our example we could just have used:  `analyzer_signals = [self.cpu.ibus]` but it would have been less understandable. Imagine we also want to capture the data bus, we could just do:  `analyzer_signals = [self.cpu.ibus, self.cpu.dbus]`. 
+
+We can now build our SoC and start using the Analyzer!
 
 # Use the Analyzer:
 
