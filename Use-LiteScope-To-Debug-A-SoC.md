@@ -53,4 +53,78 @@ We can now build our SoC and start using the Analyzer!
 
 # Use the Analyzer:
 
-TODO
+Now that the SoC is instrumented and built, we can start using the analyzer. The first step is to run the LiteX server on the Host to allow communicating with the SoC and execute scripts. The previous example is integrated in [LiteX Sim](https://github.com/enjoy-digital/litex/blob/master/litex/tools/litex_sim.py) and we are going to use it here.
+
+The simulation can be run with `litex_sim --with-ethernet --with-etherbone` and the LiteX server started with `litex_server --udp --udp-ip=192.168.1.51`.
+
+To analyze the instruction bus of the CPU, we create the following `litescope_analyzer.py` script:
+
+```python3
+#!/usr/bin/env python3
+
+import sys
+import argparse
+
+from litex import RemoteClient
+from litescope import LiteScopeAnalyzerDriver
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--ibus_stb",  action="store_true", help="Trigger on IBus Stb rising edge.")
+parser.add_argument("--ibus_adr",  default=0x00000000,  help="Trigger on IBus Adr value.")
+parser.add_argument("--offset",    default=128,         help="Capture Offset.")
+parser.add_argument("--length",    default=512,         help="Capture Length.")
+args = parser.parse_args()
+
+wb = RemoteClient()
+wb.open()
+
+# # #
+
+analyzer = LiteScopeAnalyzerDriver(wb.regs, "analyzer", debug=True)
+analyzer.configure_group(0)
+if args.ibus_stb:
+	analyzer.add_rising_edge_trigger("simsoc_cpu_ibus_stb")
+elif args.ibus_adr:
+    analyzer.configure_trigger(cond={"simsoc_cpu_ibus_adr": int(args.ibus_adr, 0)})
+else:
+    analyzer.configure_trigger(cond={})
+analyzer.run(offset=int(args.offset), length=int(args.length))
+
+analyzer.wait_done()
+analyzer.upload()
+analyzer.save("dump.vcd")
+
+# # #
+
+wb.close()
+
+```
+
+This script will allow us to trigger on a `ibus_stb` rising edge or on a specific `ibus_adr` value.
+
+The LiteX simulation is running and we are able to interact with the BIOS, let's configure the analyzer to trigger on `ibus_stb`rising edge and press enter, this will cause the CPU to fetch some data on the instruction bus and will trigger the capture:
+
+<p align="center"><img src="https://user-images.githubusercontent.com/1450143/80379942-144d2880-889f-11ea-9200-434ab7828c74.png"></p>
+
+```
+$./litescope_analyzer.py --ibus_stb
+[running]...
+[uploading]...
+|====================>| 100%
+[writing to dump.vcd]...
+```
+We can then open the wave with GTKWave and analyze the access:
+<p align="center"><img src="https://user-images.githubusercontent.com/1450143/80379951-1911dc80-889f-11ea-829c-8c820e4e1d01.png"></p>
+
+Now let's trigger on `ibus_adr=0x00000000` (which is the reset address of the CPU) and run the reboot command of the BIOS:
+<p align="center"><img src="https://user-images.githubusercontent.com/1450143/80379955-1b743680-889f-11ea-9151-d05700cea637.png"></p>
+
+```
+$./litescope_analyzer.py --ibus_adr=0x00000000
+[running]...
+[uploading]...
+|====================>| 100%
+[writing to dump.vcd]...
+```
+We can then open the wave with GTKWave and analyze the access:
+<p align="center"><img src="https://user-images.githubusercontent.com/1450143/80379959-1d3dfa00-889f-11ea-8f04-23b4ca910fc1.png"></p>
