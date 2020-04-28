@@ -1,6 +1,6 @@
 # LiteX installation guide
 
-1. Install Python 3.5+ and FPGA vendor's development tools and/or [Verilator](http://www.veripool.org/).
+1. Install Python 3.6+ and FPGA vendor's development tools and/or [Verilator](http://www.veripool.org/).
 2. Install Migen/LiteX and the LiteX's cores:
 
 ```sh
