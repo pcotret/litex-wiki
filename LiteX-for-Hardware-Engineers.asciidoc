@@ -425,7 +425,7 @@ self.specials += Instance("BUFG", i_I=self.pll_sys, o_O=self.cd_sys.clk)
 ==== Instances ====
 
 The `Instance` special is particularly handy. You
-use this to summon blocks like `BUFG`s, `BUFIO`s, `BUFR`s, `PLLE2`, `MMCME2` and
+use this to summon blocks like `BUFG`, `BUFIO`, `BUFR`, `PLLE2`, `MMCME2` and
 so forth. The format of an Instance special is as follows:
 
 ```python
