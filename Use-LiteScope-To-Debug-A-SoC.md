@@ -36,6 +36,7 @@ analyzer_signals = [
 Then we create the Litescope Analyzer that will be able to capture these signals:
 
 ```python3
+from litescope import LiteScopeAnalyzer
 self.submodules.analyzer = LiteScopeAnalyzer(analyzer_signals,
     depth        = 512,
     clock_domain = "sys",
