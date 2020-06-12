@@ -26,7 +26,7 @@
   * [Add a new Core-_TODO_](Add-A-New-Core)
   * [Add a new CPU-_TODO_](Add-A-New-CPU)
   * [Reuse a Verilog/VHDL Core-_TODO_](Add-A-Verilog-VHDL-Core)
-  * [Create and load software to the CPU-_TODO_](Create-And-Load-Software-To-The-CPU)
+  * [Load application code the CPU(s)](Load-Application-Code-To-CPU)
   * [Use Host Bridges to control/debug a SoC](Use-Host-Bridge-to-control-debug-a-SoC)
   * [Use LiteScope to debug a SoC](Use-LiteScope-To-Debug-A-SoC)
   * [Document a SoC](Document-a-SoC)
