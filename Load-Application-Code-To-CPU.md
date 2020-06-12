@@ -139,6 +139,9 @@ Executing booted program at 0x41100000
 --============= Liftoff! ===============--
 ```
 
+# SPIFlash Boot:
+TODO
+
 # SDCard Boot:
 Loading application code from SDCard is very interesting for standalone embedded systems and allow very large binaries. 
 
