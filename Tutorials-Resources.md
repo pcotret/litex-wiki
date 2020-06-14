@@ -24,7 +24,8 @@ The Colorlight 5A-75B is an inexpensive (15$) led control board equipped with a 
 ## [LiteX for Hardware Engineers](https://github.com/enjoy-digital/litex/wiki/LiteX-for-Hardware-Engineers) 
 Blogpost/Wiki by @bunnie from 2018 with his understanding of LiteX and tips for engineers with a hardware background.
 
-## [LiteX BuildEnv Wiki](https://github.com/timvideos/litex-buildenv/wiki) Wiki of LiteX Buildenv project with information complementary to LiteX's Wiki.
+## [LiteX BuildEnv Wiki](https://github.com/timvideos/litex-buildenv/wiki)
+Wiki of LiteX Buildenv project with information complementary to LiteX's Wiki.
 
 ## [LiteX SoftCPU on the ULX3S](https://gojimmypi.blogspot.com/2020/03/litex-soft-cpu-on-ulx3s-reloading.html) 
 Blogpost by gojimmypi testing LiteX on the ULX3S board and experimenting with the Soft CPU.
