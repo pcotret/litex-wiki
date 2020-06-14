@@ -1,5 +1,5 @@
 ## LiteX Wiki
----
+
 * Welcome to LiteX
   * [Presentation](Home)
   * [Installation](Installation)
@@ -38,3 +38,5 @@
   * [Run Linux on your SoC-_TODO_](Run-Linux-On-Your-SoC)
   * [Export your Core/SoC to Verilog-_TODO_](Export-Your-Core-SoC-To-Verilog)
   * [Create a PCIe SoC-_TODO_](Create-A-PCIe-SoC)
+* [[External Resources]]
+  * [LiteX BuildEnv Wiki](https://github.com/timvideos/litex-buildenv/wiki)
