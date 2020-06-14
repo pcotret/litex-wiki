@@ -1,0 +1,1 @@
+[LiteX Wiki](https://github.com/enjoy-digital/litex/wiki) || [two-clause BSD license](https://github.com/enjoy-digital/litex/blob/master/LICENSE)
