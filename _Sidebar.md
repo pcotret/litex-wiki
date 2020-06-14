@@ -8,6 +8,7 @@
   * [OSes-Ecosystem-_TODO_](OSes-Ecosystem)
   * [Tutorials-Resources](Tutorials-Resources)
   * [Projects](Projects)
+  * [[Litex for Hardware Engineers]]
 * LiteX's internals
   * [Cores-_TODO_](Cores)
   * [CPUs-_TODO_](CPUs)
