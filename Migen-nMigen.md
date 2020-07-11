@@ -27,7 +27,7 @@ So reusing nMigen modules with LiteX can already be done in two different ways:
 
 The latter is more flexible/powerful since allows elaborating the nMigen module with appropriate parameters.
 
-# Will i be limited by this?
+# Will I be limited by this?
 
 Not really, nMigen has some advantages over Migen and LiteX has features and a rich ecosystem of cores not already available in others projects, so while waiting for the planets to be aligned, the best is probably to take the best of both worlds:
 
