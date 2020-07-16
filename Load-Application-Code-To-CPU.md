@@ -85,6 +85,23 @@ When multiple binaries need to be loaded at different locations, a *JSON* descri
 
 The **last file/address tuple** is used for the CPU **jump** (so here it will jump `0x41100000`).
 
+It is also possible to optionally specify the `r1/r2/r3` and `addr` boot arguments:
+```json
+{
+	"buildroot/Image":        "0x40000000",
+	"buildroot/rootfs.cpio":  "0x40800000",
+	"buildroot/rv32.dtb":     "0x41000000",
+	"emulator/emulator.bin":  "0x41100000",
+	"bootargs": {
+		"r1":   "0x00000000",
+		"r2":   "0x00000000",
+		"r3":   "0x00000000",
+		"addr": "0x41100000",
+	}
+}
+```
+In this case, instead of defaulting to `0`, `r1/r2/r3` will use the specified value and `addr` will be used for the CPU jump.
+
 To use a _JSON_ file, start `lxterm` with:
 ```bash
 lxterm /dev/ttyUSBX --images=images.json
