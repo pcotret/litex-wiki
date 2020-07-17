@@ -38,6 +38,8 @@ Not really, nMigen has some advantages over Migen and LiteX has features and a r
 
 *If you are new to FPGA and want to start learning a Python based language, starting learning nMigen is probably the best and will not really limit you if you want to also use LiteX.
 
+> **Note:** VexRiscv, probably the most popular CPU used with LiteX is written in Spinal HDL and [Linux on LiteX VexRiscv](https://github.com/litex-hub/linux-on-litex-vexriscv) project is a good example of the possible interoperability between various high level HDLs. 
+
 # What are the long term plans regarding LiteX/nMigen?
 
 Things are still not fully decided, if:
