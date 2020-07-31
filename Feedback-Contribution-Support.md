@@ -1,4 +1,4 @@
-**Feedback / Contribution / Support**
+## **Feedback / Contribution / Support**
 
 Feedback, contributions greatly help improving open-source projects and any contribution to LiteX are welcome:
 - You create a design with LiteX, **it works** and you are happy with it?  Please **let us know**, we could list it as a [useful resource](https://github.com/enjoy-digital/litex/wiki/Tutorials-Resources#useful-resources)! It could be used as an example and help other users.
@@ -10,11 +10,11 @@ It's also possible you will think of things we would never have figured out ours
 
 We think LiteX could be useful and offer some innovative solutions for some projects, but we are also aware it's not perfect and/or will not be the solution for everyone/every project. If you are interested by the project and **want to contribute, please do!**, if the only thing that works for you with LiteX is making you angry, we're not sure the right project is for you :) (but are open to constructive criticism).
 
-**How to create an issue when you have an idea?**
+## **How to create an issue when you have an idea?**
 
 Please **just feel free to create an issue to share your ideas with us**, if you also have ideas on the implementation,  we encourage you to try it (that's how you'll learn and progress!) and submit it in the issue or even in a PR. LiteX community is **very welcoming** and we could give you directions/advices to implement your idea or do the implementation ourselves if that's something interesting for the whole project.
 
-**How to create an issue when it does not work?**
+## **How to create an issue when it does not work?**
 
 LiteX provides [tutorials](https://github.com/enjoy-digital/litex/wiki/Tutorials-Resources), examples of [projects](https://github.com/enjoy-digital/litex/wiki/Projects) and default [platforms/targets](https://github.com/litex-hub/litex-boards) for very various FPGA boards. These ones have been tested/validated and most of them covered by our CI. 
 
@@ -31,13 +31,13 @@ If you are testing a design you created with the tools or developing  a new feat
 
 **Reading this is the first thing we'll ask you if your issue does not provide enough information, so  you please try to anticipate :)**
 
-**How to create a Pull Request?**
+## **How to create a Pull Request?**
 
 If you **have an idea** and think you can **implement it**, please go ahead, **that's how you'll learn and progress!** We encourage you to do so and will **always welcome contributions**, we can help to make sure it can be merged if useful for the whole project. If before doing the hard work you have doubts it will be possible to merge your work since maybe not useful for the whole project or too specific, please feel free to first create an issue to discuss this.
 
 LiteX does not have strict coding rules, please just try (if possible) to a use coding style close to the already existing files.
 
-**Support**
+## **Support**
 
 While LiteX is an open-source project and we are really enjoying working on it, the team doing the development/maintenance is still small and often have others obligations since the initial goal of LiteX was to create custom FPGA based systems with it, so please understand if we need a few days to respond. The community is also growing and helping and a dedicated freenode channel can be found at [#litex at freenode.net](https://webchat.freenode.net/?channels=litex).
 
