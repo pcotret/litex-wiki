@@ -1,6 +1,6 @@
 ## **Feedback / Contribution / Support**
 
-Feedback, contributions greatly help improving open-source projects and any contribution to LiteX are welcome:
+Feedback, contributions greatly help improving open-source projects and any contribution to LiteX is welcome:
 - You create a design with LiteX, **it works** and you are happy with it?  Please **let us know**, we could list it as a [useful resource](https://github.com/enjoy-digital/litex/wiki/Tutorials-Resources#useful-resources)! It could be used as an example and help other users.
 - You try to use LiteX but it **does not work**, we could certainly help if you create an **issue**, but please have a look at the list of **things we'll need to know** to be able to help you.
 - You've seen things that could be **improved** or have some **ideas** you think would be useful for the project? **Please share it with us**. If you don't feel confident enough to modify the code yourself, feel free to **create an issue describing your idea(s)** and describe how it could improve the project. If you think you are able to do the modification yourself, feel free to **try and create a Pull Request**. Even if this is not perfect, this would be welcomed and we will help you understand how you could eventually improve it or could do the modification for you. 
@@ -10,9 +10,9 @@ It's also possible you will think of things we would never have figured out ours
 
 We think LiteX could be useful and offer some innovative solutions for some projects, but we are also aware it's not perfect and/or will not be the solution for everyone/every project. If you are interested by the project and **want to contribute, please do!**, if the only thing that works for you with LiteX is making you angry, we're not sure the right project is for you :) (but are open to constructive criticism).
 
-## **How to create an issue when you have an idea?**
+## **How to create an issue when you just have an idea?**
 
-Please **just feel free to create an issue to share your ideas with us**, if you also have ideas on the implementation,  we encourage you to try it (that's how you'll learn and progress!) and submit it in the issue or even in a PR. LiteX community is **very welcoming** and we could give you directions/advices to implement your idea or do the implementation ourselves if that's something interesting for the whole project.
+Please **just feel free to create an issue to share your idea with us**, if you also have ideas on the implementation,  we encourage you to try it (that's how you'll learn and progress!) and submit it in the issue or even in a PR. LiteX community is **very welcoming** and we could give you directions/advices to implement your idea or do the implementation ourselves if that's something interesting for the whole project.
 
 ## **How to create an issue when it does not work?**
 
