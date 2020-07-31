@@ -8,6 +8,7 @@
   * [OSes-Ecosystem-_TODO_](OSes-Ecosystem)
   * [Tutorials-Resources](Tutorials-Resources)
   * [Projects](Projects)
+  * [Feedback/Contribution/Support](Feedback-Contribution-Support)
   * [Migen-nMigen](Migen-nMigen)
 * LiteX's internals
   * [Cores-_TODO_](Cores)
