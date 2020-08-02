@@ -1,6 +1,6 @@
 There are already various possibilities to run Linux on a LiteX SoC or with LiteX's components:
 
-# [Linux-on-LiteX-VexRiscv](https://github.com/litex-hub/linux-on-litex-vexriscv)
+## [Linux-on-LiteX-VexRiscv](https://github.com/litex-hub/linux-on-litex-vexriscv)
 <div>
 <img src="https://linuxgizmos.com/files/gsd_orangecrab_frontback.jpg" width="300">
 <img src="https://pbs.twimg.com/media/EM6jskWXUAAflwE.jpg" width="300">
@@ -26,6 +26,10 @@ Adding the [Rocket Chip](https://github.com/chipsalliance/rocket-chip) (64-bit R
 Targeted toward the [ECP5-5G-Versa](https://www.latticesemi.com/en/Products/DevelopmentBoardsAndKits/ECP55GVersaDevKit) and the [TrellisBoard](https://github.com/daveshah1/TrellisBoard) (but also known to work on the [Nexys 4 DDR](https://store.digilentinc.com/nexys-a7-fpga-trainer-board-recommended-for-ece-curriculum/)), the ultimate goal is to boot a Linux distro (e.g., [Fedora](https://fedoraproject.org/wiki/Architectures/RISC-V)), and use native riscv64 builds of the Libre FPGA toolchain ([yosys](https://github.com/YosysHQ/yosys)/[trellis](https://github.com/SymbiFlow/prjtrellis)/[nextpnr](https://github.com/YosysHQ/nextpnr)) to build the underlying FPGA-based computer's **_own_** bitstream!
 
 For the latest details, check out [http://www.contrib.andrew.cmu.edu/~somlo/BTCP](http://www.contrib.andrew.cmu.edu/~somlo/BTCP).
+
+## OpenRisc / Mor1kx
+
+TODO
 
 ## [Linux-On-LiteX-BlackParrot](https://github.com/scanakci/linux-on-litex-blackparrot)
 ![BlackParrot](https://github.com/black-parrot/black-parrot/raw/master/docs/bp_logo.png)
