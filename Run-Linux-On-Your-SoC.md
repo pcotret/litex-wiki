@@ -27,9 +27,9 @@ Targeted toward the [ECP5-5G-Versa](https://www.latticesemi.com/en/Products/Deve
 
 For the latest details, check out [http://www.contrib.andrew.cmu.edu/~somlo/BTCP](http://www.contrib.andrew.cmu.edu/~somlo/BTCP).
 
-## OpenRisc / Mor1kx
+## [OpenRisc / Mor1kx](https://github.com/openrisc/mor1kx)
 
-TODO
+The [Mor1kx](https://github.com/openrisc/mor1kx) CPU was one of the first CPU supported in LiteX (alongs with LM32), before the RISC-V CPUs invasion :) It's still a very good CPU and was the first one to boot Linux with LiteX. More information to boot Linux on it with LiteX can be found on the [LiteX Buildenv's wiki](https://github.com/timvideos/litex-buildenv/wiki/Linux).
 
 ## [Linux-On-LiteX-BlackParrot](https://github.com/scanakci/linux-on-litex-blackparrot)
 ![BlackParrot](https://github.com/black-parrot/black-parrot/raw/master/docs/bp_logo.png)
