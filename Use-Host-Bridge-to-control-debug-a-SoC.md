@@ -107,7 +107,7 @@ Then with *lspci*, find the location of the PCIe board on the bus, here `02:00.0
 ```
 And use this to start _litex_server_ in PCIe mode:
 ```
-litex_server --pcie --pcie-bar=/sys/bus/pci/devices/0000\:02\:00.0/resource0
+litex_server --pcie --pcie-bar=02:00.0
 ```
 
 # Create scripts to communicate from the Host PC with the bridge:
