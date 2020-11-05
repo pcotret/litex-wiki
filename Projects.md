@@ -7,6 +7,8 @@ LiteX is developed and used by Enjoy-Digital since 2012 to co-develop full-syste
 
 The SoC is built with LiteX, [LitePCIe](https://github.com/enjoy-digital/litepcie) is used for the communication with the Host and [LiteJESD204B](https://github.com/enjoy-digital/litejesd204b) is used between the AD937Xs and FPGAs. 
 
+<p align="center"><img src="https://pbs.twimg.com/media/EjtsRYtX0AE72A1?format=jpg&name=medium"></p>
+
 ## PCIe 3G SDI board with Artix7, PCIe Gen2 X4. 
 <p align="center"><img src="http://enjoy-digital.fr/experience/pcie_3g_sdi.jpg"></p>
 
@@ -22,8 +24,8 @@ Collections of projects with LiteX involved that could be useful for users to be
 
 ## [Linux-on-LiteX-VexRiscv](https://github.com/litex-hub/linux-on-litex-vexriscv)
 <div>
-<img src="https://linuxgizmos.com/files/gsd_orangecrab_frontback.jpg" width="300">
-<img src="https://pbs.twimg.com/media/EM6jskWXUAAflwE.jpg" width="300">
+<img src="https://linuxgizmos.com/files/gsd_orangecrab_frontback.jpg" width="400">
+<img src="https://pbs.twimg.com/media/ENtF6OWXUAEwlA7.jpg" width="400">
 </div>
  
  - Have an FPGA board with 32MB of RAM and want to test Linux on it? 
@@ -36,8 +38,8 @@ This project demonstrates **how high level HDLs (Spinal HDL, Migen) enable new p
 
 ## [NeTV2](https://www.crowdsupply.com/alphamax/netv2)
 <div>
-<img src="https://bunniefoo.com/netv2/netv2-slogan-white.png" width="300">
-<img src="http://enjoy-digital.fr/experience/netv2.jpg" width="300">
+<img src="https://bunniefoo.com/netv2/netv2-slogan-white.png" width="400">
+<img src="http://enjoy-digital.fr/experience/netv2.jpg" width="400">
 </div>
 
 The NeTV2 is a HDMI capture/playback board based on an Xilinx Artix7 FPGA.
@@ -60,6 +62,18 @@ Targeted toward the [ECP5-5G-Versa](https://www.latticesemi.com/en/Products/Deve
 
 For the latest details, check out [http://www.contrib.andrew.cmu.edu/~somlo/BTCP](http://www.contrib.andrew.cmu.edu/~somlo/BTCP).
 
+## [Betrusted.io](https://betrusted.io/)
+<img src="https://betrusted.io/assets/images/betrusted-banner.png" width="600">
+
+Betrusted is a protected place for your private matters. It’s built from the ground up to be checked by anyone, but sealed only by you. Betrusted is more than just a secure CPU – it is a system complete with screen and keyboard, because privacy begins and ends with the user.
+
+Betrusted prototypes are built around two FPGAs SoC built with LiteX: The iCE40 based [Embedded controller](https://github.com/betrusted-io/betrusted-ec) SoC and the Spartan7 based [Secure Domain](https://github.com/betrusted-io/betrusted-soc) SoC.
+
+<div>
+<img src="https://bunniefoo.com/precursor/precursor_lte_module_example.jpg" width="400">
+<img src="https://user-images.githubusercontent.com/1450143/98281974-cf1c5880-1f9d-11eb-8e5a-277723d6f1c9.png" width="400">
+</div>
+
 ## [USB3 PIPE](https://github.com/enjoy-digital/usb3_pipe)
 <img src="https://raw.githubusercontent.com/enjoy-digital/usb3_pipe/master/doc/breakout_board.jpg" width="600">
 
@@ -70,12 +84,6 @@ Current solutions for USB3 connectivity with an FPGA require the use of an exter
 
 The aim of this project is to create a PCIe interposer + FPGA capture board for PCIe signals capture and analysis with cheap hardware.
 
-## [Betrusted.io](https://betrusted.io/)
-<img src="https://betrusted.io/assets/images/betrusted-banner.png" width="600">
-
-Betrusted is a protected place for your private matters. It’s built from the ground up to be checked by anyone, but sealed only by you. Betrusted is more than just a secure CPU – it is a system complete with screen and keyboard, because privacy begins and ends with the user.
-
-Betrusted prototypes are built around two FPGAs SoC built with LiteX: The iCE40 based [Embedded controller](https://github.com/betrusted-io/betrusted-ec) SoC and the Spartan7 based [Secure Domain](https://github.com/betrusted-io/betrusted-soc) SoC.
 
 ## [Chubby75](https://github.com/q3k/chubby75)
 <img src="https://github.com/q3k/chubby75/raw/master/5a-75b/images/cl-5a-75b-v61-front-annotated.jpg" width="600">
