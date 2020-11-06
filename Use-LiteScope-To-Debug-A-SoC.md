@@ -143,6 +143,7 @@ We then write `0x5aa55aa5` to `0x40000000`:
 Nothing happening on `litescope_cli`, as expected...
 
 Now let's write: `0x12345678` to `0x40000000`:
+
 <img src="https://user-images.githubusercontent.com/1450143/98360517-397ada80-202a-11eb-9972-b72ec12789c4.png">
 
 Now it's triggering:
