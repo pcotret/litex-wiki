@@ -4,8 +4,8 @@ LiteX is developed and used by Enjoy-Digital since 2012 to co-develop full-syste
 
 ## PCIe Software Defined Radio board with 2 Artix7, PCIe Gen2 X8 and 2 AD937X. 
 <div>
-<img src="http://enjoy-digital.fr/experience/pcie_ad937x.jpg" width="620">
-<img src="https://pbs.twimg.com/media/EjtsRYtX0AE72A1?format=jpg&name=medium" width="300">
+<img src="http://enjoy-digital.fr/experience/pcie_ad937x.jpg" width="520">
+<img src="https://pbs.twimg.com/media/EjtsRYtX0AE72A1?format=jpg&name=medium" width="250">
 </div>
 
 The SoC is built with LiteX, [LitePCIe](https://github.com/enjoy-digital/litepcie) is used for the communication with the Host and [LiteJESD204B](https://github.com/enjoy-digital/litejesd204b) is used between the AD937Xs and FPGAs. 
