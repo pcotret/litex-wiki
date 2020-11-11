@@ -3,14 +3,15 @@
 LiteX is developed and used by Enjoy-Digital since 2012 to co-develop full-systems with our partners and provide an convenient and efficient solutions to create SoCs on FPGA based systems. Here are some of the last project we worked on with our partners:
 
 ## PCIe Software Defined Radio board with 2 Artix7, PCIe Gen2 X8 and 2 AD937X. 
-<p align="center"><img src="http://enjoy-digital.fr/experience/pcie_ad937x.jpg"></p>
+<div>
+<img src="http://enjoy-digital.fr/experience/pcie_ad937x.jpg" width="620">
+<img src="https://pbs.twimg.com/media/EjtsRYtX0AE72A1?format=jpg&name=medium" width="300">
+</div>
 
 The SoC is built with LiteX, [LitePCIe](https://github.com/enjoy-digital/litepcie) is used for the communication with the Host and [LiteJESD204B](https://github.com/enjoy-digital/litejesd204b) is used between the AD937Xs and FPGAs. 
 
-<p align="center"><img src="https://pbs.twimg.com/media/EjtsRYtX0AE72A1?format=jpg&name=medium"></p>
-
 ## PCIe 3G SDI board with Artix7, PCIe Gen2 X4. 
-<p align="center"><img src="http://enjoy-digital.fr/experience/pcie_3g_sdi.jpg"></p>
+<p align="center"><img src="http://enjoy-digital.fr/experience/pcie_3g_sdi.jpg" width="600"></p>
 
 The SoC is built with LiteX, [LitePCIe](http://github.com/enjoy-digital/litepcie) is used to communicate with the Host and the Xilinx TripleRateSDI core is wrapped with custom datapath modules and gearboxes to make efficient use of the PCIe bus without any external buffering.
 
@@ -24,8 +25,8 @@ Collections of projects with LiteX involved that could be useful for users to be
 
 ## [Linux-on-LiteX-VexRiscv](https://github.com/litex-hub/linux-on-litex-vexriscv)
 <div>
-<img src="https://linuxgizmos.com/files/gsd_orangecrab_frontback.jpg" width="400">
-<img src="https://pbs.twimg.com/media/ENtF6OWXUAEwlA7.jpg" width="400">
+<img src="https://linuxgizmos.com/files/gsd_orangecrab_frontback.jpg" width="300">
+<img src="https://pbs.twimg.com/media/ENtF6OWXUAEwlA7.jpg" width="450">
 </div>
  
  - Have an FPGA board with 32MB of RAM and want to test Linux on it? 
@@ -38,7 +39,7 @@ This project demonstrates **how high level HDLs (Spinal HDL, Migen) enable new p
 
 ## [NeTV2](https://www.crowdsupply.com/alphamax/netv2)
 <div>
-<img src="https://bunniefoo.com/netv2/netv2-slogan-white.png" width="400">
+<img src="https://bunniefoo.com/netv2/netv2-slogan-white.png" width="480">
 <img src="http://enjoy-digital.fr/experience/netv2.jpg" width="400">
 </div>
 
