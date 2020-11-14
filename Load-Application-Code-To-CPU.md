@@ -161,6 +161,8 @@ Loading application code from SDCard/SATA is very interesting for standalone emb
 
 The BIOS supports loading files from FAT16/FAT32 partitions and boot scheme is similar to Ethernet boot:  File format is identical, BIOS will first  look for a valid `boot.json` file, will eventually fallback to `boot.bin` if `boot.json` is not available or not valid, and will fails if neither of these are found/valid.
 
+![](https://pbs.twimg.com/media/EaPya68XgAEEKvB?format=png&name=small)
+
 Example of Linux SDCard boot on the [OrangeCrab](https://groupgets.com/campaigns/710-orangecrab):
 ![OrangeCrab](https://raw.githubusercontent.com/gregdavill/OrangeCrab/main/documentation/hugo-files/static/r0.2/orangeCrab-1.jpg)
 [![asciicast](https://asciinema.org/a/cFQ7JRH96mgJNcuI0Ntey663H.svg)](https://asciinema.org/a/cFQ7JRH96mgJNcuI0Ntey663H)
