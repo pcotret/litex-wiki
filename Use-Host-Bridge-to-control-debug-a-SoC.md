@@ -110,6 +110,28 @@ And use this to start _litex_server_ in PCIe mode:
 litex_server --pcie --pcie-bar=02:00.0
 ```
 
+# Use LiteX's cli:
+
+A simple [litex_cli](https://github.com/enjoy-digital/litex/blob/master/litex/tools/litex_client.py) comes with LiteX and can be used for simple and common operations: verify the bridge operation, read the identifier, read all or some registers of the SoC:
+
+```
+litex_cli --help
+usage: litex_cli [-h] [--port PORT] [--ident] [--regs]
+
+LiteX Client utility
+
+optional arguments:
+  -h, --help   show this help message and exit
+  --port PORT  Host bind port
+  --ident      Dump FPGA identifier
+  --regs       Dump FPGA registers
+```
+
+```litex_cli --ident``` Will read the SoC identifier.
+```litex_cli --regs```   Will dump all registers of the SoC identifier.
+
+```litex_cli``` will very simple for now (but already very useful :)) and will be extended in the future to support more common operations.
+
 # Create scripts to communicate from the Host PC with the bridge:
 
 You can now easily create scripts to read/write from/to the main bus of your SoC:
