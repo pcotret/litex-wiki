@@ -3,7 +3,7 @@
 ```
                           Copyright 2012-2020 / Enjoy-Digital
 ```
-[![](https://travis-ci.com/enjoy-digital/litex.svg?branch=master)](https://travis-ci.com/enjoy-digital/litex)
+[![](https://github.com/enjoy-digital/litex/workflows/ci/badge.svg)](https://github.com/enjoy-digital/litex/actions)
 ![License](https://img.shields.io/badge/License-BSD%202--Clause-orange.svg)
 
 > **Note:** In release 2020.04, LiteX switched to Python modules instead of Git submodules. Existing users will have to reinstall LiteX following the [installation guide](https://github.com/enjoy-digital/litex/wiki/Installation#litex-installation-guide).
@@ -11,7 +11,7 @@
 # Welcome to LiteX!
 
 LiteX is a Migen/MiSoC based Core/SoC builder that provides the infrastructure to easily create Cores/SoCs (with or without CPU).
-The common components of a SoC are provided directly: Buses and Streams (Wishbone, AXI, Avalon-ST), Interconnect, Common cores (RAM, ROM, Timer, UART, etc...), CPU wrappers/integration, etc... and SoC creation capabilities can be greatly extended with the ecosystem of LiteX cores (DRAM, PCIe, Ethernet, SATA, etc...) than can be integrated/simulated/build easily with LiteX. It also provides build backends for open-source and vendors toolchains.
+The common components of a SoC are provided directly: Buses and Streams (Wishbone, AXI, Avalon-ST), Interconnect, Common cores (RAM, ROM, Timer, UART, etc...), CPU wrappers/integration, etc... and SoC creation capabilities can be greatly extended with the ecosystem of LiteX cores (DRAM, PCIe, Ethernet, SATA, etc...) that can be integrated/simulated/build easily with LiteX. It also provides build backends for open-source and vendors toolchains.
 
 Think of Migen as a toolbox to create FPGA designs in Python and LiteX as a
 SoC builder to create/develop/debug FPGA SoCs in Python.
@@ -42,15 +42,15 @@ LiteX already supports various softcores CPUs: VexRiscv, Rocket, LM32, Mor1kx, P
 
 | Name                                                         | Build Status                                                            | Description                   |
 | ------------------------------------------------------------ | ----------------------------------------------------------------------- | ----------------------------- |
-| [LiteDRAM](http://github.com/enjoy-digital/litedram)         | [![](https://travis-ci.com/enjoy-digital/litedram.svg?branch=master)](https://travis-ci.com/enjoy-digital/litedram)     | DRAM        |
-| [LiteEth](http://github.com/enjoy-digital/liteeth)           | [![](https://travis-ci.com/enjoy-digital/liteeth.svg?branch=master)](https://travis-ci.com/enjoy-digital/liteeth)       | Ethernet                      |
-| [LitePCIe](http://github.com/enjoy-digital/litepcie)         | [![](https://travis-ci.com/enjoy-digital/litepcie.svg?branch=master)](https://travis-ci.com/enjoy-digital/litepcie)     | PCIe                          |
-| [LiteSATA](http://github.com/enjoy-digital/litesata)         | [![](https://travis-ci.com/enjoy-digital/litesata.svg?branch=master)](https://travis-ci.com/enjoy-digital/litesata)     | SATA                          |
-| [LiteSDCard](http://github.com/enjoy-digital/litesdcard)     | [![](https://travis-ci.com/enjoy-digital/litesdcard.svg?branch=master)](https://travis-ci.com/enjoy-digital/litesdcard)   | SD card                       |
-| [LiteICLink](http://github.com/enjoy-digital/liteiclink)     | [![](https://travis-ci.com/enjoy-digital/liteiclink.svg?branch=master)](https://travis-ci.com/enjoy-digital/liteiclink)   | Inter-Chip communication      |
-| [LiteJESD204B](http://github.com/enjoy-digital/litejesd204b) | [![](https://travis-ci.com/enjoy-digital/litejesd204b.svg?branch=master)](https://travis-ci.com/enjoy-digital/litejesd204b) | JESD204B                      |
-| [LiteVideo](http://github.com/enjoy-digital/litevideo)       | [![](https://travis-ci.com/enjoy-digital/litevideo.svg?branch=master)](https://travis-ci.com/enjoy-digital/litevideo)    | VGA, DVI, HDMI                     |
-| [LiteScope](http://github.com/enjoy-digital/litescope)       | [![](https://travis-ci.com/enjoy-digital/litescope.svg?branch=master)](https://travis-ci.com/enjoy-digital/litescope)    | Logic analyzer  |
+| [LiteDRAM](http://github.com/enjoy-digital/litedram)         | [![](https://github.com/enjoy-digital/litedram/workflows/ci/badge.svg)](https://github.com/enjoy-digital/litedram/actions)    | DRAM        |
+| [LiteEth](http://github.com/enjoy-digital/liteeth)           | [![](https://github.com/enjoy-digital/liteeth/workflows/ci/badge.svg)](https://github.com/enjoy-digital/liteeth/actions)       | Ethernet                      |
+| [LitePCIe](http://github.com/enjoy-digital/litepcie)         | [![](https://github.com/enjoy-digital/litepcie/workflows/ci/badge.svg)](https://github.com/enjoy-digital/litepcie/actions)     | PCIe                          |
+| [LiteSATA](http://github.com/enjoy-digital/litesata)         | [![](https://github.com/enjoy-digital/litesata/workflows/ci/badge.svg)](https://github.com/enjoy-digital/litesata/actions)     | SATA                          |
+| [LiteSDCard](http://github.com/enjoy-digital/litesdcard)     | [![](https://github.com/enjoy-digital/litesdcard/workflows/ci/badge.svg)](https://github.com/enjoy-digital/litesdcard/actions)   | SD card                       |
+| [LiteICLink](http://github.com/enjoy-digital/liteiclink)     | [![](https://github.com/enjoy-digital/liteiclink/workflows/ci/badge.svg)](https://github.com/enjoy-digital/liteiclink/actions)   | Inter-Chip communication      |
+| [LiteJESD204B](http://github.com/enjoy-digital/litejesd204b) | [![](https://github.com/enjoy-digital/litejesd204b/workflows/ci/badge.svg)](https://github.com/enjoy-digital/litejesd204b/actions) | JESD204B                      |
+| [LiteVideo](http://github.com/enjoy-digital/litevideo)       | [![](https://github.com/enjoy-digital/litevideo/workflows/ci/badge.svg)](https://github.com/enjoy-digital/litevideo/actions)    | VGA, DVI, HDMI                     |
+| [LiteScope](http://github.com/enjoy-digital/litescope)       | [![](https://github.com/enjoy-digital/litescope/workflows/ci/badge.svg)](https://github.com/enjoy-digital/litescope/actions)     | Logic analyzer  |
 
 Combining LiteX with the ecosystem of cores allows the creation of complex SoCs such as the one below
 created for the NeTV2 board to do HDMI capture/playback over PCIe:
@@ -98,10 +98,8 @@ Provides definitions/modules to build cores (bus, bank, flow), cores and tools t
 Provides platforms and targets for the supported boards. All Migen's platforms can also be used in LiteX. The boards present in the LiteX repository are the official ones that are used for development/CI. More boards are available at: https://github.com/litex-hub/litex-boards
 
 # Quick start guide
-0. Install Python 3.5+ and FPGA vendor's development tools.
-1. Install Migen/LiteX and the LiteX's cores:
-
-On MacOS, make sure you have [HomeBrew](https://brew.sh) installed. Then do, ``brew install wget``.
+1. Install Python 3.6+ and FPGA vendor's development tools and/or [Verilator](http://www.veripool.org/).
+2. Install Migen/LiteX and the LiteX's cores:
 
 ```sh
 $ wget https://raw.githubusercontent.com/enjoy-digital/litex/master/litex_setup.py
@@ -112,32 +110,33 @@ $ ./litex_setup.py init install --user (--user to install to user directory)
 ```sh
 $ ./litex_setup.py update
 ```
-3. Install a RISC-V toolchain:
+
+> **Note:** On MacOS, make sure you have [HomeBrew](https://brew.sh) installed. Then do, ``brew install wget``.
+
+> **Note:** On Windows, it's possible you'll have to set `SHELL` environment variable to `SHELL=cmd.exe`.
+
+3. Install a RISC-V toolchain (Only if you want to test/create a SoC with a CPU):
 ```sh
 $ ./litex_setup.py gcc
 ```
 
 4. Build the target of your board...:
-  Go to litex-boards/litex_boards/xxyy/targets (xxyy being community/official/partner) and execute the target you want to build
 
-5. ... and/or install [Verilator](http://www.veripool.org/) and test LiteX on your computer
+Go to litex-boards/litex_boards/targets and execute the target you want to build.
 
-On Fedora:
-```sh
-$ sudo dnf install libevent-devel json-c-devel
-```
-On Ubuntu:
+5. ... and/or install [Verilator](http://www.veripool.org/) and test LiteX directly on your computer without any FPGA board:
+
+On Linux (Ubuntu):
 ```sh
 $ sudo apt install libevent-dev libjson-c-dev verilator
-$ litex_sim
+$ lxsim --cpu-type=vexriscv
 ```
+
 On MacOS:
-
-
 ```sh
 $ brew install json-c verilator libevent
 $ brew cask install tuntap
-$ litex_sim
+$ lxsim --cpu-type=vexriscv
 ```
 
 6. Run a terminal program on the board's serial port at 115200 8-N-1.
