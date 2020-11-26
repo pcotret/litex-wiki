@@ -85,6 +85,15 @@ Once your bitstream is built and loaded to the board, start _litex_server_ in UD
 litex_server --udp --udp_ip=192.168.1.50
 ```
 
+If you want scan your network for available Etherbone/UDP devices, you can just do:
+
+```
+litex_server --udp --udp-scan --udp-ip=192.168.1.x --udp-port=1234
+Etherbone scan on 192.168.1.x network:
+- 192.168.1.20
+- 192.168.1.50
+```
+
 # Add a PCIe bridge to your SoC:
 On PCIe SoCs, the PCIe bridge is already present in the SoC since used to access the memory map of the SoC from the Host through the BAR0. The bridge is added by the following lines in the SoC definition:
 ```python3
