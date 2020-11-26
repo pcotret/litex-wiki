@@ -30,7 +30,7 @@ builder  = Builder(soc, ..., csr_csv="csr.csv")
 
 Once your bitstream is built and loaded to the board, start *litex_server* in UART mode:
 ```
-litex_server --uart --uart-port=/dev/ttyUSBX
+$litex_server --uart --uart-port=/dev/ttyUSBX
 ```
 
 # Add an Ethernet bridge to your SoC:
@@ -82,13 +82,13 @@ builder  = Builder(soc, ..., csr_csv="csr.csv")
 Once your bitstream is built and loaded to the board, start _litex_server_ in UDP mode:
 
 ```
-litex_server --udp --udp_ip=192.168.1.50
+$litex_server --udp --udp_ip=192.168.1.50
 ```
 
 If you want scan your network for available Etherbone/UDP devices, you can just do:
 
 ```
-litex_server --udp --udp-scan --udp-ip=192.168.1.x --udp-port=1234
+$litex_server --udp --udp-scan --udp-ip=192.168.1.x --udp-port=1234
 Etherbone scan on 192.168.1.x network:
 - 192.168.1.20
 - 192.168.1.50
@@ -116,7 +116,7 @@ Then with *lspci*, find the location of the PCIe board on the bus, here `02:00.0
 ```
 And use this to start _litex_server_ in PCIe mode:
 ```
-litex_server --pcie --pcie-bar=02:00.0
+$litex_server --pcie --pcie-bar=02:00.0
 ```
 
 # Use LiteX's cli:
@@ -124,7 +124,7 @@ litex_server --pcie --pcie-bar=02:00.0
 A simple [litex_cli](https://github.com/enjoy-digital/litex/blob/master/litex/tools/litex_client.py) comes with LiteX and can be used for simple and common operations: verify the bridge operation, read the identifier, read all or some registers of the SoC:
 
 ```
-litex_cli --help
+$litex_cli --help
 usage: litex_cli [-h] [--port PORT] [--ident] [--regs]
 
 LiteX Client utility
