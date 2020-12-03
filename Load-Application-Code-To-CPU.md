@@ -106,8 +106,6 @@ To use a _JSON_ file, start `lxterm` with:
 ```bash
 lxterm /dev/ttyUSBX --images=images.json
 ```
-> **Note:** For large binaries, it's possible boost upload speed (and live dangerously :)) by disabling the CRC check with --no-crc.
-
 # Ethernet Boot:
 On SoCs with Ethernet capability, loading application code with it can be very convenient for development since flexible  and fast (on a Linux SoC, loading binaries only takes a few seconds).
 
