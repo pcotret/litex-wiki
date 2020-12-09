@@ -109,4 +109,4 @@ A quad-core VexRiscv-SMP with DDR3 / PCIe Gen2 X4 has also been demonstrated on 
 
 Since boards with very similar capabilities are already supported by [Symbiflow](https://symbiflow.github.io/) (the Arty for example for but which is lacking GTPs) we could imagine building these designs with a full open-source toolchain in a very near future!
 
-Pretty exiting to see what can now be done with open-source hardware and less than 100$/€ nowadays no ? :)
+Pretty exciting to see what can now be done with open-source hardware and less than 100$/€ nowadays no ? :)
