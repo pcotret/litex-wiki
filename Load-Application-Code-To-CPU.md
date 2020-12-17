@@ -73,13 +73,13 @@ lxterm /dev/ttyUSBX --kernel=boot.bin
 ```
  2. Uploading multiple binaries with a *JSON* description file:
 
-When multiple binaries need to be loaded at different locations, a *JSON* description file with file/address tuples can be used, as for example the `images.json` file used for [Linux-on-LiteX-VexRiscv](https://github.com/litex-hub/linux-on-litex-vexriscv):
+When multiple binaries need to be loaded at different locations, a *JSON* description file with file/address tuples can be used, as for example the `boot.json` file used for [Linux-on-LiteX-VexRiscv](https://github.com/litex-hub/linux-on-litex-vexriscv):
 ```json
 {
-	"buildroot/Image":        "0x40000000",
-	"buildroot/rootfs.cpio":  "0x40800000",
-	"buildroot/rv32.dtb":     "0x41000000",
-	"emulator/emulator.bin":  "0x41100000"
+	"Image":        "0x40000000",
+	"rv32.dtb":     "0x40ef0000",
+	"rootfs.cpio":  "0x41000000",
+	"opensbi.bin":  "0x40f00000"
 }
 ```
 
@@ -88,10 +88,10 @@ The **last file/address tuple** is used for the CPU **jump** (so here it will ju
 It is also possible to optionally specify the `r1/r2/r3` and `addr` boot arguments:
 ```json
 {
-	"buildroot/Image":        "0x40000000",
-	"buildroot/rootfs.cpio":  "0x40800000",
-	"buildroot/rv32.dtb":     "0x41000000",
-	"emulator/emulator.bin":  "0x41100000",
+	"Image":        "0x40000000",
+	"rv32.dtb":     "0x40ef0000",
+	"rootfs.cpio":  "0x41000000",
+	"opensbi.bin":  "0x40f00000",
 	"bootargs": {
 		"r1":   "0x00000000",
 		"r2":   "0x00000000",
@@ -104,7 +104,7 @@ In this case, instead of defaulting to `0`, `r1/r2/r3` will use the specified va
 
 To use a _JSON_ file, start `lxterm` with:
 ```bash
-lxterm /dev/ttyUSBX --images=images.json
+lxterm /dev/ttyUSBX --images=boot.json
 ```
 # Ethernet Boot:
 On SoCs with Ethernet capability, loading application code with it can be very convenient for development since flexible  and fast (on a Linux SoC, loading binaries only takes a few seconds).
@@ -123,9 +123,9 @@ The BIOS will first try to load a `boot.json` file over TFTP that will provide t
 ```json
 {
 	"Image":        "0x40000000",
-	"rootfs.cpio":  "0x40800000",
-	"rv32.dtb":     "0x41000000",
-	"emulator.bin": "0x41100000"
+	"rv32.dtb":     "0x40ef0000",
+	"rootfs.cpio":  "0x41000000",
+	"opensbi.bin":  "0x40f00000"
 }
 ```
 2. Uploading a single binary:
