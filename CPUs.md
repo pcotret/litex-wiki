@@ -2,6 +2,8 @@ LiteX can create SoCs with or without CPU. Some simple SoCs don’t use any CPU 
 
 # Summary of Soft CPUs
 
+FIXME: This list is currently out of date missing the HW Group CPU and BlackParrot.
+
 Currently the supported Soft CPUs are:
 
  * [`lm32`](https://github.com/enjoy-digital/litex/tree/master/litex/soc/cores/cpu/lm32) -- a [LatticeMico32](https://en.wikipedia.org/wiki/LatticeMico32) soft core.
@@ -19,6 +21,8 @@ Currently the supported Soft CPUs are:
 # Soft CPU Variants
 
 Most of these CPUs have multiple configuration variants which customize the configuration to target a specific type of firmware, performance and resource usage. All these CPUs can be used with your own bare metal firmware.
+
+FIXME: This list is currently out of date - missing the debug variants.
 
 ## `minimal`
 
