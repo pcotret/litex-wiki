@@ -1,1 +1,1 @@
-[[CPUS]]
+Moved to [[CPUs]].
