@@ -83,7 +83,7 @@ To discover more products/projects built with LiteX, visit the [projects page](h
 **35C3 - Snakes and Rabbits - How CCC shaped an open hardware success:**
 - https://www.youtube.com/watch?v=AlmVxR0417c
 
-**Tim has to many projects - LatchUp Edition:**
+**Tim has too many projects - LatchUp Edition:**
 https://www.youtube.com/watch?v=v7WrTmexod0
 
 
