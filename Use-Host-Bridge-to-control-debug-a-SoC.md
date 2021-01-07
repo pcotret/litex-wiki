@@ -139,6 +139,8 @@ optional arguments:
 ```litex_cli --ident``` Will read the SoC identifier.
 ```litex_cli --regs```   Will dump all registers of the SoC identifier.
 
+_Note:_ The current directory you invoke `litex_cli` in must be the project directory, otherwise it will not function properly.
+
 ```litex_cli``` will very simple for now (but already very useful :)) and will be extended in the future to support more common operations.
 
 # Create scripts to communicate from the Host PC with the bridge:
