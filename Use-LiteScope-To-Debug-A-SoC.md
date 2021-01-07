@@ -80,6 +80,8 @@ No trigger, immediate capture.
 [====================>] 100%
 [writing to dump.vcd]...
 ```
+_Note:_ The current directory you invoke `litescope_cli` in must be the project directory, otherwise it will not function properly.
+
 And open it with GTKWave:
 <p align="center"><img src="https://user-images.githubusercontent.com/1450143/98357623-c4a5a180-2025-11eb-9b91-de04e41a86c3.png"></p>
 
