@@ -88,14 +88,14 @@ endmodule
 Now we can now to integrate the verilog into our module:
 ```python
 #!/usr/bin/env python3
-from migen import Instance
-from migen.fhdl.module import Module
-from migen.fhdl.structure import Signal, ClockSignal, ResetSignal
-from litex.build.sim.platform import SimPlatform
-from litex.build.sim.config import SimConfig
-from litex.soc.integration.builder import Builder
+from migen                          import Instance
+from migen.fhdl.module              import Module
+from migen.fhdl.structure           import Signal, ClockSignal, ResetSignal
+from litex.build.sim.platform       import SimPlatform
+from litex.build.sim.config         import SimConfig
+from litex.soc.integration.builder  import Builder
 from litex.soc.integration.soc_core import SoCMini
-from litex.build.generic_platform import Pins
+from litex.build.generic_platform   import Pins
 
 class VerilogDemo(Module):
     def __init__(self, platform, pads):
