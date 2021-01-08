@@ -27,7 +27,7 @@
   * [Add a new Board-_TODO_](Add-A-New-Board)
   * [Add a new Core-_TODO_](Add-A-New-Core)
   * [Add a new CPU-_TODO_](Add-A-New-CPU)
-  * [Reuse a Verilog/VHDL Core-_TODO_](Add-A-Verilog-VHDL-Core)
+  * [Reuse a nMigen/Verilog/VHDL Core](Add-A-nMigen-Verilog-VHDL-Core)
   * [Use LiteX on the Acorn CLE 215+](Use-LiteX-on-the-Acorn-CLE-215)
   * [Load application code the CPU(s)](Load-Application-Code-To-CPU)
   * [Use Host Bridges to control/debug a SoC](Use-Host-Bridge-to-control-debug-a-SoC)
