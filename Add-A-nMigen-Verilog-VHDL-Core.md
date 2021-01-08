@@ -85,7 +85,65 @@ endmodule
 ```
 Now we can now to integrate the verilog into our module:
 ```python
+#!/usr/bin/env python3
+from migen import Instance
+from migen.fhdl.module import Module
+from migen.fhdl.structure import Signal, ClockSignal, ResetSignal
+from litex.build.sim.platform import SimPlatform
+from litex.build.sim.config import SimConfig
+from litex.soc.integration.builder import Builder
+from litex.soc.integration.soc_core import SoCMini
+from litex.build.generic_platform import Pins
 
+class VerilogDemo(Module):
+    def __init__(self, platform, pads):
+        self.edge_signal_in     = Signal()
+        self.pulse_signal_out   = Signal()
+        self.pulse_signal_out_n = Signal()
+
+        # instantiate the verilog module
+        self.specials += Instance("edge_to_pulse",
+            i_clk       = ClockSignal(),
+            i_rst       = ResetSignal(),
+            i_edge_in   = self.edge_signal_in,
+            o_pulse_out = self.pulse_signal_out
+        )
+
+        # add the verilog source
+        # may need to adjust the path if it is
+        # in a subdirectory
+        platform.add_source("edgetopulse.v")
+
+        # finally do something with it:
+        self.comb += self.pulse_signal_out_n.eq(~self.pulse_signal_out)
+
+class DemoPlatform(SimPlatform):
+    default_clk_name = "sys_clk"
+
+    _io = [
+        ("sys_clk", 0, Pins(1)),
+        ("sys_rst", 0, Pins(1))
+    ]
+
+    def __init__(self):
+        SimPlatform.__init__(self, "SIM", self._io)
+
+class SimSoc(SoCMini):
+    def __init__(self):
+        platform = DemoPlatform()
+        sys_clk_freq = int(100e6)
+        SoCMini.__init__(self, platform, clk_freq=sys_clk_freq)
+        dut = VerilogDemo(self.platform, pads=[])
+        self.submodules += dut
+
+def main():
+    soc = SimSoc()
+    builder = Builder(soc)
+    sim_config = SimConfig(default_clk="sys_clk")
+    builder.build(sim_config=sim_config)
+
+if __name__ == "__main__":
+    main()
 ```
 
 
