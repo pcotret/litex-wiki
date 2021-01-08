@@ -145,6 +145,12 @@ def main():
 if __name__ == "__main__":
     main()
 ```
+Note that when instantiating the verilog module, the module's arguments are prepended with
+the following prefixes as annotations for migen:
+* `i_` for an input
+* `o_` for an output
+* `io_` for a bidirectional port
+* `p_` for a module parameter (like eg. bit width of ports etc.)
 
 
 
