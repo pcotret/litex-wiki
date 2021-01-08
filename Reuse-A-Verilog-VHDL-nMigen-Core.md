@@ -169,4 +169,6 @@ Note that when instantiating the Verilog module, the module's arguments are prep
 * `io_` for a bidirectional port
 * `p_` for a module parameter (like eg. bit width of ports etc.)
 
+When the simulation is run, we see the expected output:
+![](https://user-images.githubusercontent.com/148607/104075071-56a77180-5244-11eb-9226-590946ea4ff5.png)
 
