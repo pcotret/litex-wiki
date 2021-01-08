@@ -40,7 +40,7 @@ if __name__ == "__main__":
     m = EdgeToPulse()
     main(m, name="edge_to_pulse", ports=[m.edge_in, m.pulse_out])
 ```
-The last `if`-statement is instrumental for the conversion to verilog: The name attribute will determine the module name in verilog,
+The last `if`-statement is instrumental for the conversion to verilog: The name argument will determine the module name in verilog,
 and the ports list will determine the ports that will face the outside of the module (`clk` and `rst` will be automatically added by nMigen).
 We convert to verilog with the following command line:
 ```bash
