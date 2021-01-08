@@ -83,6 +83,8 @@ module edge_to_pulse(pulse_out, clk, rst, edge_in);
   end
 endmodule
 ```
+
+## Integrating a Verilog Core
 Now we can now to integrate the verilog into our module:
 ```python
 #!/usr/bin/env python3
@@ -151,6 +153,9 @@ the following prefixes as annotations for migen:
 * `o_` for an output
 * `io_` for a bidirectional port
 * `p_` for a module parameter (like eg. bit width of ports etc.)
+
+## Integrating a VHDL Core
+probably similar to verilog, but TODO
 
 
 
