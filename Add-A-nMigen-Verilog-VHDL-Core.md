@@ -7,6 +7,7 @@ converting it to verilog first.
 
 ## Converting nMigen to Verilog to prepare for integration
 As an example, we will use this simple nMigen core:
+
 ```python
 #!/usr/bin/env python3
 """converts a rising edge to a single clock pulse"""
@@ -45,7 +46,8 @@ We convert to verilog with the following command line:
 ```bash
 $ python3 edgetopulse.py generate -t v edgetopulse.v
 ```
-which, after cleaning up some code generation comments, looks like this:
+which, after cleaning up some code generation comments (to make it more readable for this presentation), 
+looks like this:
 ```verilog
 module edge_to_pulse(pulse_out, clk, rst, edge_in);
   reg \initial  = 0;
@@ -80,6 +82,10 @@ module edge_to_pulse(pulse_out, clk, rst, edge_in);
     endcase
   end
 endmodule
+```
+Now we can now to integrate the verilog into our module:
+```python
+
 ```
 
 
