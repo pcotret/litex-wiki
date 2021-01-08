@@ -155,7 +155,7 @@ the following prefixes as annotations for migen:
 * `p_` for a module parameter (like eg. bit width of ports etc.)
 
 ## Integrating a VHDL Core
-probably similar to verilog, but TODO
+TODO: (probably analogous to verilog?)
 
 
 
