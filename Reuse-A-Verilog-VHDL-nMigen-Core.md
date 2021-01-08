@@ -94,14 +94,15 @@ endmodule
 Now we can the generated nMigen verilog core into our LiteX design:
 ```python
 #!/usr/bin/env python3
-from migen import Instance
-from migen.fhdl.module import Module
-from migen.fhdl.structure import Signal, ClockSignal, ResetSignal
-from litex.build.sim.platform import SimPlatform
-from litex.build.sim.config import SimConfig
-from litex.soc.integration.builder import Builder
+from migen                          import Instance
+from migen.fhdl.module              import Module
+from migen.fhdl.structure           import Signal, ClockSignal, ResetSignal, Finish, If
+from litex.build.io                 import CRG
+from litex.build.sim.platform       import SimPlatform
+from litex.build.sim.config         import SimConfig
+from litex.soc.integration.builder  import Builder
 from litex.soc.integration.soc_core import SoCMini
-from litex.build.generic_platform import Pins
+from litex.build.generic_platform   import Pins
 
 class VerilogDemo(Module):
     def __init__(self, platform, pads):
@@ -127,6 +128,7 @@ class VerilogDemo(Module):
 
 class DemoPlatform(SimPlatform):
     default_clk_name = "sys_clk"
+    clk_freq = int(100e6)
 
     _io = [
         ("sys_clk", 0, Pins(1)),
@@ -139,16 +141,24 @@ class DemoPlatform(SimPlatform):
 class SimSoc(SoCMini):
     def __init__(self):
         platform = DemoPlatform()
-        sys_clk_freq = int(100e6)
-        SoCMini.__init__(self, platform, clk_freq=sys_clk_freq)
+        SoCMini.__init__(self, platform, clk_freq=platform.clk_freq)
         dut = VerilogDemo(self.platform, pads=[])
         self.submodules += dut
+        counter = Signal(16)
+        self.sync += [
+            counter.eq(counter + 1),
+            If(counter[15], Finish())
+        ]
+        self.comb += [ 
+            platform.trace.eq(1),
+            dut.edge_signal_in.eq(counter[3])
+        ]
 
 def main():
     soc = SimSoc()
     builder = Builder(soc)
-    sim_config = SimConfig(default_clk="sys_clk")
-    builder.build(sim_config=sim_config)
+    sim_config = SimConfig(default_clk="sys_clk", default_clk_freq=soc.platform.clk_freq)
+    builder.build(sim_config=sim_config, trace=True)
 
 if __name__ == "__main__":
     main()
