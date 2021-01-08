@@ -1,11 +1,17 @@
-Because there is a large variety of open cores available on the internet and
-also you might want to choose another HDL than Migen for several reasons,
-it is very likely you will want to integrate cores written in other languages into your project.
+LiteX is based on Migen but is also heavily used to integrate/reuse traditional Verilog/VHDL cores (commercial or open-source). It can also be used to integrate cores from Spinal-HDL, nMigen or other high level HDL DSL through Verilog.
+
+## Reusing a Verilog core
+TODO
+
+## Reusing a VHDL core
+TODO
+
+## Reusing a nMigen core
 
 In this example we will demonstrate the integration of an nMigen core into our project by
 converting it to verilog first.
 
-## Converting nMigen to Verilog to prepare for integration
+### Converting a nMigen core to Verilog
 As an example, we will use this simple nMigen core:
 
 ```python
@@ -40,7 +46,7 @@ if __name__ == "__main__":
     m = EdgeToPulse()
     main(m, name="edge_to_pulse", ports=[m.edge_in, m.pulse_out])
 ```
-The last `if`-statement is instrumental for the conversion to verilog: The name argument will determine the module name in verilog,
+The last `if`-statement is instrumental for the conversion to verilog: The name attribute will determine the module name in verilog,
 and the ports list will determine the ports that will face the outside of the module (`clk` and `rst` will be automatically added by nMigen).
 We convert to verilog with the following command line:
 ```bash
@@ -84,18 +90,18 @@ module edge_to_pulse(pulse_out, clk, rst, edge_in);
 endmodule
 ```
 
-## Integrating a Verilog Core
-Now we can now to integrate the verilog into our module:
+### Integrating the generated Verilog core
+Now we can the generated nMigen verilog core into our LiteX design:
 ```python
 #!/usr/bin/env python3
-from migen                          import Instance
-from migen.fhdl.module              import Module
-from migen.fhdl.structure           import Signal, ClockSignal, ResetSignal
-from litex.build.sim.platform       import SimPlatform
-from litex.build.sim.config         import SimConfig
-from litex.soc.integration.builder  import Builder
+from migen import Instance
+from migen.fhdl.module import Module
+from migen.fhdl.structure import Signal, ClockSignal, ResetSignal
+from litex.build.sim.platform import SimPlatform
+from litex.build.sim.config import SimConfig
+from litex.soc.integration.builder import Builder
 from litex.soc.integration.soc_core import SoCMini
-from litex.build.generic_platform   import Pins
+from litex.build.generic_platform import Pins
 
 class VerilogDemo(Module):
     def __init__(self, platform, pads):
@@ -147,15 +153,10 @@ def main():
 if __name__ == "__main__":
     main()
 ```
-Note that when instantiating the verilog module, the module's arguments are prepended with
-the following prefixes as annotations for migen:
+Note that when instantiating the Verilog module, the module's arguments are prepended with the following prefixes as annotations for Migen:
 * `i_` for an input
 * `o_` for an output
 * `io_` for a bidirectional port
 * `p_` for a module parameter (like eg. bit width of ports etc.)
-
-## Integrating a VHDL Core
-TODO: (probably analogous to verilog?)
-
 
 
