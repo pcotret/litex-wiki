@@ -29,3 +29,6 @@ Wiki of LiteX Buildenv project with information complementary to LiteX's Wiki.
 
 ## [LiteX SoftCPU on the ULX3S](https://gojimmypi.blogspot.com/2020/03/litex-soft-cpu-on-ulx3s-reloading.html) 
 Blogpost by gojimmypi testing LiteX on the ULX3S board and experimenting with the Soft CPU.
+
+## [Colorlight i5 Tips](https://github.com/kazkojima/colorlight-i5-tips) 
+Tiny collection of tips for the [Colorlight i5 FPGA board](https://github.com/wuxx/Colorlight-FPGA-Projects).
