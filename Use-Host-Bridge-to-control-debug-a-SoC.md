@@ -23,6 +23,13 @@ uart_bridge = uart.UARTWishboneBridge(
 self.submodules += uart_bridge
 self.add_wb_master(uart_bridge.wishbone)
 ```
+
+or simply with the `add_uartbone` method:
+
+```python3
+self.add_uartbone(name="uart_bridge")
+```
+
 and generate the *.csv* file that will be used by the tools:
 ```python3
 builder  = Builder(soc, ..., csr_csv="csr.csv")
@@ -32,6 +39,27 @@ Once your bitstream is built and loaded to the board, start *litex_server* in UA
 ```
 $litex_server --uart --uart-port=/dev/ttyUSBX
 ```
+
+
+
+# Add a JTAG bridge to your SoC:
+
+On boards with limited IOs or simply to avoid a specific debug cable, using the JTAG bridge can be very convenient:
+
+In your SoC, instantiate the JTAG bridge:
+```python3
+self.add_jtagbone()
+```
+and generate the *.csv* file that will be used by the tools:
+```python3
+builder  = Builder(soc, ..., csr_csv="csr.csv")
+```
+Once your bitstream is built and loaded to the board, start *litex_server* in JTAG mode:
+```
+$litex_server --jtag
+```
+Tadaaa! Here is your JTAG-to-AXI equivalent :)
+
 
 # Add an Ethernet bridge to your SoC:
 Another very convenient way to debug a SoC is to add an Ethernet Bridge to it this allows debugging your SoC over your local ethernet network and provide better speeds.
