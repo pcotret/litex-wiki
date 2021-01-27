@@ -61,5 +61,5 @@ was defined as a record with a single member (`data`):
 ```python
 self.sink = stream.Endpoint([("data", 8)])
 ```
-This means that streams can carry bundles of related signals (nmigen `Record` type).
+This means that streams can carry bundles of related signals (migen `Record` type).
 Click [here](https://github.com/m-labs/migen/blob/master/examples/basic/record.py) for a more in-depth example of using `Record`.
