@@ -56,3 +56,10 @@ When the `valid` signal is asserted, the data is read by the module. In the exam
 The whole trace of the above example then looks like this:
 ![image](https://user-images.githubusercontent.com/148607/105935950-71237c80-6085-11eb-901b-a56f5dd62c64.png)
 
+Note that in this example we had only a single input signal (`payload.data`). This is because the Endpoint definition for the UART
+was defined as a record with a single member (`data`):
+```python
+self.sink = stream.Endpoint([("data", 8)])
+```
+This means that streams can carry bundles of related signals (nmigen `Record` type).
+Click [here](https://github.com/m-labs/migen/blob/master/examples/basic/record.py) for a more in-depth example of using `Record`.
