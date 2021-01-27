@@ -8,7 +8,7 @@ LiteX's streams are group of signals (Migen's Record) used to create Sink/Source
 
 LiteX's streams can be directly mapped to AXI-4 and adapted easily to AvalonST with: https://github.com/enjoy-digital/litex/blob/master/litex/soc/interconnect/avalon.py.
 
-A basic real world example provides `litex.soc.cores.uart`.
+A basic real world example is provided by `litex.soc.cores.uart`.
 It has a `StreamEndpoint` called `sink`, which
 enables the user of the module to stream data into the module as follows:
 ```python
