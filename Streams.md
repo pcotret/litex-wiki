@@ -51,7 +51,7 @@ run_simulation(dut, testbench(), vcd_name="rs232-tx.vcd")
 
 When the sink becomes ready (ie the UART is ready to transmit another byte), the `ready` signal is asserted, and data
 can be written by setting up the payload data as above and asserting the `valid` signal.
-When the `valid` signal is asserted, the data is read by the module. In the example above, you can see that it is clocked into the transfer register of the UART.
+When the `valid` signal is asserted, the data is read by the module. In the example above, you can see that it is clocked into the transmit register of the UART.
 
 The whole trace of the above example then looks like this:
 ![image](https://user-images.githubusercontent.com/148607/105935950-71237c80-6085-11eb-901b-a56f5dd62c64.png)
