@@ -12,7 +12,7 @@
   * [Migen-nMigen](Migen-nMigen)
 * LiteX's internals
   * [Cores-_TODO_](Cores)
-  * [CPUs-_TODO_](CPUs)
+  * [CPUs](CPUs)
   * [Wishbone Bus-_TODO_](Wishbone-Bus)
   * [AXI Bus-_TODO_](AXI-Bus)
   * [CSR Bus](CSR-Bus)
