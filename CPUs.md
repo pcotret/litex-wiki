@@ -18,6 +18,9 @@ Currently the supported Soft CPUs are:
 
 *   [`rocket`](https://github.com/enjoy-digital/litex/tree/master/litex/soc/cores/cpu/rocket) -- [Rocket Chip](https://github.com/chipsalliance/rocket-chip), a configurable, fully featured, 64-bit `rv64imafdc` capable core.
 
+
+*   [`blackparrot`](https://github.com/enjoy-digital/litex/tree/master/litex/soc/cores/cpu/blackparrot) -- [BlackParrot](https://github.com/black-parrot/black-parrot), a Linux-Capable accelerator 64-bit host multicore that implements `rv64imafdc` instruction set.
+
 # Soft CPU Variants
 
 Most of these CPUs have multiple configuration variants which customize the configuration to target a specific type of firmware, performance and resource usage. All these CPUs can be used with your own bare metal firmware.
@@ -66,6 +69,7 @@ Standard is the default configuration which should work well for bare metal firm
  * or1k
  * vexriscv
  * rocket
+ * blackparrot
 
 ### Recommended FPGAs
 
@@ -96,6 +100,7 @@ This target enables CPU features such as MMU that are required to get Linux boot
  * or1k
  * vexriscv
  * rocket
+ * blackparrot
 
 ---
 
