@@ -19,7 +19,7 @@ Currently the supported Soft CPUs are:
 *   [`rocket`](https://github.com/enjoy-digital/litex/tree/master/litex/soc/cores/cpu/rocket) -- [Rocket Chip](https://github.com/chipsalliance/rocket-chip), a configurable, fully featured, 64-bit `rv64imafdc` capable core.
 
 
-*   [`blackparrot`](https://github.com/enjoy-digital/litex/tree/master/litex/soc/cores/cpu/blackparrot) -- [BlackParrot](https://github.com/black-parrot/black-parrot), a 64-bit Linux-Capable accelerator host multicore that implements rv64imafdc instruction set.
+*   [`blackparrot`](https://github.com/enjoy-digital/litex/tree/master/litex/soc/cores/cpu/blackparrot) -- [BlackParrot](https://github.com/black-parrot/black-parrot), a 64-bit Linux-Capable accelerator host multicore that implements `rv64imafdc` instruction set.
 
 # Soft CPU Variants
 
