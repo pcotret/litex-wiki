@@ -12,7 +12,7 @@ With LiteScope, we want to capture internal signals of our design, store their v
 
 To use LiteScope in LiteX, the first step is then to add a bridge connection between the Host PC and our FPGA board to allow the Host PC to access the main bus of our SoC and interact with it.
 
-LiteX provides natives bridges that can operate over a [UART](https://github.com/enjoy-digital/litex/wiki/Use-Host-Bridge-to-control-debug-a-SoC#add-a-uart-bridge-to-your-soc), [Ethernet](https://github.com/enjoy-digital/litex/wiki/Use-Host-Bridge-to-control-debug-a-SoC#add-an-ethernet-bridge-to-your-soc) or [PCIe](https://github.com/enjoy-digital/litex/wiki/Use-Host-Bridge-to-control-debug-a-SoC#add-a-pcie-bridge-to-your-soc) and the integration of a such bridge in the SoC is explained in the [Use Host Bridge to control/debug a SoC documentation](https://github.com/enjoy-digital/litex/wiki/Use-Host-Bridge-to-control-debug-a-SoC).
+LiteX provides native bridges that can operate over a [UART](https://github.com/enjoy-digital/litex/wiki/Use-Host-Bridge-to-control-debug-a-SoC#add-a-uart-bridge-to-your-soc), [Ethernet](https://github.com/enjoy-digital/litex/wiki/Use-Host-Bridge-to-control-debug-a-SoC#add-an-ethernet-bridge-to-your-soc) or [PCIe](https://github.com/enjoy-digital/litex/wiki/Use-Host-Bridge-to-control-debug-a-SoC#add-a-pcie-bridge-to-your-soc) and the integration of these bridges in the SoC is explained in the [Use a Host Bridge to control/debug a SoC documentation](https://github.com/enjoy-digital/litex/wiki/Use-Host-Bridge-to-control-debug-a-SoC).
 
 Alternative ways to create a bridges have also been developed, such as USB/SPI (used on Fomu), SPI. #FIXME: add more infos.
 
