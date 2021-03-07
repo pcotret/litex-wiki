@@ -31,7 +31,7 @@ to (re)load application code, boot to it and do quick iterations. LiteX supports
 
 Serial boot is generally slow compared to Ethernet or SDCard boot but is the easiest to setup and usable on all boards so is still very interesting for easy use or when no alternative are available.
 
-LiteX's [lxterm](https://github.com/enjoy-digital/litex/blob/master/litex/tools/litex_term.py) tool is used to ulpload the application code and is directly installed with LiteX, available with the `lxterm` command.
+LiteX's [lxterm](https://github.com/enjoy-digital/litex/blob/master/litex/tools/litex_term.py) tool is used to upload the application code and is directly installed with LiteX, available with the `lxterm` command.
 
 Serial boot has priority over the other boot methods and the BIOS will always try to boot from it. If `lxterm` is running on the Host, it upload the binary(ies) at startup: 
 ```bash
