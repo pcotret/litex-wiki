@@ -110,7 +110,7 @@ builder  = Builder(soc, ..., csr_csv="csr.csv")
 Once your bitstream is built and loaded to the board, start _litex_server_ in UDP mode:
 
 ```
-$litex_server --udp --udp_ip=192.168.1.50
+$litex_server --udp --udp-ip=192.168.1.50
 ```
 
 If you want scan your network for available Etherbone/UDP devices, you can just do:
