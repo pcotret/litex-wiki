@@ -1,7 +1,59 @@
 LiteX is based on Migen but is also heavily used to integrate/reuse traditional Verilog/VHDL cores (commercial or open-source). It can also be used to integrate cores from Spinal-HDL, nMigen or other high level HDL DSL through Verilog.
 
 ## Reusing a Verilog core
-TODO
+
+In this example we will demonstrate the integration of a verilog core. Two steps are involved. The step first is to include the given core through call to platform.add_source given the verilog . The second step is to the instantiate this core.
+
+We are going to modify [lab001](https://github.com/litex-hub/fpga_101/blob/master/lab001/base.py) to use verilog directly and start by writing a small verilog core called *blink.v* .
+
+```
+module blink(
+    input clk,
+    input rst,
+    output led
+);
+  reg [25:0] cnt;
+  assign led = cnt[25] == 1;
+
+  always @(posedge clk) begin
+    if(rst) begin
+        cnt <= 25'd0;
+    end else begin
+        cnt <= cnt + 1'b1;
+    end
+  end
+endmodule
+```
+
+This module can be added by calling `platform.add_source("blink.v")`
+
+and then must be instantiate. This is done using *Instance*
+
+```
+#!/usr/bin/env python3
+from migen import *
+from litex_boards.platforms import tinyfpga_bx
+
+# Create our platform (fpga interface)
+platform = platform = tinyfpga_bx.Platform()
+platform.add_source("blink.v")
+
+# Create our module (fpga description)
+module = Module()
+module.specials += Instance("blink",
+    i_clk = ClockSignal(),
+    i_rst = ResetSignal(),
+    o_led = platform.request("user_led")
+)
+
+# Build
+platform.build(module)
+
+```
+
+The first parameter of the instance is the verilog module name (the verilog file will actually be included in the generated code). The parameters have the same names as the verilog module parameters with the exception that they are prefixed with the addition of a prefix "i_" for input "o_" for output and "p_" for parameter.
+
+A more complex example is [the inclusion of an I2C core obtained through OpenCores](https://github.com/betrusted-io/gateware/blob/master/gateware/i2c/core.py)
 
 ## Reusing a VHDL core
 TODO
