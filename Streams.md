@@ -124,7 +124,7 @@ run_simulation(dut, dict(usb = testbench_usb(), sys = testbench_sys()), vcd_name
 In this code we a data stream flows from the slower USB domain (period 16ns) into the faster sys clock domain (period 10ns).
 As we can clearly see, the data will only pass through the stream, if both `valid` and `ready` are asserted. Data which is valid, but not ready at the receiving end, will be dropped:
 ![image](https://user-images.githubusercontent.com/148607/112723471-37fe7000-8f41-11eb-8a64-711a1743c542.png)
-
+We also can see nicely here, how `first` and `last` mark the first and the last payload byte of a packet of transferred data.
 
 
 
