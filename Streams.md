@@ -75,12 +75,10 @@ High speed USB, for example, operates at 60MHz, while the default system clock i
 Since all those devices represent streams of continually flowing data, LiteX provides a standard way of crossing from one clock domain into another:
 ```python
 from migen                         import *
-from migen.fhdl.decorators         import ClockDomainsRenamer
-from litex.soc.interconnect.stream import AsyncFIFO
+from litex.soc.interconnect.stream import ClockDomainCrossing
 from litex.build.generic_platform  import *
 
-clk_freq = 50e6
-dut = ClockDomainsRenamer({"write": "usb", "read": "sys"})(AsyncFIFO([("data", 8)]))
+dut = ClockDomainCrossing(layout=[("data", 8)], cd_from="usb", cd_to="sys", depth=4)
 dut.clock_domains += ClockDomain("usb")
 
 def write(value: int, first=False, last=False):
@@ -114,12 +112,15 @@ def testbench_usb():
         yield
 
 def testbench_sys():
+    yield
     yield dut.source.ready.eq(0)
     for i in range(0, 10):
         yield
     yield dut.source.ready.eq(1)
 
-run_simulation(dut, dict(usb = testbench_usb(), sys = testbench_sys()), vcd_name="cdc-slow-to-fast.vcd", clocks={"sys": 10, "usb": 16})
+run_simulation(dut, dict(usb = testbench_usb(), sys = testbench_sys()),
+                    vcd_name="cdc-slow-to-fast.vcd",
+                    clocks={"sys": 10, "usb": 16})
 ```
 In this code we a data stream flows from the slower USB domain (period 16ns) into the faster sys clock domain (period 10ns).
 As we can clearly see, the data will only pass through the stream, if both `valid` and `ready` are asserted. Data which is valid, but not ready at the receiving end, will be dropped:
