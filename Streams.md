@@ -65,8 +65,8 @@ This means that streams can carry bundles of related signals (migen `Record` typ
 Click [here](https://github.com/m-labs/migen/blob/master/examples/basic/record.py) for a more in-depth example of using `Record`.
 
 ## A Classic Streams Example
-While the UART example above may have been easy to get started with, it actually violates the Streams protocol:
-Actually only when valid *and* ready are asserted, then only may the data 'legally' handed on.
+While the UART example above may have been easy to get started with, it violates the Streams protocol:
+Actually when both `valid` *and* `ready` are asserted, then _only_ may the data 'legally' handed on.
 We illustrate this with a very prominent example, which you are likely to encounter: Clock Domain Crossings.
 
 Since streams transport dataflows from one peripheral to another (for example camera to USB), they almost surely will cross clock domains,
