@@ -63,3 +63,68 @@ self.sink = stream.Endpoint([("data", 8)])
 ```
 This means that streams can carry bundles of related signals (migen `Record` type).
 Click [here](https://github.com/m-labs/migen/blob/master/examples/basic/record.py) for a more in-depth example of using `Record`.
+
+## A classic Streams example
+While the UART example above may have been easy to get started with, it actually violates the Streams protocol:
+Actually only when valid *and* ready are asserted, then only may the data 'legally' handed on.
+We illustrate this with a very prominent example, which you are likely to encounter: Clock Domain Crossings.
+
+Since streams transport dataflows from one peripheral to another (for example camera to USB), they almost surely will cross clock domains,
+because those peripherals operate with different clock frequencies and thus are said to be in different _clock domains_.
+High speed USB, for example, operates at 60MHz, while the default system clock in LiteX tends to be at 50MHz, or more, depending on the board. Also, cameras and audio equipment operate at different clock frequencies altogether.
+Since all those devices represent streams of continually flowing data, LiteX provides a standard way of crossing from one clock domain into another:
+```python
+from migen                         import *
+from migen.fhdl.decorators         import ClockDomainsRenamer
+from litex.soc.interconnect.stream import AsyncFIFO
+from litex.build.generic_platform  import *
+
+clk_freq = 50e6
+dut = ClockDomainsRenamer({"write": "usb", "read": "sys"})(AsyncFIFO([("data", 8)]))
+dut.clock_domains += ClockDomain("usb")
+
+def write(value: int, first=False, last=False):
+    if first:
+        yield dut.sink.first.eq(1)
+    if last:
+        yield dut.sink.last.eq(1)
+    yield dut.sink.payload.data.eq(value)
+    yield dut.sink.valid.eq(1)
+    yield
+    if first:
+        yield dut.sink.first.eq(0)
+    if last:
+        yield dut.sink.last.eq(0)
+    yield dut.sink.payload.data.eq(0)
+    yield dut.sink.valid.eq(0)
+    #yield
+
+def testbench_usb():
+    yield from write(0xaa, first=True)
+    yield from write(0xbb)
+    yield from write(0xcc)
+    yield from write(0xdd)
+    yield
+    yield
+    yield
+    yield
+    yield from write(0x55)
+    yield from write(0xff, last=True)
+    for i in range(0, 4):
+        yield
+
+def testbench_sys():
+    yield dut.source.ready.eq(0)
+    for i in range(0, 10):
+        yield
+    yield dut.source.ready.eq(1)
+
+run_simulation(dut, dict(usb = testbench_usb(), sys = testbench_sys()), vcd_name="cdc-slow-to-fast.vcd", clocks={"sys": 10, "usb": 16})
+```
+In this code we a data stream flows from the slower USB domain (period 16ns) into the faster sys clock domain (period 10ns).
+As we can clearly see, the data will only pass through the stream, if both `valid` and `ready` are asserted. Data which is valid, but not ready at the receiving end, will be dropped:
+![image](https://user-images.githubusercontent.com/148607/112723471-37fe7000-8f41-11eb-8a64-711a1743c542.png)
+
+
+
+
