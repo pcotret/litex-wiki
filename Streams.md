@@ -126,5 +126,7 @@ As we can clearly see, the data will only pass through the stream, if both `vali
 ![image](https://user-images.githubusercontent.com/148607/112723471-37fe7000-8f41-11eb-8a64-711a1743c542.png)
 We also can see nicely here, how `first` and `last` mark the first and the last payload byte of a packet of transferred data.
 
+I would strongly encourage you to copy and paste the simulation and experiment with it: Try to move valid and ready around, and see how the signals react. This will give you a good intuition of how it behaves.
+
 
 
