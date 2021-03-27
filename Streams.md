@@ -64,7 +64,7 @@ self.sink = stream.Endpoint([("data", 8)])
 This means that streams can carry bundles of related signals (migen `Record` type).
 Click [here](https://github.com/m-labs/migen/blob/master/examples/basic/record.py) for a more in-depth example of using `Record`.
 
-## A classic Streams example
+## A Classic Streams Example
 While the UART example above may have been easy to get started with, it actually violates the Streams protocol:
 Actually only when valid *and* ready are asserted, then only may the data 'legally' handed on.
 We illustrate this with a very prominent example, which you are likely to encounter: Clock Domain Crossings.
