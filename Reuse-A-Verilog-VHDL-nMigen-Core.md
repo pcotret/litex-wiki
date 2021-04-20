@@ -6,7 +6,7 @@ In this example we will demonstrate the integration of a verilog core. Two steps
 
 We are going to modify [lab001](https://github.com/litex-hub/fpga_101/blob/master/lab001/base.py) to use verilog directly and start by writing a small verilog core called *blink.v* .
 
-```
+```verilog
 module blink(
     input clk,
     input rst,
@@ -29,7 +29,7 @@ This module can be added by calling `platform.add_source("blink.v")`
 
 and then must be instantiate. This is done using *Instance*
 
-```
+```python
 #!/usr/bin/env python3
 from migen import *
 from litex_boards.platforms import tinyfpga_bx
