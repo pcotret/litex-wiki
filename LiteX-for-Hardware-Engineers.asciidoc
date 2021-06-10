@@ -167,6 +167,8 @@ that later. A `Signal()` has no inherent direction, clock domain, or
 meaning. It picks this all up based on how you use it: which attribute
 of the `Module` class you've assigned it to, and so forth.
 
+CAUTION: In Migen, you can specify the number of bits for a `Signal()` by doing `Signal(max=8)`. Counter to what you think it should do, `max` is *exclusive* (but `min` is *inclusive*), so `Signal(max=8)` cannot actually hold the number `8`. It can hold the number `7`, because it will infer only three bits for the directive `max=8`. I was not in the room when this was decided.
+
 TIP: Dangling references and signal name typos will result in Python crashes during
 the finalization process, and you are expected to dig through the stack
 trace to find the problem. Because finalization disassociates the locality
@@ -764,7 +766,9 @@ CSRs also provide some convenience on the hardware Python side.
 
 * You can specify the reset value by passing the reset=value parameter (for both
 Storage and Status)
-* the .re attribute provides a single-cycle pulse when the CSRStorage is updated
+* `.re` is a "write" strobe -- the .re attribute provides a single-cycle pulse when a CSRStorage is updated
+* `.we` is a "read" strobe -- the .we attribute provides a single-cycle pulse when a CSRStatus is read
+* **yes, you read those two lines above correctly. in Litex, .re is a write, and .we is a read.** I was not in the room when this was decided.
 * if write_from_dev=True is passed as a parameter to CSRStorage, the device can flip the storage bit (allowing it to work as an input, oddly enough), by providing data on .dat_w, and strobing .we. Difference between this and CSR is reads are not guaranteed atomic when CSRStorage is made writeable.
 
 If you're using a straight-up CSR (not a Storage or Status), the accessors
