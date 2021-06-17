@@ -26,7 +26,7 @@
   * [Create a minimal SoC_TODO_](Create-A-minimal-SoC)
   * [Add a new Board-_TODO_](Add-A-New-Board)
   * [Add a new Core-_TODO_](Add-A-New-Core)
-  * [Add a new CPU-_TODO_](Add-A-New-CPU)
+  * [Add a new CPU-_WIP_](Add-A-New-CPU)
   * [Reuse a Verilog/VHDL/nMigen Core](Reuse-A-Verilog-VHDL-nMigen-Core)
   * [Use LiteX on the Acorn CLE 215+](Use-LiteX-on-the-Acorn-CLE-215)
   * [Load application code the CPU(s)](Load-Application-Code-To-CPU)
