@@ -39,7 +39,7 @@ LiteX does not have strict coding rules, please just try (if possible) to a use 
 
 ## **Support**
 
-While LiteX is an open-source project and we are really enjoying working on it, the team doing the development/maintenance is still small and often have others obligations since the initial goal of LiteX was to create custom FPGA based systems with it, so please understand if we need a few days to respond. The community is also growing and helping and a dedicated freenode channel can be found at [#litex at freenode.net](https://webchat.freenode.net/?channels=litex).
+While LiteX is an open-source project and we are really enjoying working on it, the team doing the development/maintenance is still small and often have others obligations since the initial goal of LiteX was to create custom FPGA based systems with it, so please understand if we need a few days to respond. The community is also growing and helping and a dedicated freenode channel can be found at [#litex at irc.libera.chat](https://web.libera.chat/).
 
 We have the chance to have clients trusting us and funding systems built with LiteX or new developments but please consider that most of us can only answer you on working days and also need to spend weekend/holidays with our family and friends to come back with fresh minds and ideas!
 
