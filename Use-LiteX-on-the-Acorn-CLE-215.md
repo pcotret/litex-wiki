@@ -63,7 +63,7 @@ This adapter will allow you to use LiteSATA on FPGA boards with a PCIe connector
 
 You are now ready to use LiteX on your board, let's first run a classical LiteX SoC on the board:
 
-    python3 -m litex_boards.targets.acorn_cle_215 --build --load
+    python3 -m litex_boards.targets.sqrl_acorn --build --load
 
 This will build a LiteX SoC with CPU/ROM/SRAM/DDR3 and load if to the board. At the end of the build you should see the LiteX BIOS prompt and be able to interact with it.
 
