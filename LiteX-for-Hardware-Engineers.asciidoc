@@ -1072,6 +1072,7 @@ using `get_port()`.
 
 ```python
      storage = Memory(width, depth)
+     self.specials += storage
 
      wrport = storage.get_port(write_capable=True)
      self.specials += wrport
