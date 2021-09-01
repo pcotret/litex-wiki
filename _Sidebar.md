@@ -40,3 +40,4 @@
   * [Run Linux on your SoC](Run-Linux-On-Your-SoC)
   * [Export your Core/SoC to Verilog-_TODO_](Export-Your-Core-SoC-To-Verilog)
   * [Create a PCIe SoC-_TODO_](Create-A-PCIe-SoC)
+  * [Generate Renode simulation](Generate-Renode-simulation)
