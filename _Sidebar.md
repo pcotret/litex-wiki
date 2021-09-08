@@ -36,7 +36,7 @@
 * How to (Advanced)
   * [Create a complex SoC with cores from the Ecosystem-_TODO_](Create-A-complex-SoC-With-Cores-From-The-Ecosystem)
   * [Run MicroPython/CircuitPython on your SoC](Run-MicroPython-CircuitPython-On-Your-SoC)
-  * [Run Zephyr on your SoC-_TODO_](Run-Zephyr-On-Your-SoC)
+  * [Run Zephyr on your SoC](Run-Zephyr-On-Your-SoC)
   * [Run Linux on your SoC](Run-Linux-On-Your-SoC)
   * [Export your Core/SoC to Verilog-_TODO_](Export-Your-Core-SoC-To-Verilog)
   * [Create a PCIe SoC-_TODO_](Create-A-PCIe-SoC)
