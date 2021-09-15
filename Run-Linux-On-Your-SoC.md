@@ -44,5 +44,12 @@ The [BlackParrot](https://github.com/black-parrot/black-parrot) CPU support has 
 
 ![Microwatt](https://shenki.github.io/images/microwatt-title.png)
 
-The Microwatt CPU is supported by LiteX but not yet capable of booting Linux directly when integrated in LiteX. The [Boot Linux on Microwatt](https://shenki.github.io/boot-linux-on-microwatt/) blogpost demonstrates how to boot Linux on the Microwatt CPU with an interesting approach where LiteX is not used as the SoC builder,  but just providing the DRAM controller and initialization code as a standalone core generated with [LiteDRAM generator](https://github.com/enjoy-digital/litedram/blob/master/litedram/gen.py) and integrated in a VHDL SoC. This **approach is really interesting** since also demonstrates that **just some components** of the LiteX ecosystem **can be reused separately in a more traditional flow** and that user is not enforced to use LiteX for the integration.
+The Microwatt CPU is supported by LiteX but not yet capable of booting Linux directly when integrated in LiteX. 
 
+##### Linux on MicroWatt outside of LiteX (but using some LiteX cores)
+
+The [Boot Linux on Microwatt](https://shenki.github.io/boot-linux-on-microwatt/) blog post demonstrates how to boot Linux on the Microwatt CPU. It does this by pulling together a number of cores from multiple sources, including a few LiteX based cores **without** using the full LiteX SoC builder. 
+
+By choosing to not use the LiteX SoC builder, this approach is unable to take advantage of many of the nicest features in the LiteX ecosystem and isolates itself from other efforts like the OpenRISC1000 and RISC-V efforts (VexRISC-V / Rocket / BlackParrot / more in future).
+
+This approach **does** demonstrate that LiteX based cores can be integrated directly into existing more traditional flows like any other traditional IP core and a user is not forced to use LiteX for the integration. This example uses the [LiteDRAM memory controller generator](https://github.com/enjoy-digital/litedram/blob/master/litedram/gen.py) to create the DRAM controller and initialization code to be included in the VHDL based SoC.
