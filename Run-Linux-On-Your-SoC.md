@@ -46,7 +46,7 @@ The [BlackParrot](https://github.com/black-parrot/black-parrot) CPU support has 
 
 The Microwatt CPU is supported by LiteX but not yet capable of booting Linux directly when integrated in LiteX. 
 
-##### Linux on MicroWatt outside of LiteX (but using some LiteX cores)
+### Linux on MicroWatt outside of LiteX (but using some LiteX cores)
 
 The [Boot Linux on Microwatt](https://shenki.github.io/boot-linux-on-microwatt/) blog post demonstrates how to boot Linux on the Microwatt CPU. It does this by pulling together a number of cores from multiple sources, including a few LiteX based cores **without** using the full LiteX SoC builder. 
 
