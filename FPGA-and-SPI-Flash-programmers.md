@@ -2,7 +2,7 @@ LiteX relies on several external tools to load the FPGA bitstream in SRAM or fla
 
 ## OpenOCD
 
-Please use and install **our OpenOCD fork** for boards using OpenOCD programmer:
+Please use and install **our OpenOCD fork** for LiteX-Boards using OpenOCD programmer:
 
     git clone https://github.com/enjoy-digital/openocd
     cd openocd  
