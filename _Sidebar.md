@@ -22,7 +22,7 @@
   * [SoC Builder-_TODO_](SoC-builder)
   * [SoC Simulator-_TODO_](SoC-Simulator)
   * [SoC Documentation](SoC-Documentation)
-  * [FPGA/SPI Flash programmers](FPGA-SPI-Flash-programmers)
+  * [FPGA/SPI Flash programmers](FPGA-and-SPI-Flash-programmers)
 * How to
   * [Create a minimal SoC_TODO_](Create-A-minimal-SoC)
   * [Add a new Board-_TODO_](Add-A-New-Board)
