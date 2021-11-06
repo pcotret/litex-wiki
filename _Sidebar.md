@@ -3,7 +3,6 @@
 * Welcome to LiteX
   * [Presentation](Home)
   * [Installation](Installation)
-  * [Capabilities-_TODO_](Capabilities)
   * [Cores-Ecosystem](Cores-Ecosystem)
   * [OSes-Ecosystem-_TODO_](OSes-Ecosystem)
   * [Tutorials-Resources](Tutorials-Resources)
@@ -24,7 +23,7 @@
   * [SoC Documentation](SoC-Documentation)
   * [FPGA/SPI Flash programmers](FPGA-and-SPI-Flash-programmers)
 * How to
-  * [Create a minimal SoC_TODO_](Create-A-minimal-SoC)
+  * [Create a minimal SoC-_TODO_](Create-A-minimal-SoC)
   * [Add a new Board-_TODO_](Add-A-New-Board)
   * [Add a new Core-_WIP_](Add-A-New-Core)
   * [Add a new CPU-_WIP_](Add-A-New-CPU)
