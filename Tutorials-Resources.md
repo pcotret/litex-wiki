@@ -9,15 +9,18 @@ These tutorials should help users understand the possibilities of Migen/LiteX an
 
 ## [Fomu Workshop](https://workshop.fomu.im/en/latest/)
 ![Fomu FPGA board](https://www.crowdsupply.com/img/decb/fomu-front-back-03_png_project-body.jpg)
-The [Fomu](https://www.crowdsupply.com/sutajio-kosagi/fomu) is a tiny FPGA board that fits in your USB port. The SoC of the FPGA is built with LiteX and the workshop provides a hands-on approach to control the peripherals from a Host PC through the USB bridge from the [ValentyUSB](https://github.com/im-tomu/valentyusb) core and then demonstrates how to create a RISC-V SoC with a [VexRiscv](https://github.com/SpinalHDL/VexRiscv) CPU and load/execute/debug C/Rust core with it and control the peripherals of the board.
 
-## [iCEBreaker LiteX examples](https://github.com/icebreaker-fpga/icebreaker-litex-examples)
-![enter image description here](https://www.crowdsupply.com/img/301a/icebreaker-iso_png_project-body.jpg)
-The [iCEBreaker](https://www.crowdsupply.com/1bitsquared/icebreaker-fpga) is the first open source iCE40 FPGA development board designed for teachers and students. The iCEBreaker [target](https://github.com/litex-hub/litex-boards/blob/master/litex_boards/targets/icebreaker.py) integrated in [LiteX-Boards](https://github.com/litex-hub/litex-boards) provides a minimal LiteX SoC for the iCEBreaker with a CPU, its ROM (in SPI Flash), its SRAM, close to the others LiteX targets. A more complete example of LiteX SoC for the iCEBreaker with more features, examples to run C/Rust code on the RISC-V CPU and documentation can be found in the [iCEBreaker LiteX examples](https://github.com/icebreaker-fpga/icebreaker-litex-examples) tutorial.
+The [Fomu](https://www.crowdsupply.com/sutajio-kosagi/fomu) is a tiny FPGA board that fits in your USB port. The SoC of the FPGA is built with LiteX and the workshop provides a hands-on approach to control the peripherals from a Host PC through the USB bridge from the [ValentyUSB](https://github.com/im-tomu/valentyusb) core and then demonstrates how to create a RISC-V SoC with a [VexRiscv](https://github.com/SpinalHDL/VexRiscv) CPU and load/execute/debug C/Rust core with it and control the peripherals of the board.
 
 ## [ColorLite](https://github.com/enjoy-digital/colorlite)
 ![enter image description here](https://raw.githubusercontent.com/enjoy-digital/colorlite/master/doc/power_off.jpg)
+
 The Colorlight 5A-75B is an inexpensive (15$) led control board equipped with a Lattice ECP5 FPGA, 2 x 1Gbps Ethernet and lots of IOs. ColorLite project explains how to create a cheap remote control/monitoring system with it can be useful to discover LiteX/LiteEth through a practical example.
+
+## [iCEBreaker LiteX examples](https://github.com/icebreaker-fpga/icebreaker-litex-examples)
+![enter image description here](https://www.crowdsupply.com/img/301a/icebreaker-iso_png_project-body.jpg)
+
+The [iCEBreaker](https://www.crowdsupply.com/1bitsquared/icebreaker-fpga) is the first open source iCE40 FPGA development board designed for teachers and students. The iCEBreaker [target](https://github.com/litex-hub/litex-boards/blob/master/litex_boards/targets/icebreaker.py) integrated in [LiteX-Boards](https://github.com/litex-hub/litex-boards) provides a minimal LiteX SoC for the iCEBreaker with a CPU, its ROM (in SPI Flash), its SRAM, close to the others LiteX targets. A more complete example of LiteX SoC for the iCEBreaker with more features, examples to run C/Rust code on the RISC-V CPU and documentation can be found in the [iCEBreaker LiteX examples](https://github.com/icebreaker-fpga/icebreaker-litex-examples) tutorial.
 
 # Useful resources
 
