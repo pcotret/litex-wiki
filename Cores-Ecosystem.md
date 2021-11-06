@@ -51,14 +51,14 @@ LiteX cores Ecosystem
 
 | **[LiteSPI](http://github.com/litex-hub/litespi)** | |
 | ----------------------|-------------------------------------------------------------------------------|
-| Build Status          | ![](http://github.com/litex-hub/litespi/workflows/ci/badge.svg)               |
+| Build Status          | ![](https://github.com/litex-hub/litespi/workflows/ci/badge.svg)              |
 | Description           | SPI/(Q)SPI Flash                                                              |
 | Supported Standards   |                                                                               |
 | Supported Hardware    | Generic.                                                                      |
 
 | **[LiteHyperBus](http://github.com/litex-hub/litehyperbus)** | |
 | ----------------------|-------------------------------------------------------------------------------|
-| Build Status          | ![](http://github.com/litex-hub/litehyperbus/workflows/ci/badge.svg)          |
+| Build Status          | ![](https://github.com/litex-hub/litehyperbus/workflows/ci/badge.svg)         |
 | Description           | HyperBus/HyperRAM                                                             |
 | Supported Standards   |                                                                               |
 | Supported Hardware    | Generic                                                                       |
