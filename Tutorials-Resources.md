@@ -35,3 +35,6 @@ Blogpost by gojimmypi testing LiteX on the ULX3S board and experimenting with th
 
 ## [Colorlight i5 Tips](https://github.com/kazkojima/colorlight-i5-tips) 
 Tiny collection of tips for the [Colorlight i5 FPGA board](https://github.com/wuxx/Colorlight-FPGA-Projects).
+
+## [SQRL Acorn / LitePCIe / Thunderbolt](https://github.com/SMB784/SQRL_quickstart) 
+Use of the SQRL Acorn with LitePCIe in a Thunderbolt/nVME enclosure.
