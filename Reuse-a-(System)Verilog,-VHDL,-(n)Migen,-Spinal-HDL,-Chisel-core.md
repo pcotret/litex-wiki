@@ -132,7 +132,7 @@ Or **just provide the path** and let LiteX automatically collect and add the sou
 platform.add_source_dir(path="./")
 ```
 
-This last method is **however not always possible** for all external cores: Some projects provides can provide different implementation of the same module: One for simulation, one specialized for one type of FPGA, etc... and the synthesis toolchain will not be able to automatically select the one to use. In theses cases, the previous methods manually specifying the sources should be used.
+This last method is **however not always possible** for all external cores: Some projects provide different implementation of the same module: One for simulation, one specialized for one type of FPGA, etc... and the synthesis toolchain will not be able to automatically select the one to use. In theses cases, the previous methods manually specifying the sources should be used.
 
 For more information about the supported parameters of these methods, the LiteX source code be consulted.
 
