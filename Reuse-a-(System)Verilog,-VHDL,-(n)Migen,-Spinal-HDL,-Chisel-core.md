@@ -13,16 +13,14 @@ In this SoC, the integration and most of the cores are directly described with M
 - Core 1 is a Verilog core.
 
 >Note: The VexRiscv configurations can also be directly generated from design's parameters/Spinal-HDL sources when the configuration is not cached/present, where verilog is just used as an intermediate language for the integration.
->
-# Basics
 
+# Basics
 Integrating an external core in LiteX that is not decribed in native Migen/LiteX is pretty straightforward and follow the exact sames rules than other design flows; the tool just needs to know:
 
 - **The configuration of the core (through parameters) and the description of the interfaces** for the integration in the design.
 - **The list of sources describing the core** that will be passed to the toolchain for synthesis, place and route.
 
 # Instantiate a core in the design
-
 Doing the instance of the core in the design configures the core and specifies the interfaces. The framework will then consider the **core as a blackbox with known name and interfaces** and will discover the contents and integrate it during the synthesis of the design.
 
 To instantiate a core in LiteX we are simply reallying on Migen's Instance:
@@ -47,6 +45,59 @@ Prefixes are used to specify the type of interface:
 
 If you are **already familiar with VHDL/Verilog**, you can see that the approach is **very similar** to the what you are already doing in these language, with just more flexibility thanks to Python :)
 
+## A few Python's tricks for Instances:
+While an instance has to be declared as a single block in (System)Verilog/VHDL, it's not mandatory with Migen/LiteX since Migen's Instance is relying on a Python's Dict: It's possible to have a lot more flexibility and prepare the Instance's parameters in advance or conditionally:
+
+```python3
+# Create a Dict for the Parameters/IOs.
+params_ios = dict()
+
+# Add the Parameters.
+params_ios.update(
+   p_DATA_WIDTH = 32
+)
+# Add the IOs.
+params_ios.update(
+   i_din     = din,
+   o_dout    = dout,
+   io_dinout = dinout
+)
+# Do the Instance:
+self.specials += Instance("custom_core", **self.params_ios)
+```
+Splitting the Instance allows the use of Python as a powerful pre-processor to defined the Parameters and/or assign the IOs.
+
+This can be very useful to update some Parameters/IOs of the Instance from methods; for example allowing the update CPU reset addresses from the design:
+```python3
+def set_reset_address(self, reset_address):
+	self.cpu_params.update(i_externalResetVector=Signal(32, reset=reset_address)) 
+```
+
+It can also provide some interesting flexibility connect group of ports, as done for example below to connect an abitraty number of FIFOs ports when re-integrating a LiteDRAM's standalone core in LiteX design:
+
+```python3
+for i in range(fifo_ports):
+	litedram_params.update(**{
+		# FIFO In.
+		f"i_user_fifo_{i}_in_valid": axis_in[i].valid,
+		f"o_user_fifo_{i}_in_ready": axis_in[i].ready,
+		f"i_user_fifo_{i}_in_data" : axis_in[i].data,
+		
+		# FIFO Out.
+		f"o_user_fifo_{i}_out_valid": axis_out[i].valid,
+		f"i_user_fifo_{i}_out_ready": axis_out[i].ready,
+		f"o_user_fifo_{i}_out_data" : axis_out[i].data,
+})
+```
+...Or to connect with a single line a bus with a different name for each bit to a bus of the LiteX design, as done for example on the [LiteICLink ECP5's SerDes](https://github.com/enjoy-digital/liteiclink/blob/master/liteiclink/serdes/serdes_ecp5.py):
+```python3
+serdes_params.update(**{
+# CHX TX — data
+**{f"i_CHX_FF_TX_D_{n}" : tx_bus[n] for n in range(tx_bus.nbits)}
+})
+```
+>Note: Python restricts Dict creation/update to 255 items, so large Instances have to split the Dict creation as just described above.
+
 # Adding the sources of a core to the design
 
 With the `Instance`,  the design is now aware of the configuration and interfaces of the integrated core but **still don't know from where this core comes and in which language it is described**.
@@ -69,7 +120,7 @@ As can be seen, to simplify things for the User, **LiteX automatically determine
 Still to simplify things for User, it is possible to **pass multiple sources at once** with `platform.add_sources(...)`:
 
 ```python3
-platform.add_sources(path="./,
+platform.add_sources(path="./",
   "core0.v",
   "core1.vhd",
   "core2.sv"
@@ -104,4 +155,3 @@ The [Betrusted-IO](https://github.com/betrusted-io) projects relies on LiteX for
 In some cases, some encrypted cores or proprietary core formats needs to be passed to the toolchain: On Xilinx design you'll generally have to integrate `.xci` files or `.tcl` scripts that will automatically generate the cores.
 
 Most of these use-cases are probably already supported by LiteX but aren't (yet) documented here. Please have a look at the LiteX source code, the different LiteX [ressources](https://github.com/enjoy-digital/litex/wiki/Tutorials-Resources), [projects](https://github.com/enjoy-digital/litex/wiki/Projects) or at the targets from [LiteX-Boards](https://github.com/litex-hub/litex-boards/tree/master/litex_boards/targets) to find similar integration cases.
-
