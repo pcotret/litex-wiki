@@ -1,226 +1,107 @@
-LiteX is based on Migen but is also heavily used to integrate/reuse traditional Verilog/VHDL cores (commercial or open-source). It can also be used to integrate cores from Spinal-HDL, nMigen or other high level HDL DSL through Verilog.
+# Intro
+Most of the open-source/shared LiteX designs are directly described in Migen/LiteX, but LiteX but is also **heavily used** to integrate/reuse traditional **Verilog/VHDL** cores (commercial or open-source) and also to integrate cores from described in **Spinal-HDL, nMigen or other high level HDL DSL** through **Verilog**.
 
-## Reusing a Verilog core
+It's for example very common to create mixed language SoC similar to the following one:
 
-In this example we will demonstrate the integration of a verilog core. Two steps are involved. The step first is to include the given core through call to platform.add_source given the verilog . The second step is to the instantiate this core.
+![](https://user-images.githubusercontent.com/1450143/141749008-de7c8784-0450-4e7c-8013-621eeb96a370.png)
 
-We are going to modify [lab001](https://github.com/litex-hub/fpga_101/blob/master/lab001/base.py) to use verilog directly and start by writing a small verilog core called *blink.v* .
+In this SoC, the integration and most of the cores are directly described with Migen/LiteX but external cores are also integrated:
 
-```verilog
-module blink(
-    input clk,
-    input rst,
-    output led
-);
-  reg [25:0] cnt;
-  assign led = cnt[25] == 1;
+- The [VexRiscv](https://github.com/SpinalHDL/VexRiscv) CPU, described in [Spinal-HDL](https://github.com/SpinalHDL/SpinalHDL) language, is integrated as a verilog standalone core in the LiteX SoC (Pre-generated verilog configuration from https://github.com/litex-hub/pythondata-cpu-vexriscv or https://github.com/litex-hub/pythondata-cpu-vexriscv_smp).
+- The [LiteDRAM](https://github.com/enjoy-digital/litedram) core is in this case integrated as verilog standalone core, generated from a [LiteDRAM's Generator](https://github.com/enjoy-digital/litedram/blob/master/litedram/gen.py) and a `.yml` configuration file (ex: [Arty's yml](https://github.com/enjoy-digital/litedram/blob/master/examples/arty.yml))  with: `litedram_gen arty.yml`
+- Core 0 is a VHDL core.
+- Core 1 is a Verilog core.
 
-  always @(posedge clk) begin
-    if(rst) begin
-        cnt <= 25'd0;
-    end else begin
-        cnt <= cnt + 1'b1;
-    end
-  end
-endmodule
+>Note: The VexRiscv configurations can also be directly generated from design's parameters/Spinal-HDL sources when the configuration is not cached/present, where verilog is just used as an intermediate language for the integration.
+>
+# Basics
+
+Integrating an external core in LiteX that is not decribed in native Migen/LiteX is pretty straightforward and follow the exact sames rules than other design flows; the tool just needs to know:
+
+- **The configuration of the core (through parameters) and the description of the interfaces** for the integration in the design.
+- **The list of sources describing the core** that will be passed to the toolchain for synthesis, place and route.
+
+# Instantiate a core in the design:
+
+Doing the instance of the core in the design configures the core and specifies the interfaces. The framework will then consider the **core as a blackbox with known name and interfaces** and will discover the contents and integrate it during the synthesis of the design.
+
+To instantiate a core in LiteX we are simply reallying on Migen's Instance:
+```python3
+    din    = Signal(32)
+    dout   = Signal(32)
+    dinout = Signal(32)
+    self.specials += Instance("custom_core",
+       p_DATA_WIDTH = 32,
+       i_din     = din,
+       o_dout    = dout,
+       io_dinout = dinout
+    )
+```
+The first parameters of the `Instance` is the Module's name (`custom_core` in our example) followed by the parameters and ports of the Module:
+
+Prefixes are used to specify the type of interface:
+* `p_` for a Parameter (Python's `str` or `int` or Migen's `Const`).
+* `i_` for an Input port (Python's `int` or Migen's `Signal`, `Cat`, `Slice`).
+* `o_` for an Output port (Python's `int` or Migen's `Signal`, `Cat`, `Slice`).
+* `io_` for a Bi-Directional port  (Migen's `Signal`, `Cat`, `Slice`).
+
+If you are **already familiar with VHDL/Verilog**, you can see that the approach is **very similar** to the what you are already doing in these language, with just more flexibility thanks to Python :)
+
+# Adding the sources of a core to the design:
+
+With the `Instance`,  the design is now aware of the configuration and interfaces of the integrated core but **still don't know from where this core comes and in which language it is described**.
+
+Adding the sources of the core to the design will allow LiteX to pass these to the synthesis toolchain and let the toolchain do the synthesis of the core and integration.
+
+Adding the **single source to the LiteX design** is done with `platform.add_source(...)`
+```python3
+    platform.add_source("core.v")   # Will automatically add the core as Verilog source.
+    platform.add_source("core.sv")  # Will automatically add the core as System-Verilog source.
+    platform.add_source("core.vhd") # Will automatically add the core as VHDL source.
+```
+As can be seen, to simplify things for the User, **LiteX automatically determines the language** based on the file extension:
+|      Extension    | Language       |
+|-------------------|----------------|
+| .vhd, .vhdl, .vho | VHDL           |
+| .v, .vh, .vo      | Verilog        |
+| .sv, .svo         | System Verilog |
+
+Still to simplify things for User, it is possible to **pass multiple sources at once** with `platform.add_sources(...)`:
+
+```python3
+   platform.add_sources(path="./,
+      "core0.v",
+      "core1.vhd",
+      "core2.sv
+   )
 ```
 
-This module can be added by calling `platform.add_source("blink.v")`
-
-and then must be instantiate. This is done using *Instance*
-
-```python
-#!/usr/bin/env python3
-from migen import *
-from litex_boards.platforms import tinyfpga_bx
-
-# Create our platform (fpga interface)
-platform = platform = tinyfpga_bx.Platform()
-platform.add_source("blink.v")
-
-# Create our module (fpga description)
-module = Module()
-module.specials += Instance("blink",
-    i_clk = ClockSignal(),
-    i_rst = ResetSignal(),
-    o_led = platform.request("user_led")
-)
-
-# Build
-platform.build(module)
-
+Or **just provide the path** and let LiteX automatically collect and add the sources:
+```python3
+    platform.add_source_dir(path="./")
 ```
 
-The first parameter of the instance is the verilog module name (the verilog file will actually be included in the generated code). The parameters have the same names as the verilog module parameters with the exception that they are prefixed with the addition of a prefix "i_" for input "o_" for output and "p_" for parameter.
+This last method is **however not always possible** for all external cores: Some projects provides can provide different implementation of the same module: One for simulation, one specialized for one type of FPGA, etc... and the synthesis toolchain will not be able to automatically select the one to use. In theses cases, the previous methods manually specifying the sources should be used.
 
-A more complex example is [the inclusion of an I2C core obtained through OpenCores](https://github.com/betrusted-io/gateware/blob/master/gateware/i2c/core.py)
+For more information about the supported parameters of these methods, the LiteX source code be consulted.
 
-## Reusing a VHDL core
-TODO
+# Reusing a (System)Verilog/VHDL core
 
-## Reusing a nMigen core
+Just do the `Instance` in your LiteX design and add the source to the LiteX platform as just described just above.
 
-In this example we will demonstrate the integration of an nMigen core into our project by
-converting it to verilog first.
+> Note: For verilog cores [litex_read_verilog](https://github.com/enjoy-digital/litex/blob/master/litex/tools/litex_read_verilog.py) tool can be useful to generate the Instance template.
 
-### Converting a nMigen core to Verilog
-As an example, we will use this simple nMigen core:
+# Reusing a nMigen/Spinal-HDL/Chisel/etc... core
 
-```python
-#!/usr/bin/env python3
-"""converts a rising edge to a single clock pulse"""
-from nmigen     import Elaboratable, Signal, Module
-from nmigen.cli import main
+This is very similar to reusing a Verilog/VHDL core, one extra step just needs to be added: **First Generate** the nMigen/Spinal-HDL/Chisel/etc.. core **as a verilog core** :)
 
-class EdgeToPulse(Elaboratable):
-    """
-        each rising edge of the signal edge_in will be
-        converted to a single clock pulse on pulse_out
-    """
-    def __init__(self):
-        self.edge_in          = Signal()
-        self.pulse_out        = Signal()
+# Examples of more complex integration
 
-    def elaborate(self, platform) -> Module:
-        m = Module()
+The [Betrusted-IO](https://github.com/betrusted-io) projects relies on LiteX for the integration and makes heavy use of external Verilog/System Verilog cores. This can then be a good source of integration examples such as [the integration of an I2C core from  OpenCores](https://github.com/betrusted-io/gateware/blob/master/gateware/i2c/core.py).
 
-        edge_last = Signal()
+# Reusing other type of cores
 
-        m.d.sync += edge_last.eq(self.edge_in)
-        with m.If(self.edge_in & ~edge_last):
-            m.d.comb += self.pulse_out.eq(1)
-        with m.Else():
-            m.d.comb += self.pulse_out.eq(0)
+In some cases, some encrypted cores or proprietary core formats needs to be passed to the toolchain: On Xilinx design you'll generally have to integrate `.xci` files or `.tcl` scripts that will automatically generate the cores.
 
-        return m
-
-if __name__ == "__main__":
-    m = EdgeToPulse()
-    main(m, name="edge_to_pulse", ports=[m.edge_in, m.pulse_out])
-```
-The last `if`-statement is instrumental for the conversion to verilog: The name attribute will determine the module name in verilog,
-and the ports list will determine the ports that will face the outside of the module (`clk` and `rst` will be automatically added by nMigen).
-We convert to verilog with the following command line:
-```bash
-$ python3 edgetopulse.py generate -t v edgetopulse.v
-```
-which, after cleaning up some code generation comments (to make it more readable for this presentation), 
-looks like this:
-```verilog
-module edge_to_pulse(pulse_out, clk, rst, edge_in);
-  reg \initial  = 0;
-    wire \$1 ;
-    wire \$3 ;
-    input clk;
-    input edge_in;
-    reg edge_last = 1'h0;
-    reg \edge_last$next ;
-    output pulse_out;
-  reg pulse_out;
-    input rst;
-  assign \$1  = ~ edge_last;
-  assign \$3  = edge_in & \$1 ;
-  always @(posedge clk)
-    edge_last <= \edge_last$next ;
-  always @* begin
-    if (\initial ) begin end
-    \edge_last$next  = edge_in;
-        casez (rst)
-      1'h1:
-          \edge_last$next  = 1'h0;
-    endcase
-  end
-  always @* begin
-    if (\initial ) begin end
-            casez (\$3 )
-      1'h1:
-          pulse_out = 1'h1;
-      default:
-          pulse_out = 1'h0;
-    endcase
-  end
-endmodule
-```
-
-### Integrating the generated Verilog core
-Now we can the generated nMigen verilog core into our LiteX design:
-```python
-#!/usr/bin/env python3
-from migen                          import Instance
-from migen.fhdl.module              import Module
-from migen.fhdl.structure           import Signal, ClockSignal, ResetSignal, Finish, If
-from litex.build.io                 import CRG
-from litex.build.sim.platform       import SimPlatform
-from litex.build.sim.config         import SimConfig
-from litex.soc.integration.builder  import Builder
-from litex.soc.integration.soc_core import SoCMini
-from litex.build.generic_platform   import Pins
-
-class VerilogDemo(Module):
-    def __init__(self, platform, pads):
-        self.edge_signal_in     = Signal()
-        self.pulse_signal_out   = Signal()
-        self.pulse_signal_out_n = Signal()
-
-        # instantiate the verilog module
-        self.specials += Instance("edge_to_pulse",
-            i_clk       = ClockSignal(),
-            i_rst       = ResetSignal(),
-            i_edge_in   = self.edge_signal_in,
-            o_pulse_out = self.pulse_signal_out
-        )
-
-        # add the verilog source
-        # may need to adjust the path if it is
-        # in a subdirectory
-        platform.add_source("edgetopulse.v")
-
-        # finally do something with it:
-        self.comb += self.pulse_signal_out_n.eq(~self.pulse_signal_out)
-
-class DemoPlatform(SimPlatform):
-    default_clk_name = "sys_clk"
-    clk_freq = int(100e6)
-
-    _io = [
-        ("sys_clk", 0, Pins(1)),
-        ("sys_rst", 0, Pins(1))
-    ]
-
-    def __init__(self):
-        SimPlatform.__init__(self, "SIM", self._io)
-
-class SimSoc(SoCMini):
-    def __init__(self):
-        platform = DemoPlatform()
-        SoCMini.__init__(self, platform, clk_freq=platform.clk_freq)
-        dut = VerilogDemo(self.platform, pads=[])
-        self.submodules += dut
-        counter = Signal(16)
-        self.sync += [
-            counter.eq(counter + 1),
-            If(counter[15], Finish())
-        ]
-        self.comb += [ 
-            platform.trace.eq(1),
-            dut.edge_signal_in.eq(counter[3])
-        ]
-
-def main():
-    soc = SimSoc()
-    builder = Builder(soc)
-    sim_config = SimConfig(default_clk="sys_clk", default_clk_freq=soc.platform.clk_freq)
-    builder.build(sim_config=sim_config, trace=True)
-
-if __name__ == "__main__":
-    main()
-```
-Note that when instantiating the Verilog module, the module's arguments are prepended with the following prefixes as annotations for Migen:
-* `i_` for an input
-* `o_` for an output
-* `io_` for a bidirectional port
-* `p_` for a module parameter (like eg. bit width of ports etc.)
-
-When the simulation is run, we see the expected output:
-![](https://user-images.githubusercontent.com/148607/104075071-56a77180-5244-11eb-9226-590946ea4ff5.png)
+Most of these use-cases are probably already supported by LiteX but aren't (yet) documented here. Please have a look at the LiteX source code, the different LiteX [ressources](https://github.com/enjoy-digital/litex/wiki/Tutorials-Resources), [projects](https://github.com/enjoy-digital/litex/wiki/Projects) or at the targets from [LiteX-Boards](https://github.com/litex-hub/litex-boards/tree/master/litex_boards/targets) to find similar integration cases.
 
