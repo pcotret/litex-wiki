@@ -27,15 +27,15 @@ Doing the instance of the core in the design configures the core and specifies t
 
 To instantiate a core in LiteX we are simply reallying on Migen's Instance:
 ```python3
-    din    = Signal(32)
-    dout   = Signal(32)
-    dinout = Signal(32)
-    self.specials += Instance("custom_core",
-       p_DATA_WIDTH = 32,
-       i_din     = din,
-       o_dout    = dout,
-       io_dinout = dinout
-    )
+din    = Signal(32)
+dout   = Signal(32)
+dinout = Signal(32)
+self.specials += Instance("custom_core",
+   p_DATA_WIDTH = 32,
+   i_din     = din,
+   o_dout    = dout,
+   io_dinout = dinout
+)
 ```
 The first parameters of the `Instance` is the Module's name (`custom_core` in our example) followed by the parameters and ports of the Module:
 
@@ -55,9 +55,9 @@ Adding the sources of the core to the design will allow LiteX to pass these to t
 
 Adding the **single source to the LiteX design** is done with `platform.add_source(...)`
 ```python3
-    platform.add_source("core.v")   # Will automatically add the core as Verilog source.
-    platform.add_source("core.sv")  # Will automatically add the core as System-Verilog source.
-    platform.add_source("core.vhd") # Will automatically add the core as VHDL source.
+platform.add_source("core.v")   # Will automatically add the core as Verilog source.
+platform.add_source("core.sv")  # Will automatically add the core as System-Verilog source.
+platform.add_source("core.vhd") # Will automatically add the core as VHDL source.
 ```
 As can be seen, to simplify things for the User, **LiteX automatically determines the language** based on the file extension:
 |      Extension    | Language       |
@@ -69,16 +69,16 @@ As can be seen, to simplify things for the User, **LiteX automatically determine
 Still to simplify things for User, it is possible to **pass multiple sources at once** with `platform.add_sources(...)`:
 
 ```python3
-   platform.add_sources(path="./,
-      "core0.v",
-      "core1.vhd",
-      "core2.sv
-   )
+platform.add_sources(path="./,
+  "core0.v",
+  "core1.vhd",
+  "core2.sv
+)
 ```
 
 Or **just provide the path** and let LiteX automatically collect and add the sources:
 ```python3
-    platform.add_source_dir(path="./")
+platform.add_source_dir(path="./")
 ```
 
 This last method is **however not always possible** for all external cores: Some projects provides can provide different implementation of the same module: One for simulation, one specialized for one type of FPGA, etc... and the synthesis toolchain will not be able to automatically select the one to use. In theses cases, the previous methods manually specifying the sources should be used.
