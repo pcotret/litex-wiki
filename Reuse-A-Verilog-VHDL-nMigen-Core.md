@@ -3,7 +3,7 @@ Most of the open-source/shared LiteX designs are directly described in Migen/Lit
 
 It's for example very common to create mixed language SoC similar to the following one:
 
-![](https://user-images.githubusercontent.com/1450143/141749008-de7c8784-0450-4e7c-8013-621eeb96a370.png)
+![](https://user-images.githubusercontent.com/1450143/141784446-e60d3905-6f1c-4773-89b9-dfe2074b5686.png)
 
 In this SoC, the integration and most of the cores are directly described with Migen/LiteX but external cores are also integrated:
 
