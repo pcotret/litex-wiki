@@ -21,7 +21,7 @@ Integrating an external core in LiteX that is not decribed in native Migen/LiteX
 - **The configuration of the core (through parameters) and the description of the interfaces** for the integration in the design.
 - **The list of sources describing the core** that will be passed to the toolchain for synthesis, place and route.
 
-# Instantiate a core in the design:
+# Instantiate a core in the design
 
 Doing the instance of the core in the design configures the core and specifies the interfaces. The framework will then consider the **core as a blackbox with known name and interfaces** and will discover the contents and integrate it during the synthesis of the design.
 
@@ -47,7 +47,7 @@ Prefixes are used to specify the type of interface:
 
 If you are **already familiar with VHDL/Verilog**, you can see that the approach is **very similar** to the what you are already doing in these language, with just more flexibility thanks to Python :)
 
-# Adding the sources of a core to the design:
+# Adding the sources of a core to the design
 
 With the `Instance`,  the design is now aware of the configuration and interfaces of the integrated core but **still don't know from where this core comes and in which language it is described**.
 
