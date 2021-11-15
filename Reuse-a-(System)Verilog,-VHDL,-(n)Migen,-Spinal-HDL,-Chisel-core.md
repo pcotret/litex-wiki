@@ -1,7 +1,7 @@
 # Intro
-Most of the open-source/shared LiteX designs are directly described in Migen/LiteX, but LiteX but is also **heavily used** to integrate/reuse traditional **Verilog/VHDL** cores (commercial or open-source) and also to integrate cores from described in **Spinal-HDL, nMigen or other high level HDL DSL** through **Verilog**.
+Most of the open-source/shared LiteX designs are directly described in Migen/LiteX, but LiteX but is also **heavily used** to integrate/reuse traditional **Verilog/VHDL** cores (commercial or open-source) and also to integrate cores described in **Spinal-HDL, nMigen or other high level HDL DSL** through **Verilog**.
 
-It's for example very common to create mixed language SoC similar to the following one:
+It is for example very common to create mixed language SoC similar to the following one:
 
 ![](https://user-images.githubusercontent.com/1450143/141784446-e60d3905-6f1c-4773-89b9-dfe2074b5686.png)
 
@@ -15,13 +15,13 @@ In this SoC, the integration and most of the cores are directly described with M
 >Note: The VexRiscv configurations can also be directly generated from design's parameters/Spinal-HDL sources when the configuration is not cached/present, where verilog is just used as an intermediate language for the integration.
 
 # Basics
-Integrating an external core in LiteX that is not decribed in native Migen/LiteX is pretty straightforward and follow the exact sames rules than other design flows; the tool just needs to know:
+Integrating an external core in LiteX that is not written in native Migen/LiteX is pretty straightforward and follows the exact sames rules than other design flows; the tool just needs to know:
 
 - **The configuration of the core (through parameters) and the description of the interfaces** for the integration in the design.
 - **The list of sources describing the core** that will be passed to the toolchain for synthesis, place and route.
 
 # Instantiate a core in the design
-Doing the instance of the core in the design configures the core and specifies the interfaces. The framework will then consider the **core as a blackbox with known name and interfaces** and will discover the contents and integrate it during the synthesis of the design.
+Doing the instance of the core in the design configures the core and specifies the interfaces. The framework will then consider the **core as a blackbox with known name and interfaces** and will only discover its contents and integrate it during the synthesis of the design.
 
 To instantiate a core in LiteX we are simply reallying on Migen's Instance:
 ```python3
@@ -43,10 +43,10 @@ Prefixes are used to specify the type of interface:
 * `o_` for an Output port (Python's `int` or Migen's `Signal`, `Cat`, `Slice`).
 * `io_` for a Bi-Directional port  (Migen's `Signal`, `Cat`, `Slice`).
 
-If you are **already familiar with VHDL/Verilog**, you can see that the approach is **very similar** to the what you are already doing in these language, with just more flexibility thanks to Python :)
+If you are **already familiar with VHDL/Verilog**, you can see that the approach is **very similar** to the one you are already using in these languages, with just more flexibility thanks to Python :)
 
 ## A few Python's tricks for Instances:
-While an instance has to be declared as a single block in (System)Verilog/VHDL, it's not mandatory with Migen/LiteX since Migen's Instance is relying on a Python's Dict: It's possible to have a lot more flexibility and prepare the Instance's parameters in advance or conditionally:
+While an instance has to be declared as a single block in (System)Verilog/VHDL, it's not mandatory with Migen/LiteX since Migen's Instance is relying on a Python's Dict: It's possible to have a lot more flexibility and prepare the Instance's parameters in conditionally or in advance:
 
 ```python3
 # Create a Dict for the Parameters/IOs.
@@ -65,15 +65,15 @@ params_ios.update(
 # Do the Instance:
 self.specials += Instance("custom_core", **self.params_ios)
 ```
-Splitting the Instance allows the use of Python as a powerful pre-processor to defined the Parameters and/or assign the IOs.
+Splitting the Instance allows the use of Python as a powerful pre-processor to define the Parameters and/or assign the IOs.
 
-This can be very useful to update some Parameters/IOs of the Instance from methods; for example allowing the update CPU reset addresses from the design:
+This can be very useful to update some Parameters/IOs of the Instance from methods; for example allowing the update the CPU reset address from the design:
 ```python3
 def set_reset_address(self, reset_address):
 	self.cpu_params.update(i_externalResetVector=Signal(32, reset=reset_address)) 
 ```
 
-It can also provide some interesting flexibility connect group of ports, as done for example below to connect an abitraty number of FIFOs ports when re-integrating a LiteDRAM's standalone core in LiteX design:
+It can also provide some interesting flexibility to connect group of ports, as done for example below to connect an abitrary number of FIFOs ports when re-integrating a LiteDRAM's standalone core in LiteX design:
 
 ```python3
 for i in range(fifo_ports):
@@ -89,7 +89,7 @@ for i in range(fifo_ports):
 		f"o_user_fifo_{i}_out_data" : axis_out[i].data,
 })
 ```
-...Or to connect with a single line a bus with a different name for each bit to a bus of the LiteX design, as done for example on the [LiteICLink ECP5's SerDes](https://github.com/enjoy-digital/liteiclink/blob/master/liteiclink/serdes/serdes_ecp5.py):
+...Or do a one-line connect of a bus with a different name for each bit to a bus of the LiteX design, as done for example on the [LiteICLink ECP5's SerDes](https://github.com/enjoy-digital/liteiclink/blob/master/liteiclink/serdes/serdes_ecp5.py):
 ```python3
 serdes_params.update(**{
 # CHX TX — data
@@ -102,7 +102,7 @@ serdes_params.update(**{
 
 With the `Instance`,  the design is now aware of the configuration and interfaces of the integrated core but **still don't know from where this core comes and in which language it is described**.
 
-Adding the sources of the core to the design will allow LiteX to pass these to the synthesis toolchain and let the toolchain do the synthesis of the core and integration.
+Adding the sources of the core to the design will allow LiteX to pass these informations to the synthesis toolchain and let the toolchain do the synthesis of the core and integration in the design.
 
 Adding the **single source to the LiteX design** is done with `platform.add_source(...)`
 ```python3
@@ -144,11 +144,11 @@ Just do the `Instance` in your LiteX design and add the source to the LiteX plat
 
 # Reusing a nMigen/Spinal-HDL/Chisel/etc... core
 
-This is very similar to reusing a Verilog/VHDL core, one extra step just needs to be added: **First Generate** the nMigen/Spinal-HDL/Chisel/etc.. core **as a verilog core** :)
+This is very similar than reusing a Verilog/VHDL core with just one extra step: **Generate** the nMigen/Spinal-HDL/Chisel/etc.. core **as a verilog core** :)
 
 # Examples of more complex integration
 
-The [Betrusted-IO](https://github.com/betrusted-io) projects relies on LiteX for the integration and makes heavy use of external Verilog/System Verilog cores. This can then be a good source of integration examples such as [the integration of an I2C core from  OpenCores](https://github.com/betrusted-io/gateware/blob/master/gateware/i2c/core.py).
+The [Betrusted.io](https://github.com/betrusted-io) project relies on LiteX for the integration and makes heavy use of external Verilog/System Verilog cores. This can then be a good source of integration examples such as [the integration of an I2C core from  OpenCores](https://github.com/betrusted-io/gateware/blob/master/gateware/i2c/core.py).
 
 # Reusing other type of cores
 
