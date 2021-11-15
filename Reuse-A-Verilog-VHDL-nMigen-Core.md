@@ -72,7 +72,7 @@ Still to simplify things for User, it is possible to **pass multiple sources at 
 platform.add_sources(path="./,
   "core0.v",
   "core1.vhd",
-  "core2.sv
+  "core2.sv"
 )
 ```
 
