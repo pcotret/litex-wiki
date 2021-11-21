@@ -38,3 +38,6 @@ Tiny collection of tips for the [Colorlight i5 FPGA board](https://github.com/wu
 
 ## [SQRL Acorn / LitePCIe / Thunderbolt](https://github.com/SMB784/SQRL_quickstart) 
 Use of the SQRL Acorn with LitePCIe in a Thunderbolt/nVME enclosure.
+
+## [FemtoRV CPU with LiteX on ULX3S](https://github.com/BrunoLevy/learn-fpga/blob/master/FemtoRV/TUTORIALS/litex.md)
+Discovery/Use of LiteX with FemtoRV CPU by @BrunoLevy.
