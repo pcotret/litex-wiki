@@ -97,6 +97,43 @@ And you should see linux booting:
 
 Since the SoC integrates LiteSATA, it's also possible to boot over SATA with the optional SATA adapter, you can copy the Linux images directly to the SATA drive by following [this guide](https://github.com/enjoy-digital/litex/wiki/Load-Application-Code-To-CPU#sdcardsata-boot), plug the SATA drive and should see the system booting directly from SATA.
 
+# Acorn Giveaway
+![https://user-images.githubusercontent.com/1450143/144005083-9dc62efa-a875-4abd-a3f5-4129e34267d2.png](https://user-images.githubusercontent.com/1450143/144005083-9dc62efa-a875-4abd-a3f5-4129e34267d2.png)
+You received your Acorn from the [giveway](https://twitter.com/enjoy_digital/status/1461353848388284422) or want to reproduce the results on your Acorn? Please use the following instructions to reproduce the results.
+
+In the demo, a [Linux-on-LiteX-VexRiscv](https://github.com/litex-hub/linux-on-litex-vexriscv) design is flashed on the Acorn:
+![enter image description here](https://user-images.githubusercontent.com/1450143/144007475-fc77e884-0a5e-4d28-be42-29b6b550abe4.png)
+The design has been initially generated and over JTAG with:
+
+    ./make.py --board=acorn_pcie --build --flash
+
+The Linux driver is then available at: `build/acorn_pcie/driver` and can be loaded with:
+
+    cd kernel
+    sudo ./init.sh
+
+A `/dev/ttyLXU0` UART is created and can be used with LiteX Term:
+
+    litex_term /dev/ttyLXU0
+
+And to load the Linux images:
+
+    litex_term /dev/ttyLXU0 --images=images/boot.json
+
+**FPGA bitstream update over PCIe:**
+
+The Acorns are flashed with a Multiboot bitstream composed of a Fallback bitstream and Operational bitstream:
+
+![enter image description here](https://user-images.githubusercontent.com/1450143/144006990-730a81bf-aedb-4310-a11a-f9dd97315cc3.png)
+Updating the Operational bitstream over PCIe is possible with:
+
+    cd user
+    ./litepcie_util flash_write acorn_pcie_operational.bin 0x400000
+
+A `./litepcie_util flash_reload` will reload the bitstream from SPI Flash and a PCIe rescan or reboot the computer will allow you to use the new bitstream.
+
+> Note: Be careful of the **0x400000 offset** to only update the Operational bitstream.
+
 # Going Further...
 
 In this guide, we demonstrated a classical LiteX SoC with a CPU/ROM/RAM/DDR3 on the Acorn CLE 215+. The design is only using a fraction of the FPGA and leaves plenty of room for the user, so it already makes it a very nice and cheap FPGA development board. The NiteFury and LiteFury boards can also be used and will just require changing the FPGA device in the platform file and DDR3 chip in the target file.
