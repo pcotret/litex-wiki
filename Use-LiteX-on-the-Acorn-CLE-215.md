@@ -99,10 +99,12 @@ Since the SoC integrates LiteSATA, it's also possible to boot over SATA with the
 
 # Acorn Giveaway
 ![https://user-images.githubusercontent.com/1450143/144005083-9dc62efa-a875-4abd-a3f5-4129e34267d2.png](https://user-images.githubusercontent.com/1450143/144005083-9dc62efa-a875-4abd-a3f5-4129e34267d2.png)
+
 You received your Acorn from the [giveway](https://twitter.com/enjoy_digital/status/1461353848388284422) or want to reproduce the results on your Acorn? Please use the following instructions to reproduce the results.
 
 In the demo, a [Linux-on-LiteX-VexRiscv](https://github.com/litex-hub/linux-on-litex-vexriscv) design is flashed on the Acorn:
 ![enter image description here](https://user-images.githubusercontent.com/1450143/144007475-fc77e884-0a5e-4d28-be42-29b6b550abe4.png)
+
 The design has been initially generated and over JTAG with:
 
     ./make.py --board=acorn_pcie --build --flash
