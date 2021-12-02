@@ -5,12 +5,13 @@ Running the application code from a embedded ROM is the fastest way to execute c
 
 An boot ROM with contents from `bootrom.bin` file, located at `0x20000000` can be added to the SoC with:
 ```python3
-self.add_rom("bootrom", 0x20000000, contents=get_mem_data("bootrom.bin", endianness="big"))
+self.add_rom("bootrom", 0x20000000, 2**10, contents=get_mem_data("bootrom.bin", endianness="little"))  # "little" for the default RISCV architectures selected by litex
 ```
 Defining `ROM_BOOT_ADDRESS` in the SoC will make it jump to the defined value at startup:
 ```python3
 self.add_constant("ROM_BOOT_ADDRESS", 0x20000000)
 ```
+
 # Serial Boot:
 Loading application code from serial is very convenient for development since provides an easy way
 to (re)load application code, boot to it and do quick iterations. LiteX supports very various serial interfaces that can be configured for the board with:
