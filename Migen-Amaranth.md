@@ -1,5 +1,5 @@
 
-# Why is LiteX Migen based and hasn't switched Amaranth?
+# Why is LiteX Migen based and hasn't switched to Amaranth?
 
 To give a bit of context/history, Migen DSL has been around since 2012 and we have been involved in its development since then while also working on LiteX and creating the ecosystem of cores.
 
