@@ -8,7 +8,7 @@
   * [Tutorials-Resources](Tutorials-Resources)
   * [Projects](Projects)
   * [Feedback-Contribution-Support](Feedback-Contribution-Support)
-  * [Migen-Amaranth(Migen-Amaranth)
+  * [Migen-Amaranth](Migen-Amaranth)
 * LiteX's internals
   * [Cores-_TODO_](Cores)
   * [CPUs](CPUs)
