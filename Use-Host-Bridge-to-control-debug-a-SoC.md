@@ -2,10 +2,10 @@ Being able to easily read/write the addressable space of the SoC from a Host PC 
 
 <p align="center"><img src="https://user-images.githubusercontent.com/1450143/100260325-90990e80-2f49-11eb-8f6d-c485940b7d9e.png"></p>
 
-# Add a UART bridge to your SoC:
-The easiest way to add a UART bridge to a SoC is to use an unused UART of your FPGA board. If your Platform file already has a an unused UART you can just use it, otherwise you can simply add UART pins to your Platform file by adapting the following template:
+# Add a UARTBone bridge to your SoC:
+The easiest way to add a UARTBone bridge to a SoC is to use an unused UART of your FPGA board. If your platform file already has a an unused UART you can just use it, otherwise you can simply add UART pins to your Platform file by adapting the following template:
 ```python3
-   ("uart_bridge", 0,
+   ("serial_debug", 0,
         Subsignal("tx", Pins("XY")),
         Subsignal("rx", Pins("YX")),
         IOStandard("LVCMOSXY")
@@ -15,13 +15,7 @@ and connect a USB/UART dongle between your FPGA board and your Host PC.
 
 In your SoC, instantiate the UART bridge:
 ```python3
-from litex.soc.cores import uart
-uart_bridge = uart.UARTWishboneBridge(
-    pads     = platform.request("uart_bridge"),
-    clk_freq = self.clk_freq,
-    baudrate = 115200)
-self.submodules += uart_bridge
-self.add_wb_master(uart_bridge.wishbone)
+self.add_uartbone(name="serial_debug", baudrate=115200)
 ```
 
 or simply with the `add_uartbone` method:
