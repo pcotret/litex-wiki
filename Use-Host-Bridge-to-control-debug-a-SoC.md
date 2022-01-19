@@ -13,7 +13,7 @@ The easiest way to add a UARTBone bridge to a SoC is to use an unused UART of yo
 ```
 and connect a USB/UART dongle between your FPGA board and your Host PC.
 
-In your SoC, instantiate the UART bridge:
+In your SoC, add the UARTBone bridge:
 ```python3
 self.add_uartbone(name="serial_debug", baudrate=115200)
 ```
