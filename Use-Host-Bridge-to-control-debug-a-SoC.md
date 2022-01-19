@@ -17,13 +17,6 @@ In your SoC, instantiate the UART bridge:
 ```python3
 self.add_uartbone(name="serial_debug", baudrate=115200)
 ```
-
-or simply with the `add_uartbone` method:
-
-```python3
-self.add_uartbone(name="uart_bridge")
-```
-
 and generate the *.csv* file that will be used by the tools:
 ```python3
 builder  = Builder(soc, ..., csr_csv="csr.csv")
