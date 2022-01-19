@@ -41,3 +41,6 @@ Use of the SQRL Acorn with LitePCIe in a Thunderbolt/nVME enclosure.
 
 ## [FemtoRV CPU with LiteX on ULX3S](https://github.com/BrunoLevy/learn-fpga/blob/master/FemtoRV/TUTORIALS/litex.md)
 Discovery/Use of LiteX with FemtoRV CPU by @BrunoLevy.
+
+## [Building a SoC in an FPGA in less than (literally) 5 minutes?](https://www.controlpaths.com/2022/01/17/building-a-soc-with-litex/)
+Discovery of LiteX as a SoC Builder by @controlpaths
