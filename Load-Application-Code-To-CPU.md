@@ -32,25 +32,25 @@ to (re)load application code, boot to it and do quick iterations. LiteX supports
 
 Serial boot is generally slow compared to Ethernet or SDCard boot but is the easiest to setup and usable on all boards so is still very interesting for easy use or when no alternative are available.
 
-LiteX's [lxterm](https://github.com/enjoy-digital/litex/blob/master/litex/tools/litex_term.py) tool is used to upload the application code and is directly installed with LiteX, available with the `lxterm` command.
+LiteX's [litex_term](https://github.com/enjoy-digital/litex/blob/master/litex/tools/litex_term.py) tool is used to upload the application code and is directly installed with LiteX, available with the `litex_term` command.
 
-Serial boot has priority over the other boot methods and the BIOS will always try to boot from it. If `lxterm` is running on the Host, it upload the binary(ies) at startup: 
+Serial boot has priority over the other boot methods and the BIOS will always try to boot from it. If `litex_term` is running on the Host, it upload the binary(ies) at startup: 
 ```bash
 --============== Boot ==================--
 Booting from serial...
 Press Q or ESC to abort boot completely.
 sL5DdSMmkekro
-[LXTERM] Received firmware download request from the device.
-[LXTERM] Uploading buildroot/Image to 0x40000000 (4545524 bytes)...
-[LXTERM] Upload complete (162.0KB/s).
-[LXTERM] Uploading buildroot/rootfs.cpio to 0x40800000 (8029184 bytes)...
-[LXTERM] Upload complete (163.3KB/s).
-[LXTERM] Uploading buildroot/rv32.dtb to 0x41000000 (1995 bytes)...
-[LXTERM] Upload complete (191.2KB/s).
-[LXTERM] Uploading emulator/emulator.bin to 0x41100000 (9600 bytes)...
-[LXTERM] Upload complete (161.1KB/s).
-[LXTERM] Booting the device.
-[LXTERM] Done.
+[LITEX-TERM] Received firmware download request from the device.
+[LITEX-TERM] Uploading buildroot/Image to 0x40000000 (4545524 bytes)...
+[LITEX-TERM] Upload complete (162.0KB/s).
+[LITEX-TERM] Uploading buildroot/rootfs.cpio to 0x40800000 (8029184 bytes)...
+[LITEX-TERM] Upload complete (163.3KB/s).
+[LITEX-TERM] Uploading buildroot/rv32.dtb to 0x41000000 (1995 bytes)...
+[LITEX-TERM] Upload complete (191.2KB/s).
+[LITEX-TERM] Uploading emulator/emulator.bin to 0x41100000 (9600 bytes)...
+[LITEX-TERM] Upload complete (161.1KB/s).
+[LITEX-TERM] Booting the device.
+[LITEX-TERM] Done.
 Executing booted program at 0x41100000
 --============= Liftoff! ===============--
 ...
@@ -68,9 +68,9 @@ Booting from SDCard in SPI-Mode...
 
  1. Uploading a single binary:
 
-To load `boot.bin` to default location (`RAM at 0x4000000`), start `lxterm` with:
+To load `boot.bin` to default location (`RAM at 0x4000000`), start `litex_term` with:
 ```bash
-lxterm /dev/ttyUSBX --kernel=boot.bin
+litex_term /dev/ttyUSBX --kernel=boot.bin
 ```
  2. Uploading multiple binaries with a *JSON* description file:
 
@@ -103,9 +103,9 @@ It is also possible to optionally specify the `r1/r2/r3` and `addr` boot argumen
 ```
 In this case, instead of defaulting to `0`, `r1/r2/r3` will use the specified value and `addr` will be used for the CPU jump.
 
-To use a _JSON_ file, start `lxterm` with:
+To use a _JSON_ file, start `litex_term` with:
 ```bash
-lxterm /dev/ttyUSBX --images=boot.json
+litex_term /dev/ttyUSBX --images=boot.json
 ```
 # Ethernet Boot:
 On SoCs with Ethernet capability, loading application code with it can be very convenient for development since flexible  and fast (on a Linux SoC, loading binaries only takes a few seconds).
