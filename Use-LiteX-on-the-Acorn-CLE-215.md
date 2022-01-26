@@ -89,7 +89,7 @@ And build the Acorn CLE215+ target:
 
 You can then load the Linux images to the board over UART with:
 
-    lxterm /dev/ttyUSBX --images=images.json --speed=1e6
+    litex_term /dev/ttyUSBX --images=images.json --speed=1e6
 
 And you should see linux booting:
 
@@ -114,7 +114,7 @@ The Linux driver is then available at `build/acorn_pcie/driver` and can be loade
     cd kernel
     sudo ./init.sh
 
-A `/dev/ttyLXU0` UART is created and can be used with LiteX Term:
+A `/dev/ttyLXU0` UART is created and can be used with LiteX-Term:
 
     litex_term /dev/ttyLXU0
 
