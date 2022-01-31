@@ -1,5 +1,7 @@
 LiteX can create SoCs with or without CPU. Some simple SoCs don’t use any CPU (bridging SoCs for example), some SoCs use a CPU but external to the FPGA (PCIe SoCs for example where the CPU is directly the CPU of the Host machine) but in most of the cases the SoC embedded a "Soft CPU" to control the system and/or ease splitting tasks between software/hardware.
 
+# [Hard CPUs page](https://github.com/enjoy-digital/litex/wiki/Hard-core-CPUs)
+
 # Summary of Soft CPUs
 
 **FIXME**: This list is currently out of date missing the HW Group CPU, MicroWatt and BlackParrot.
