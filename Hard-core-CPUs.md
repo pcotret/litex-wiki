@@ -1,4 +1,7 @@
-LiteX currently has minimal support (compiling and running BIOS, with UART serial terminal, connected to CSR bus in gateware) on these following hard ARM CPUs: Xilinx Zynq-7000, QuickLogic EOS S3, Gowin EMCU.
+LiteX currently has minimal support (compiling and running BIOS, with UART serial terminal, connected to CSR bus in gateware) on these following hard ARM CPUs: Xilinx Zynq-7000, Xilinx UltraScale+ MPSoC, QuickLogic EOS S3, Gowin EMCU.
+
+Note: producing working gateware on all these except Gowin EMCU currently requires [patching LiteX locally](https://github.com/enjoy-digital/litex/issues/1154) in some way to remove address decoding on the CSR bus.
+
 
 # Xilinx Zynq-7000
 
@@ -6,7 +9,12 @@ Demonstrated on [Digilent Zedboard](https://github.com/litex-hub/litex-boards/bl
 As any complete workflow on Zynq devices requires a number of tools, scripts and build steps besides software and gateware binaries built by LiteX to produce and program boot images - refer to [this repository](https://github.com/sergachev/litex-template/tree/main/digilent_zedboard) for a complete implementation and details.
 Serial terminal is on the USB-UART.
 
-Note: producing a working gateware currently requires [patching LiteX locally](https://github.com/enjoy-digital/litex/issues/1154) in some way to remove address decoding on the CSR bus.
+
+# Xilinx UltraScale+ MPSoC
+
+Demonstrated on [Xilinx KV260](https://github.com/litex-hub/litex-boards/blob/master/litex_boards/targets/xilinx_kv260.py).
+Refer to the readme in [this repository](https://github.com/sergachev/litex-template/) for a workflow allowing execution via JTAG.
+Serial terminal is on the USB-UART.
 
 
 # QuickLogic EOS S3
