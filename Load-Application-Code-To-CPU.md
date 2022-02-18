@@ -112,10 +112,10 @@ On SoCs with Ethernet capability, loading application code with it can be very c
 
 Ethernet boot requires a *TFTP* server on the Host. LiteX uses `192.168.1.50` as default Host IP address, this default IP address can be changed by defining the `REMOTEIPX` constants in the SoC:
 ```python3
-self.add_constant("REMOTE1", 192)
-self.add_constant("REMOTE2", 168)
-self.add_constant("REMOTE3", 1)
-self.add_constant("REMOTE4", X)
+self.add_constant("REMOTEIP1", 192)
+self.add_constant("REMOTEIP2", 168)
+self.add_constant("REMOTEIP3", 1)
+self.add_constant("REMOTEIP4", X)
 ```
 
  1. Uploading multiple binaries with a *JSON* description file:
