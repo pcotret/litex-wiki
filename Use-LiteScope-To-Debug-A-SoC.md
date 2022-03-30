@@ -51,7 +51,9 @@ from litescope import LiteScopeAnalyzer
 self.submodules.analyzer = LiteScopeAnalyzer(analyzer_signals,
     depth        = 512,
     clock_domain = "sys",
-    csr_csv      = "analyzer.csv")
+    samplerate   = sys_clk_freq,
+    csr_csv      = "analyzer.csv"
+)
 ```
 
 The Analyzer is configured with a `depth` of *512* samples, doing the capture in the *sys* `clock domain` of the SoC and exporting the its configuration (`csr_csv`) to *analyzer.csv* file that will be used by the software during the trigger/capture.
