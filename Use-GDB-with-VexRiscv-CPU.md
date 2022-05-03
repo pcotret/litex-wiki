@@ -1,6 +1,3 @@
-[> Use GDB with VexRiscv CPU
-----------------------------
-
 It is possible to use GDB with VexRiscv CPU on LiteX SoCs; this requires a specific  configuration of the CPU/ScC and a specific OpenOCD version is also required:
  - The debug variants of VexRiscv CPU have to be used (`+debug`).
  - A [LiteX bridge](https://github.com/enjoy-digital/litex/wiki/Use-Host-Bridge-to-control-debug-a-SoC) has to be added to the SoC to provides a Host <-> FPGA bridge used to tunnel GDB.
