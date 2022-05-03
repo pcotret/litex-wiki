@@ -1,7 +1,14 @@
-It is possible to use GDB with VexRiscv CPU on LiteX SoCs; this requires a specific  configuration of the CPU/ScC and a specific OpenOCD version is also required:
- - The debug variants of VexRiscv CPU have to be used (`+debug`).
+[> Description/Requirements
+---------------------------
+
+![](https://user-images.githubusercontent.com/1450143/166491365-62846a9e-8c08-4dc3-b45d-35353c1c6fc0.png)
+
+It is possible to use GDB with VexRiscv CPU on LiteX SoCs; this requires a specific  configuration of the CPU/SoC and a specific OpenOCD version:
+ - A debug variant of VexRiscv CPU has to be used (`+debug`).
  - A [LiteX bridge](https://github.com/enjoy-digital/litex/wiki/Use-Host-Bridge-to-control-debug-a-SoC) has to be added to the SoC to provides a Host <-> FPGA bridge used to tunnel GDB.
- -  A specific version of [OpenOCD](https://github.com/SpinalHDL/openocd_riscv) from SpinalHDL.
+ - A specific version of [OpenOCD](https://github.com/SpinalHDL/openocd_riscv) from SpinalHDL.
+
+One of the advantage of tunneling GDB over a LiteX bridge is that LiteX-Term and Python scripts can still be used during GDB debug with a single bridge, enabling MMAP writes/reads and LiteScope captures during the GDB session.
  
 [> Enable the debug CPU plugin
 ------------------------------
