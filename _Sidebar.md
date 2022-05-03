@@ -32,6 +32,7 @@
   * [Load application code the CPU(s)](Load-Application-Code-To-CPU)
   * [Use Host Bridges to control/debug a SoC](Use-Host-Bridge-to-control-debug-a-SoC)
   * [Use LiteScope to debug a SoC](Use-LiteScope-To-Debug-A-SoC)
+  * [Use GDB with VexRiscv CPU](Use-GDB-with-VexRiscv-CPU)
   * [Document a SoC](Document-a-SoC)
 * How to (Advanced)
   * [Create a complex SoC with cores from the Ecosystem-_TODO_](Create-A-complex-SoC-With-Cores-From-The-Ecosystem)
