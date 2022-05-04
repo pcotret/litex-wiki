@@ -13,6 +13,11 @@ $ ./litex_setup.py --init --install --user (--user to install to user directory)
 $ ./litex_setup.py --update
 ```
 
+Release tag can also be specified to update/install specific release of LiteX, ex:
+```sh
+$ ./litex_setup.py --tag=2022.04 --update
+```
+
 > **Note:** On MacOS, make sure you have [HomeBrew](https://brew.sh) installed. Then do, ``brew install wget``.
 
 > **Note:** On Windows, make sure you have `make` and/or `GnuWin` installed and it's possible you'll have to set `SHELL` environment variable to `SHELL=cmd.exe`.
