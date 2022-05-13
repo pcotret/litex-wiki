@@ -57,7 +57,7 @@ cat overlay.config | xargs west build \
 	-b litex_vexriscv \
 	samples/subsys/shell/shell_module \
 	-- \
-	-DDTC_OVERLAY_FILE=dts.overlay
+	-DDTC_OVERLAY_FILE=overlay.dts
 ```
 
 ### More details
