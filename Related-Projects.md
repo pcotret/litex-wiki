@@ -1,5 +1,3 @@
-# Related Projects
-
 ## [Fomu](https://fomu.im) - A tiny FPGA board which fits in your USB port
 
 Fomu is a very small FPGA board which is well supported by the LiteX ecosystem and has a [workshop](https://workshop.fomu.im) which includes LiteX demos.
