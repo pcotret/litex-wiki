@@ -1,0 +1,1 @@
+Have a question or want to get in touch? Our IRC channel is [#litex at irc.libera.chat](https://libera.chat/).
