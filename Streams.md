@@ -7,3 +7,5 @@ LiteX's streams are group of signals (Migen's Record) used to create Sink/Source
 *  `param` (optional): a Record with its own layout, similar to AXI-4's `tuser` that can evolve at each start of packet.
 
 LiteX's streams can be directly mapped to AXI-4 and adapted easily to AvalonST with: https://github.com/enjoy-digital/litex/blob/master/litex/soc/interconnect/avalon.py.
+
+[alanvgreen](https://github.com/alanvgreen) has provided a [thorough description of LiteX streams and a helpful diagram](https://github.com/amaranth-lang/amaranth/issues/317#issuecomment-899407394).
