@@ -39,7 +39,7 @@ This can be retrieved/compiled with:
     git clone https://github.com/SpinalHDL/openocd_riscv.git
     cd openocd_riscv
     wget https://raw.githubusercontent.com/litex-hub/pythondata-cpu-vexriscv/master/pythondata_cpu_vexriscv/verilog/VexRiscv_Debug.yaml
-    mv cpu0.yaml.txt cpu0.yaml
+    mv VexRiscv_Debug.yaml cpu0.yaml
     ./bootstrap
     ./configure --enable-dummy
     make
