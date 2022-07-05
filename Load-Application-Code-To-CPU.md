@@ -155,6 +155,22 @@ Executing booted program at 0x41100000
 --============= Liftoff! ===============--
 ```
 
+# SPIFlash Boot:
+Most of the FPGA based systems are storing their bitstreams in SPIFlash. This SPIFlash is generally a lot larger than the FPGA bitstream size and thus allows storing software applications in the unused part.
+
+To store an application in SPIFlash, the application first need to be prepared to add Length/CRC information to it:
+```bash
+python3 -m litex.soc.software.crcfbigen app.bin -o app.fbi --fbi --little
+```
+
+The `.fbi` file can then be flashed to a specific location of the SPIFlash.
+
+Let's say SPIFlash is mapped at address `0x30000000` of the SoC and application has been flashed at address `0x40000` of the SPIFlash, defining `FLASH_BOOT_ADDRESS` in the SoC will make it jump to the defined value at startup:
+
+```python3
+self.add_constant("FLASH_BOOT_ADDRESS", 0x30040000)
+```
+
 # SDCard/SATA Boot:
 Loading application code from SDCard/SATA is very interesting for standalone embedded systems and allow very large binaries. 
 
@@ -165,6 +181,3 @@ The BIOS supports loading files from FAT16/FAT32 partitions and boot scheme is s
 Example of Linux SDCard boot on the [OrangeCrab](https://groupgets.com/campaigns/710-orangecrab):
 ![OrangeCrab](https://raw.githubusercontent.com/gregdavill/OrangeCrab/main/documentation/hugo-files/static/r0.2/orangeCrab-1.jpg)
 [![asciicast](https://asciinema.org/a/cFQ7JRH96mgJNcuI0Ntey663H.svg)](https://asciinema.org/a/cFQ7JRH96mgJNcuI0Ntey663H)
-
-# SPIFlash Boot:
-TODO
