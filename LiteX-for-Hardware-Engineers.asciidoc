@@ -1049,18 +1049,17 @@ And to integrate the logic module into your top level SoC code:
      mem_map.update(SoCCore.mem_map)
      def __init__(self, **kwargs):
         # top-level logic stuff
-	# infer the logic block with memory
-	self.submodules.logicmem = Logic_with_memory() # the above function
-
-	# add the wishbone slave mapping to the mem_map entry made above
-        self.add_wb_slave(mem_decoder(self.mem_map["logic_memory"]), self.logicmem.bus)
+        # infer the logic block with memory
+        self.submodules.logicmem = Logic_with_memory() # the above function
 
         # define the memory region size/location
-	# memdepth is the depth of the memory inferred in your logic block
-	# the length is in bytes, so for example if the data_width of your memory
-	# block is 32 bits, the total length is memdepth * 4
-        self.add_memory_region("logic_memory", self.mem_map["logic_memory"] |
-	                       self.shadow_base, memdepth * data_width//8)
+        # memdepth is the depth of the memory inferred in your logic block
+        # the length is in bytes, so for example if the data_width of your memory
+        # block is 32 bits, the total length is memdepth * 4
+        self.add_memory_region("logic_memory", self.mem_map["logic_memory"], memdepth * data_width//8, type='cached')
+        
+        # add the wishbone slave mapping to the mem_map entry made above
+        self.add_wb_slave(self.mem_map["logic_memory"], self.logicmem.bus)
 	
 ```
 
