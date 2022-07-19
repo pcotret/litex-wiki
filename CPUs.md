@@ -20,8 +20,9 @@ Currently the supported Soft CPUs are:
 
 *   [`rocket`](https://github.com/enjoy-digital/litex/tree/master/litex/soc/cores/cpu/rocket) -- [Rocket Chip](https://github.com/chipsalliance/rocket-chip), a configurable, fully featured, 64-bit `rv64imafdc` capable core.
 
-
 *   [`blackparrot`](https://github.com/enjoy-digital/litex/tree/master/litex/soc/cores/cpu/blackparrot) -- [BlackParrot](https://github.com/black-parrot/black-parrot), a 64-bit Linux-Capable accelerator host multicore that implements `rv64imafdc` instruction set.
+
+*   [`neorv32`](https://github.com/enjoy-digital/litex/tree/master/litex/soc/cores/cpu/neorv32) -- [NEORV32](https://github.com/stnolting/neorv32), a small, platform-agnostic and highly extendable 32-bit RTOS-capable RISC-V core supporting the `rv32imcbu` instruction set.
 
 # Soft CPU Variants
 
@@ -40,6 +41,7 @@ Minimal is the smallest possible working configuration for a given CPU type. The
  * lm32
  * picorv32
  * vexriscv
+ * neorv32
 
 ## `lite`
 
@@ -56,6 +58,7 @@ Lite is the configuration which should work okay for bare metal firmware and RTO
 
  * lm32
  * vexriscv
+ * neorv32
 
 ## `standard`
 
@@ -72,6 +75,7 @@ Standard is the default configuration which should work well for bare metal firm
  * vexriscv
  * rocket
  * blackparrot
+ * neorv32
 
 ### Recommended FPGAs
 
@@ -91,6 +95,7 @@ This target enables **all** features of each CPU.
  * (TODO) - or1k
  * vexriscv
  * rocket
+ * neorv32
 
 
 ## `linux`
@@ -117,6 +122,7 @@ The debug extension enables extra features useful for debugging. This normally i
 ### Supported CPUs
 
  * vexriscv
+ * (TODO) - neorv32
 
 ## TODO - `mmu`
 
@@ -290,6 +296,7 @@ The Minerva is a CPU core that currently implements the RISC-V RV32I instruction
 ### Community
 
  * Some activity
+
 ## RISC-V - [`rocket`](https://github.com/enjoy-digital/litex/tree/master/litex/soc/cores/cpu/rocket)
 
 The Rocket Chip is a full-featured, configurable CPU core that implements up to the full RISC-V RV64IMAFDC (a.k.a. RV64GC) instruction set, with its microarchitecture described in [Chisel](https://github.com/freechipsproject/chisel3).
@@ -314,3 +321,30 @@ The Rocket Chip is a full-featured, configurable CPU core that implements up to 
 
  * [Lots of activity](https://github.com/chipsalliance/rocket-chip)
  * Reference design for several taped-out ASICs (e.g., from [SiFive](https://www.sifive.com/risc-v-core-ip))
+
+## RISC-V - [`neorv32`](https://github.com/enjoy-digital/litex/tree/master/litex/soc/cores/cpu/neorv32)
+
+The [NEORV32 RISC-V Processor](https://github.com/stnolting/neorv32) is a tiny, customizable and highly extensible MCU-class 32-bit RISC-V soft-core CPU and microcontroller-like SoC written in platform-independent VHDL.
+
+### CPU Variants
+
+ * minimal (`rv32i_Zicsr_Zifencei`)
+ * lite (`rv32imc_Zicsr_Zifencei`)
+ * standard (`rv32imc_Zicsr_Zifencei_Zicntr` + i-cache, fast MUL (DSPs) and barrel-shifter)
+ * full (`rv32imcu_Zicsr_Zifencei_Zicntr_Zihpm` + i-cache + physical memory protection, fast MUL (DSPs) and barrel-shifter)
+
+### Tooling support
+
+ * Upstream GCC
+ * Upstream Binutils
+ * Upstream openOCD and GDB
+
+### OS support
+
+ * Upstream [Zephyr](https://docs.zephyrproject.org/latest/boards/riscv/neorv32/doc/index.html) support
+ * FreeRTOS [port](https://github.com/stnolting/neorv32/tree/main/sw/example/demo_freeRTOS)
+
+### Community
+
+ * [gitter channel](https://gitter.im/neorv32/community)
+ * community-driven [example setups and projects](https://github.com/stnolting/neorv32-setups) for various FPGAs, boards and toolchains
