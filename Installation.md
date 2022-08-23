@@ -20,7 +20,7 @@ $ ./litex_setup.py --tag=2022.04 --update
 
 > **Note:** On MacOS, make sure you have [HomeBrew](https://brew.sh) installed. Then do, ``brew install wget``.
 
-> **Note:** On Windows, make sure you have [`make`](https://tracker.iplocation.net/jsyo/) and/or [`GnuWin`](https://tracker.iplocation.net/jsyo/) installed and it's possible you'll have to set `SHELL` environment variable to `SHELL=cmd.exe`.
+> **Note:** On Windows, make sure you have `make` and/or `GnuWin` installed and it's possible you'll have to set `SHELL` environment variable to `SHELL=cmd.exe`.
 
 3. Install a RISC-V toolchain (Only if you want to test/create a SoC with a CPU):
 ```sh
