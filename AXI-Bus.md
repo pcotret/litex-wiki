@@ -8,6 +8,13 @@ The AXI bus is a high-performance, scalable bus system that is widely used in FP
 
 The AXI bus provides a simple, flexible, and scalable bus architecture that makes it easy to connect and communicate between different components in an SoC. The AXI bus specification defines a standard interface for communication between components, allowing components from different vendors to be easily combined in a single SoC.
 
+The AXI bus specification defines several channels or signals to communicate between the bus master and bus slave components in an SoC. Here are the main channels and their descriptions:
+* **AW (Address Write)** Channel: This channel carries the write address and write control signals from the bus master to the bus slave. It is used to initiate a write transaction.
+* **W (Write Data)** Channel: This channel carries the write data from the bus master to the bus slave. It is used to transfer the data to be written to the bus slave's memory.
+* **B (Write Response)** Channel: This channel carries the response from the bus slave to the bus master for a write transaction. It confirms the completion of the write transaction and provides status information.
+* **AR (Address Read)** Channel: This channel carries the read address and read control signals from the bus master to the bus slave. It is used to initiate a read transaction.
+*** R (Read Data)** Channel: This channel carries the read data from the bus slave to the bus master. It is used to transfer the data read from the bus slave's memory.
+
 The AXI bus API in LiteX provides a convenient and straightforward way to work with the AXI bus in a LiteX SoC.
 
 ## How AXI Bus Works in LiteX SoCs
