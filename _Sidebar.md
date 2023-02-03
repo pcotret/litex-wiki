@@ -12,7 +12,7 @@
 * LiteX's internals
   * [Cores-_TODO_](Cores)
   * [CPUs](CPUs)
-  * [Wishbone Bus-_TODO_](Wishbone-Bus)
+  * [Wishbone Bus](Wishbone-Bus)
   * [AXI Bus-_TODO_](AXI-Bus)
   * [CSR Bus](CSR-Bus)
   * [Streams](Streams)
