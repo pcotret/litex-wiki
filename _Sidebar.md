@@ -13,7 +13,7 @@
   * [Cores-_TODO_](Cores)
   * [CPUs](CPUs)
   * [Wishbone Bus](Wishbone-Bus)
-  * [AXI Bus-_TODO_](AXI-Bus)
+  * [AXI Bus](AXI-Bus)
   * [CSR Bus](CSR-Bus)
   * [Streams](Streams)
   * [Host Bridges-_TODO_](Host-Bridges)
