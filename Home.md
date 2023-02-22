@@ -57,7 +57,6 @@ Have fun! :wink:
 **Moral precisions**: The project is shared with a permissive BSD 2-Clause License and we are encouraged to continue sharing it this way thanks to the awesome community and clients willing to support the project!
 If the projet is useful for your research, hobby or commercial projects, we are just asking you to be coherent and behave with integrity: Don't expect free support or that the community will be welcoming if your spent your time complaining about the project (and then direspect developers) or don't pay the custom developments you asked for... (While it's probably natural for 99% of users/clients, it  does seems useful to add this for the 1% remaining that are eating lots of our energy/time).
 
-
 # Typical LiteX design flow:
 ```
                                       +---------------+
@@ -102,6 +101,12 @@ HBM2 test infrastructure on Forest Kitten 33:
 ![enter image description here](https://user-images.githubusercontent.com/1450143/124902018-d4c1b680-dfe2-11eb-89c4-8b498605c34d.png)
 
 To discover more products/projects built with LiteX, visit the [projects page](https://github.com/enjoy-digital/litex/wiki/Projects) on the Wiki.
+
+# Sponsors/Partners:
+
+A huge shoutout to our awesome industrial clients who have given us the green light to incorporate some of the developments we initially created for them directly into LiteX! These innovative developments often provide the building blocks for the features that the wider community can then use and improve upon. Your support has been instrumental for the project, and we are incredibly grateful for your partnership. Thanks!
+
+![](https://user-images.githubusercontent.com/1450143/220726598-08e9262c-338c-4027-a70e-7cc8ad8acb51.png)
 
 # Papers, Presentations, Tutorials, Links
 **FPGA lessons/tutorials:**
