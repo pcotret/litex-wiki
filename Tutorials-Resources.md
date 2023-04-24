@@ -15,16 +15,20 @@ TODO: Add description.
 
 The [Fomu](https://www.crowdsupply.com/sutajio-kosagi/fomu) is a tiny FPGA board that fits in your USB port. The SoC of the FPGA is built with LiteX and the workshop provides a hands-on approach to control the peripherals from a Host PC through the USB bridge from the [ValentyUSB](https://github.com/im-tomu/valentyusb) core and then demonstrates how to create a RISC-V SoC with a [VexRiscv](https://github.com/SpinalHDL/VexRiscv) CPU and load/execute/debug C/Rust core with it and control the peripherals of the board.
 
+## [360nosc0pe LiteX SoC](https://github.com/360nosc0pe/scope)
+![](https://user-images.githubusercontent.com/1450143/120784644-9856f280-c52c-11eb-8d99-1ec916dea836.png)
+
+LiteX based FPGA SoC for the Siglent SDS1104X-E Scope.
+
+## [Thunderscope LiteX SoC](https://github.com/enjoy-digital/thunderscope)
+![](https://user-images.githubusercontent.com/1450143/179495534-4c54973b-9203-4893-9eaa-d9177413e9bf.png)
+
+LiteX based FPGA SoC for the ThunderScope Scope.
+
 ## [ColorLite](https://github.com/enjoy-digital/colorlite)
 ![](https://raw.githubusercontent.com/enjoy-digital/colorlite/master/doc/power_off.jpg)
 
 The Colorlight 5A-75B is an inexpensive (15$) led control board equipped with a Lattice ECP5 FPGA, 2 x 1Gbps Ethernet and lots of IOs. ColorLite project explains how to create a cheap remote control/monitoring system with it can be useful to discover LiteX/LiteEth through a practical example.
-
-## [360nosc0pe](https://github.com/360nosc0pe/scope)
-![](https://user-images.githubusercontent.com/1450143/120784644-9856f280-c52c-11eb-8d99-1ec916dea836.png)
-
-LiteX alternative FPGA Scope SoC for the Siglent SDS1104X-E Scope.
-
 
 ## [iCEBreaker LiteX examples](https://github.com/icebreaker-fpga/icebreaker-litex-examples)
 ![enter image description here](https://www.crowdsupply.com/img/301a/icebreaker-iso_png_project-body.jpg)
