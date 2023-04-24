@@ -50,4 +50,4 @@ Discovery of LiteX as a SoC Builder by @controlpaths
 
 ## [Running Linux with LiteX and VexRiscv on Arty A7](https://jia-je.translate.goog/hardware/2023/04/19/litex-digilent-arty-a7/?_x_tr_sl=auto&_x_tr_tl=en&_x_tr_hl=fr&_x_tr_pto=wapp)
 
-## [DRAM topology and training] (https://jia-je.translate.goog/hardware/2023/04/20/dram-topology-training/?_x_tr_sl=auto&_x_tr_tl=en&_x_tr_hl=fr&_x_tr_pto=wapp)
+## [DRAM topology and training](https://jia-je.translate.goog/hardware/2023/04/20/dram-topology-training/?_x_tr_sl=auto&_x_tr_tl=en&_x_tr_hl=fr&_x_tr_pto=wapp)
